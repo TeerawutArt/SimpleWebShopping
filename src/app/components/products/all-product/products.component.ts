@@ -50,8 +50,6 @@ import { ProductService } from '../../../shared/services/product.service';
 import { PagingDto } from '../../../shared/dtos/paging.dto';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ProductUpdateAvailableDto } from '../../../shared/dtos/product-update-available.dto';
-import { ProductStoreInfoService } from '../../../shared/services/product-store-info.service';
-import { query } from '@angular/animations';
 
 @Component({
   selector: 'app-products',
