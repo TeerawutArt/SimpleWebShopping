@@ -1,0 +1,7 @@
+/* override primeng class style */
+::ng-deep .card_container {
+  margin-top: 1rem;
+  width: 100vw;
+  height: 100vh;
+  box-sizing: border-box;
+}

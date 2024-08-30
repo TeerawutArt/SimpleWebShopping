@@ -1,0 +1,236 @@
+<div class="card flex justify-content-center margin-top-10 ">
+    <form [formGroup]="registerForm" (ngSubmit)="registerUser()">
+        <p-stepper [(activeStep)]="active">
+            <p-stepperPanel>
+                <ng-template pTemplate="header" let-onClick="onClick" let-index="index">
+
+                    <button class="bg-transparent border-none inline-flex flex-column gap-2" disabled>
+                        <span
+                            class="border-round border-2 w-3rem h-3rem inline-flex align-items-center justify-content-center"
+                            [ngClass]="{
+                            'bg-primary border-primary': index <= active,
+                            'surface-border': index > active
+                        }">
+                            <i class="pi pi-user"></i>
+                        </span>
+                    </button>
+                </ng-template>
+                <ng-template pTemplate="content" let-nextCallback="nextCallback">
+                    <div class="formgrid grid " style="min-height: 16rem; max-width: 50rem; ">
+
+                        <div class="text-center mt-3 mb-3 text-xl font-semibold w-full">สร้างบัญชีผู้ใช้งานของคุณ</div>
+                        <div class="field col-12 md:col-12 mt-3">
+                            <p-floatLabel>
+                                <input pInputText id="userName" type="userName" formControlName="userName"
+                                    class="w-full" />
+                                <label for="userName">ชื่อผู้ใช้งาน</label>
+                            </p-floatLabel>
+                            @if (validateControl('userName') && isError('userName', 'required')) {
+                            <small class="text-red-500 font-italic">กรุณากรอกชื่อผู้ใช้งาน </small>
+                            }
+                        </div>
+                        <div class="field col-12 md:col-6 mt-3">
+                            <p-floatLabel>
+                                <p-password id="password" type="password" formControlName="password"
+                                    inputStyleClass="w-full" styleClass="w-full" [toggleMask]="true" />
+
+                                <label for="password">Password</label>
+                            </p-floatLabel>
+                            @if (validateControl('password') && isError('password', 'required')) {
+                            <small class="text-red-500 font-italic">กรุณากรอกรหัสผ่าน </small>
+                            }
+                        </div>
+                        <div class="field col-12 md:col-6 mt-3">
+                            <p-floatLabel>
+                                <input pPassword id="confirmPassword" type="password" formControlName="confirmPassword"
+                                    feedback="false" class="w-full" />
+                                <label for="confirmPassword">Confirm Password</label>
+                            </p-floatLabel>
+                            @if (validateControl('confirmPassword') && isError('confirmPassword', 'required')) {
+                            <small class="text-red-500 font-italic">Confirm password </small>
+                            }
+                            @if (validateControl('confirmPassword') && isError('confirmPassword', 'mismatched')) {
+                            <small class="text-red-500 font-italic">Confirm password is mismatched.</small>
+                            }
+                        </div>
+
+                        <div class="field col-12 md:col-12 mt-3">
+                            <p-floatLabel>
+                                <input pInputText id="email" type="email" formControlName="email" class="w-full" />
+                                <label for="email">Email</label>
+                            </p-floatLabel>
+                            @if (validateControl('email') && isError('email', 'required')) {
+                            <small class="text-red-500 font-italic">กรุณากรอกอีเมล </small>
+                            }
+                            @if (validateControl('email') && isError('email', 'email')) {
+                            <small class="text-red-500 font-italic">รูปแบบอีเมลไม่ถูกต้อง</small>
+                            }
+                        </div>
+                    </div>
+                    @if
+                    (!this.registerForm.get('userName')?.value
+                    ||!this.registerForm.get('password')?.value
+                    ||!this.registerForm.get('confirmPassword')?.value
+                    ||!this.registerForm.get('email')?.value
+                    ||isError('confirmPassword', 'mismatched')
+                    ||isError('email', 'email'))
+                    {
+                    <div class="w-full text-center">
+                        <small
+                            class="text-red-500 font-italic align-content-center">กรุณากรอกข้อมูลให้ถูกต้องก่อนดำเนินการต่อ</small>
+                    </div>
+                    <div class="flex pt-4 justify-content-end">
+
+                        <p-button (onClick)=" nextCallback.emit()" label="ถัดไป" disabled icon="pi pi-arrow-right"
+                            iconPos="right" />
+
+                    </div>
+                    } @else {
+                    <div class="flex pt-4 justify-content-end">
+                        <p-button (onClick)=" nextCallback.emit()" label="ถัดไป" icon="pi pi-arrow-right"
+                            iconPos="right" />
+                    </div>
+                    }
+
+                </ng-template>
+            </p-stepperPanel>
+            <p-stepperPanel>
+                <ng-template pTemplate="header" let-onClick="onClick" let-index="index">
+                    <button class="bg-transparent border-none inline-flex flex-column gap-2" disabled>
+                        <span
+                            class="border-round border-2 w-3rem h-3rem inline-flex align-items-center justify-content-center"
+                            [ngClass]="{
+                            'bg-primary border-primary': index <= active,
+                            'surface-border': index > active
+                        }">
+                            <i class="pi pi-star"></i>
+                        </span>
+                    </button>
+                </ng-template>
+                <ng-template pTemplate="content" let-prevCallback="prevCallback" let-nextCallback="nextCallback">
+
+
+                    <div class="flex flex-column gap-2 mx-auto" style="min-height: 16rem; max-width: 50rem">
+                        <div class="text-center mt-3 mb-3 text-xl font-semibold">กรอกข้อมูลส่วนตัวของคุณ</div>
+                        <div class="card flex justify-content-center">
+                        </div>
+                        <div class="formgrid grid">
+
+
+
+                            <div class="field col-12 md:col-2 mt-3">
+                                <p-dropdown id="prefix" [options]="prefixes" class="w-1" placeholder="คำนำ"
+                                    formControlName="prefix" />
+                                @if (validateControl('prefix') && isError('prefix', 'required')) {
+                                <small class="text-red-500 font-italic">ระบุคำนำหน้าชื่อ</small>
+                                }
+                            </div>
+                            <div class="field col-12 md:col-5 mt-3">
+                                <p-floatLabel>
+
+                                    <input pInputText id="firstName" type="text" formControlName="firstName" required
+                                        class="w-full" />
+                                    <label for="firstName">ชื่อ</label>
+                                </p-floatLabel>
+
+                                @if (validateControl('firstName') && isError('firstName', 'required')) {
+                                <small class="text-red-500 font-italic">กรุณากรอกชื่อจริง </small>
+                                }
+
+
+
+                            </div>
+                            <div class="field col-12 md:col-5 mt-3">
+                                <p-floatLabel>
+                                    <input pInputText id="lastName" type="text" formControlName="lastName"
+                                        class="w-full" />
+                                    <label for="lastName">นามสกุล</label>
+                                </p-floatLabel>
+                                @if (validateControl('lastName') && isError('lastName', 'required')) {
+                                <small class="text-red-500 font-italic">กรุณากรอกนามสกุล </small>
+                                }
+                            </div>
+
+                            <div class="field col-12 md:col-2   ">
+                                <label class="text-red-500">*</label><label for="gender">เพศ</label>
+                                <br>
+                                <p-dropdown id="gender" [options]="genders" placeholder="เพศ"
+                                    formControlName="gender" />
+
+                                @if (validateControl('gender')&& isError('gender', 'required')) {
+                                <small class="text-red-500 font-italic">กรุณากรอกเพศ </small>
+                                }
+                            </div>
+                            <div class="field col-12  md:col-5">
+                                <label class="text-red-500">*</label><label for="birthDate">วันเกิด
+                                    (วัน/เดือน/ค.ศ.)</label>
+                                <br>
+                                <p-calendar inputId="birthDate" formControlName="birthDate" hourFormat="24"
+                                    styleClass="w-full" placeholder="วันเกิด" [dateFormat]="'dd/mm/yy'" />
+                                @if (validateControl('birthDate') && isError('birthDate', 'required')) {
+                                <small class="text-red-500 font-italic">กรุณาเลือกวันเกิด</small>
+                                }
+                            </div>
+
+                            <div class="field col-12 md:col-5 p-fluid">
+                                <label class="text-red-500">*</label>
+                                <label for="phoneNumber">เบอร์โทรศัพท์</label>
+                                <br>
+                                <input id="phoneNumber" type="text" pInputText formControlName="phoneNumber" />
+                                @if (validateControl('phoneNumber') && isError('phoneNumber', 'required')) {
+                                <small class="text-red-500 font-italic">กรุณากรอกเบอร์โทรศัพท์ </small>
+                                }
+                                @if (validateControl('phoneNumber') && isError('phoneNumber', 'pattern')) {
+                                <small class="text-red-500 font-italic">กรุณากรอกตัวเลขเท่านั้น </small>
+                                }
+                            </div>
+                            <div class="field col-12 text-center flex justify-content-between">
+                                <p-button (onClick)="prevCallback.emit()" label="ย้อนกลับ" severity="secondary"
+                                    icon="pi pi-arrow-left" />
+                                <p-button type="submit" label="ลงทะเบียน" [disabled]="registerForm.invalid"
+                                    [loading]="isProcessing" title="submit" />
+
+                            </div>
+
+                        </div>
+                    </div>
+                </ng-template>
+            </p-stepperPanel>
+            <p-stepperPanel>
+                <ng-template pTemplate="header" let-onClick="onClick" let-index="index">
+                    <button class="bg-transparent border-none inline-flex flex-column gap-2" disabled>
+                        <span
+                            class="border-round border-2 w-3rem h-3rem inline-flex align-items-center justify-content-center"
+                            [ngClass]="{
+                            'bg-primary border-primary': index <= active,
+                            'surface-border': index > active
+                        }">
+                            <i class="pi pi-id-card"></i>
+                        </span>
+                    </button>
+
+                </ng-template>
+
+                <ng-template pTemplate="content">
+
+                    <div class="flex flex-column gap-2 mx-auto" style="min-height: 16rem; max-width: 24rem">
+                        <div class="text-center mt-3 mb-3 text-xl font-semibold">สร้างบัญชีเสร็จสิ้น</div>
+                        <div class="text-center">
+                            <img alt="logo" src="https://primefaces.org/cdn/primeng/images/stepper/content.svg" />
+                        </div>
+
+                    </div>
+
+                    <div class="flex pt-4 justify-content-center">
+                        <p-button (onClick)="clickLogin()" label="Login" severity="success" icon="pi pi-sign-in" />
+                    </div>
+
+                </ng-template>
+
+            </p-stepperPanel>
+
+        </p-stepper>
+
+    </form>
+
+</div>

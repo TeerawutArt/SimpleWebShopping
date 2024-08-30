@@ -1,0 +1,94 @@
+<div class="card_container flex flex-wrap align-items-center justify-content-center">
+    <p-card class="static  w-full md:w-8 lg:w-10 xl:w-5  ">
+        <ng-template pTemplate="header">
+            <div class="text-center text-2xl pt-3 ">
+                <span>ขายสินค้า</span>
+            </div>
+        </ng-template>
+        <form [formGroup]="productForm" (ngSubmit)="createdProduct()">
+            <div class="formGrid grid">
+                <div class="field col-12">
+                    <label class="text-red-500">*</label><label for="name">ชื่อสินค้า</label>
+                    <br>
+                    <input pInputText id="name" type="text" formControlName="name" required class="w-full" />
+                    @if (validateControl('name') && hasError('name', 'required')) {
+                    <small class="text-red-500 font-italic">กรุณากรอกชื่อสินค้า</small>
+                    }
+                </div>
+                <div class="field col-12 ">
+                    <label for="description">รายละเอียดสินค้า</label>
+                    <br>
+                    <textarea id="description" rows="5" cols="30" pInputTextarea formControlName="description"
+                        class="w-full"></textarea>
+                </div>
+            </div>
+            <div class="formGrid grid">
+                <div class="field col-12 md:col-6 ">
+                    <label class="text-red-500">*</label><label class=" " for="productAmount">จำนวนสินค้า</label>
+                    <br>
+                    <p-inputGroup>
+                        <p-inputGroupAddon><i class="pi pi-cart-arrow-down"></i></p-inputGroupAddon>
+                        <input type="number" pInputText placeholder="ชิ้น" id="productAmount"
+                            formControlName="productAmount" required [min]="0" />
+                    </p-inputGroup>
+                    @if (validateControl('productAmount') && hasError('productAmount', 'required')) {
+                    <small class="text-red-500 font-italic">กรุณากรอกจำนวนสินค้า</small>
+                    }
+                </div>
+                <div class="field col-12 md:col-6 ">
+                    <label class="text-red-500">*</label><label class=" " for="productAmount">ราคาสินค้า</label>
+                    <p-inputGroup>
+                        <p-inputGroupAddon>฿</p-inputGroupAddon>
+                        <input id="productPrice" formControlName="productPrice" type="number" pInputText
+                            placeholder="ราคา" required [min]="0" />
+                    </p-inputGroup>
+                    @if (validateControl('productPrice') && hasError('productPrice', 'required')) {
+                    <small class="text-red-500 font-italic">กรุณากรอกราคาสินค้า</small>
+                    }
+                </div>
+                <div class="field col-12 md:col-6 ">
+                    <p-multiSelect [options]="categoriesItem" formControlName="categories" optionLabel="name"
+                        placeholder="แท็กสินค้า" />
+                </div>
+
+                <!-- เผื่อได้ใช้ 
+                    <div formArrayName="categories">
+                    <button type="button" (click)="addCategoryField()">Add Category</button>
+                    <div *ngFor="let category of categories.controls; let i = index">
+                        <div>
+                            <label for="category-{{i}}">Category</label>
+                            <input id="category-{{i}}" type="text" formControlName="{{i}}">
+                            <button type="button" (click)="removeCategoryField(i)">remove</button>
+                        </div>
+                    </div>
+                </div> -->
+
+
+
+                <div class="field col-12 ">
+                    <label>รูปสินค้า</label>
+                    <br>
+                    <p-fileUpload mode="advanced" showUploadButton="false" chooseLabel="Choose" showCancelButton="true"
+                        chooseIcon="pi pi-upload" accept="image/,.jpg,.jpeg,.png" maxFileSize="1048576"
+                        (onSelect)="onSelectImage($event)" (onRemove)="onRemoveImage($event)" (onClear)="onClearImage()"
+                        previewWidth="150" invalidFileSizeMessageSummary="ขนาดรูปภาพต้องไม่เกิน 1024KB"
+                        chooseLabel="เลือกรูป" cancelLabel="ลบรูปที่เลือก" cancelStyleClass="bg-red-500" />
+
+
+                </div>
+            </div>
+            <div class="field col-12 text-center">
+                @if (isProductAmountInvalid) {
+                <label class="text-red-500 font-italic mb-3">กรุณาตรวจดูจำนวนสินค้าอีกครั้ง</label>
+                <br>
+                }
+                <button pButton type="submit" label="สร้างสินค้า" [disabled]="productForm.invalid"
+                    [loading]="isProcessing" class="w-full md:w-4"></button>
+            </div>
+
+
+        </form>
+
+
+    </p-card>
+</div>

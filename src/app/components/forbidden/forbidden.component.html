@@ -1,0 +1,16 @@
+<p-card class="md:fixed md:top-50 md:left-50 -translate-xy-50 w-full md:w-6 ">
+    <ng-template pTemplate="header">
+        <div class="text-center text-2xl pt-3">
+            <span>ไม่พบสิทธิ์การใช้งาน</span>
+        </div>
+        <div class="flex flex-column">
+            <div class="flex  justify-content-center">
+                <p>กรุณาเข้าสู่ระบบใหม่อีกครั้ง</p>
+            </div>
+            <div class="flex  justify-content-center">
+                <p-button (onClick)="clickLogin()" label="Login" severity="success" icon="pi pi-sign-in"
+                    [link]="true" />
+            </div>
+        </div>
+    </ng-template>
+</p-card>

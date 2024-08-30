@@ -1,0 +1,78 @@
+<header class="fixed top-0 w-full margin-btm-15">
+
+    <p-menubar [model]="items">
+        <ng-template pTemplate="start">
+            <a routerLink="/home" routerLinkActive="active" ariaCurrentWhenActive="page" class="mr-2"><img
+                    src="favicon.ico" height="32px" alt="profile"></a>
+        </ng-template>
+
+        <ng-template pTemplate="end">
+            @if (isUserAuthenticated){
+            <div class="flex flex-wrap align-items-center justify-content-center">
+                <p-avatar image="{{rootImgUrl}}/{{imgUserURL}}" shape="circle" class="mr-2" />
+                <span class="vertical-align-middle">{{userName}}</span>
+                <p-button label="Log out" [link]="true" (onClick)="logout()" />
+            </div>
+
+            }
+            @else {
+            <p-button id="loginBTN" (onClick)="showLogin()" label="Login" [link]="true" />
+            <p-button label="Register" [link]="true" routerLink="/account/register" />
+            }
+
+        </ng-template>
+    </p-menubar>
+</header>
+<!-- modal -->
+<div class="card flex justify-content-center">
+
+    <p-dialog header="Header" [(visible)]="visible" [modal]="true" [style]="{ minWidth: '25rem' }">
+        <ng-template pTemplate="header">
+            <div class="inline-flex align-items-center justify-content-center gap-2 ">
+
+                <span class="font-bold white-space-nowrap mt-2">
+                    เข้าสู่ระบบ
+                </span>
+            </div>
+        </ng-template>
+        <form [formGroup]="loginForm" (ngSubmit)="loginUser()">
+            <div class="formgrid grid mt-3">
+                <div class="field col-12 mt-3">
+                    <p-floatLabel>
+                        <input pInputText id="userName" type="userName" formControlName="userName" class="w-full" />
+                        <label for="userName">ชื่อผู้ใช้งาน</label>
+                    </p-floatLabel>
+                    @if (validateControl('userName') && hasError('userName', 'required')) {
+                    <small class="text-red-500 font-italic ">userName is required.</small>
+                    }
+
+                </div>
+                <div class="field col-12 mt-3">
+                    <p-floatLabel>
+                        <p-password [toggleMask]="true" id="password" type="password" formControlName="password"
+                            feedback="false" inputStyleClass="w-full" styleClass="w-full" />
+                        <label for="password">รหัสผ่าน</label>
+                    </p-floatLabel>
+                    @if (validateControl('password') && hasError('password', 'required')) {
+                    <small class="text-red-500 font-italic">Password is required.</small>
+                    }
+                </div>
+                <div class="field col-12 mt-3 text-center">
+                    <button pButton type="submit" label="Submit" [disabled]="loginForm.invalid" [loading]="isProcessing"
+                        title="submit" class="w-full md:w-4"></button>
+                </div>
+            </div>
+        </form>
+        <ng-template pTemplate="footer">
+            <div class="grid">
+                <div class="col-6 text-left ">
+                    <span><a [href]="'/account/forgotpassword?returnUrl=' + returnUrl">Forgot
+                            password?</a></span>
+                </div>
+                <div class="col-6 text-right">
+                    <span><a [href]="'/account/register?returnUrl=' + returnUrl">New account?</a></span>
+                </div>
+            </div>
+        </ng-template>
+    </p-dialog>
+</div>

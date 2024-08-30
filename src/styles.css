@@ -1,0 +1,17 @@
+/* for primeng */
+@import "primeng/resources/themes/lara-light-blue/theme.css";
+@import "primeng/resources/primeng.css";
+/* for primeicons */
+@import "primeicons/primeicons.css";
+/* for primeflex */
+@import "primeflex/primeflex.css";
+
+/* set body's margin to 0 */
+body {
+  margin: 0;
+}
+
+/* to transalte object in xy axis with half of its width and height */
+.-translate-xy-50 {
+  transform: translate(-50%, -50%);
+}

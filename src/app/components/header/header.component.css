@@ -1,0 +1,11 @@
+header {
+  z-index: 1;
+}
+
+::ng-deep .p-menuitem-link-active .p-menuitem-text {
+  color: #1d4ed8;
+}
+
+::ng-deep .p-menuitem-link-active .p-menuitem-icon {
+  color: #1d4ed8;
+}
