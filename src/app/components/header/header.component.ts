@@ -112,9 +112,11 @@ export class HeaderComponent implements OnInit {
             },
           ],
         });
-      }
+      }else{
       this.items.push({ label: 'Product', routerLink: 'product/list' });
       this.items.push({ label: 'News', routerLink: 'news' });
+      }
+
     } else {
       this.items.push({ label: 'Product', routerLink: 'product/list' });
       this.items.push({ label: 'News', routerLink: 'news' });
