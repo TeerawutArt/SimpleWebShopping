@@ -9,6 +9,11 @@ import { NotifyNewsComponent } from './components/notify-news/notify-news.compon
 import { ForbiddenComponent } from './components/forbidden/forbidden.component';
 import { isLoginGuard } from './shared/guards/islogin.guard';
 import { UpdateProductComponent } from './components/products/update-product/update-product.component';
+import { ManageProductsComponent } from './components/products/manage-products/manage-products.component';
+import { adminGuard } from './shared/guards/admin.guard';
+import { DiscountComponent } from './components/discount/discount-create/discount.component';
+import { DiscountListComponent } from './components/discount/discount-list/discount-list.component';
+import { DiscountUpdateComponent } from './components/discount/discount-update/discount-update.component';
 
 export const routes: Routes = [
   {
@@ -36,9 +41,38 @@ export const routes: Routes = [
         canActivate: [authGuard],
       },
       {
+        path: 'manage',
+        title: 'จัดการสินค้า',
+        component: ManageProductsComponent,
+        canActivate: [adminGuard],
+      },
+      {
         path: ':id/update',
         title: 'แก้ไขสินค้า',
         component: UpdateProductComponent,
+        canActivate: [authGuard],
+      },
+    ],
+  },
+  {
+    path: 'discount',
+    children: [
+      {
+        path: 'list',
+        title: 'รายการลดราคา',
+        component: DiscountListComponent,
+        canActivate: [authGuard],
+      },
+      {
+        path: 'products',
+        title: 'ลดราคาสินค้า',
+        component: DiscountComponent,
+        canActivate: [authGuard],
+      },
+      {
+        path: ':id/update',
+        title: 'แก้ไขลดราคาสินค้า',
+        component: DiscountUpdateComponent,
         canActivate: [authGuard],
       },
     ],

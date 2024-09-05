@@ -1,0 +1,151 @@
+<div class="card_container flex flex-wrap align-items-center justify-content-center mt-8">
+    <p-card class="static w-full md:w-8 lg:w-10 xl:w-8  ">
+        <ng-template pTemplate="header">
+            <div class="text-center text-2xl pt-3 ">
+                <span>ลดราคาสินค้า</span>
+            </div>
+        </ng-template>
+        <form [formGroup]="productDiscountForm" (ngSubmit)="createDiscountProduct()">
+            <div class="formGrid grid">
+                <div class="field col-12">
+                    <label class="text-red-500">*</label><label for="name">ชื่อลดราคา</label>
+                    <br>
+                    <input pInputText id="name" type="text" formControlName="name" required class="w-full" />
+                    @if (validateControl('name') && hasError('name', 'required')) {
+                    <small class="text-red-500 font-italic">กรุณากรอกชื่อสินค้า</small>
+                    }
+                </div>
+                <div class="field col-12 ">
+                    <label for="description">รายละเอียด</label>
+                    <br>
+                    <textarea id="description" rows="5" cols="30" pInputTextarea formControlName="description"
+                        class="w-full"></textarea>
+                </div>
+
+                <div class="field col-12  lg:col-6">
+                    <label class="text-red-500">*</label><label for="startDate">เวลาเริ่มลดราคา (วัน/เดือน/ค.ศ.)</label>
+                    <br>
+                    <p-calendar inputId="startDate" formControlName="startDate" [showTime]="true" hourFormat="24"
+                        (onSelect)="onSelectDate($event)" [minDate]="dateNow" styleClass="w-full"
+                        placeholder="วันเริ่มลดราคา" [dateFormat]="'dd/mm/yy'" />
+                    @if (validateControl('startDate') && hasError('startDate', 'invalidDate')) {
+                    <small class="text-red-500 font-italic">วันเริ่มลดราคาไม่ถูกต้อง</small>
+                    }
+                </div>
+                <div class="field col-12  lg:col-6 ">
+                    <label class="text-red-500">*</label><label for="endDate">เวลาสิ้นสุดลดราคา (วัน/เดือน/ค.ศ.)</label>
+                    <br>
+                    <p-calendar inputId="endDate" formControlName="endDate" [showTime]="true" hourFormat="24"
+                        styleClass="w-full" [minDate]="minDate" placeholder="วันลดราคา" [dateFormat]="'dd/mm/yy'" />
+
+                    @if (validateControl('endDate') && hasError('endDate', 'invalidDate')) {
+                    <small class="text-red-500 font-italic">วันสิ้นสุดลดราคาไม่ถูกต้อง</small>
+                    }
+                </div>
+
+
+                <div class="field col-6 md:col-6 ">
+                    <label class="text-red-500">*</label><label class=" " for="productAmount">เรทลดราคา</label>
+                    <p-inputGroup>
+                        <input id="discountRate" formControlName="discountRate" type="number" pInputText
+                            placeholder="เรท" required [min]="0" />
+                        @if (IsDiscountPercent) {
+                        <p-inputGroupAddon>%</p-inputGroupAddon>
+                        }@else {<p-inputGroupAddon>฿</p-inputGroupAddon>}
+                    </p-inputGroup>
+                    @if (validateControl('discountRate') && hasError('discountRate', 'required')) {
+                    <small class="text-red-500 font-italic">กรุณากรอกเรทลดราคา</small>
+                    }
+                </div>
+                <div class="field col-6  flex  align-items-center mt-4 ">
+                    <p-checkbox formControlName="discountPercent" inputId="percent" binary=true
+                        (onChange)="checkedBox()" />
+                    <label for="percent" class="ml-2 mt-1">ลดราคาเป็นเปอร์เซ็นต์</label>
+                </div>
+
+                <!-- picklist สำหรับสินค้า -->
+                @if (pickMode=='Products') {
+                <div class="flex card justify-content-center w-full">
+                    <p-pickList [source]="sourceProducts" [target]="targetProducts" sourceHeader="รายการที่มี"
+                        targetHeader="รายการที่เลือก" [dragdrop]="true" [responsive]="true" [disabled]="isProcessing"
+                        [sourceStyle]="{ height: '30rem',width:'25rem' }"
+                        [targetStyle]="{ height: '30rem',width:'25rem' }" breakpoint="1400px">
+                        <ng-template let-product pTemplate="item">
+                            <div class="flex flex-wrap p-2 align-items-center gap-3">
+                                <img class="w-4rem shadow-2 flex-shrink-0 border-round"
+                                    src="{{rootImgUrl}}/{{product.productImageURL}}" alt={{product.productName}} />
+                                <div class="flex-1 flex flex-column gap-2">
+                                    <span class="font-bold">
+                                        {{ product.productName }}
+                                    </span>
+                                    <div class="flex align-items-center gap-2">
+                                        @if (product.categories.length>0) {
+                                        <i class="pi pi-tag text-sm"></i>
+                                        <label class="text-xs" [pTooltip]="tooltipCategories" tooltipPosition="bottom">
+                                            Tags
+                                        </label>
+                                        <ng-template #tooltipCategories>
+                                            <ul>
+                                                @for (category of product.categories; track $index) {
+                                                <li>{{category.name}}</li>
+                                                }
+                                            </ul>
+                                        </ng-template>
+                                        }
+                                    </div>
+                                </div>
+                                <span class="font-bold text-900">
+                                    {{product.price|currency:'฿'}}
+                                </span>
+                            </div>
+                        </ng-template>
+                    </p-pickList>
+                </div>
+                <!-- สำหรับ หมวดหมู่สินค้า -->
+                }@else if (pickMode=="Categories") {
+                <div class="flex card justify-content-center w-full">
+                    <p-pickList [source]="sourceCategories" [target]="targetCategories" sourceHeader="รายการที่มี"
+                        targetHeader="รายการที่เลือก" [dragdrop]="true" [responsive]="true" [disabled]="isProcessing"
+                        [sourceStyle]="{ height: '30rem',width:'25rem' }"
+                        [targetStyle]="{ height: '30rem',width:'25rem' }" breakpoint="1400px">
+                        <ng-template let-category pTemplate="item">
+                            <div class="flex flex-wrap p-2 align-items-center gap-3">
+                                <div class="flex-1 flex flex-column gap-2">
+                                    <span class="font-bold">
+                                        {{ category.name }}
+                                    </span>
+                                </div>
+                            </div>
+                        </ng-template>
+                    </p-pickList>
+                </div>
+                }@else {
+                <div class="flex card justify-content-center w-full">
+                    <p-pickList sourceHeader="รายการที่มี" targetHeader="รายการที่เลือก" [dragdrop]="true"
+                        [responsive]="true" [disabled]="true" [sourceStyle]="{ height: '30rem',width:'30rem' }"
+                        [targetStyle]="{ height: '30rem',width:'30rem' }" breakpoint="1400px">
+                    </p-pickList>
+                </div>
+                }
+
+
+            </div>
+            <div class="field col-12 text-center">
+                @if (isProductAmountInvalid) {
+                <label class="text-red-500 font-italic mb-3">กรุณาตรวจดูจำนวนสินค้าอีกครั้ง</label>
+                <br>
+                }
+                <div class="field col-12 text-center flex justify-content-between">
+                    <button pButton type="button" (click)="cancel()" label="ย้อนกลับ" class="w-full md:w-4"
+                        severity="info"></button>
+                    <button pButton type="submit" label="ลดราคาสินค้า" [disabled]="productDiscountForm.invalid"
+                        [loading]="isProcessing" class="w-full md:w-4"></button>
+                </div>
+            </div>
+
+
+        </form>
+
+
+    </p-card>
+</div>

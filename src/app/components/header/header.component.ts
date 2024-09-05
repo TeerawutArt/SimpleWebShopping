@@ -108,15 +108,20 @@ export class HeaderComponent implements OnInit {
             {
               label: 'New',
               icon: PrimeIcons.PLUS,
-              routerLink: '/product/new',
+              command: () => this.newProduct(),
+            },
+            {
+              label: 'จัดการ',
+              icon: PrimeIcons.PLUS,
+              routerLink: '/product/manage',
             },
           ],
         });
-      }else{
-      this.items.push({ label: 'Product', routerLink: 'product/list' });
-      this.items.push({ label: 'News', routerLink: 'news' });
+        this.items.push({ label: 'Discount', routerLink: 'discount/list' });
+      } else {
+        this.items.push({ label: 'Product', routerLink: 'product/list' });
+        this.items.push({ label: 'News', routerLink: 'news' });
       }
-
     } else {
       this.items.push({ label: 'Product', routerLink: 'product/list' });
       this.items.push({ label: 'News', routerLink: 'news' });
@@ -125,6 +130,12 @@ export class HeaderComponent implements OnInit {
   showLogin() {
     this.returnUrl = this.router.url; //เก็บ url หน้าที่ทำการกดปุ่ม login
     this.componentHelper.setLoginVisible(true);
+  }
+  newProduct() {
+    this.returnUrl = this.router.url;
+    this.router.navigate(['/product/new'], {
+      queryParams: { returnUrl: this.returnUrl },
+    });
   }
 
   advancePermission(role: string) {

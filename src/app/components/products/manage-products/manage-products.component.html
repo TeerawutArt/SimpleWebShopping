@@ -1,0 +1,141 @@
+<div class="card m-7">
+    <p-toast />
+    <p-toolbar styleClass="mb-4 gap-2">
+        <ng-template pTemplate="left">
+            <p-button severity="success" label="เพิ่มสินค้า" icon="pi pi-plus" class="mr-2" (onClick)="newProduct()" />
+            <p-button severity="info" label="ลดราคาสินค้า" icon="pi pi-plus" class="mr-2"
+                (onClick)="discountProduct(selectedProducts)" />
+            <p-button severity="help" label="ลดราคาตามประเภท" icon="pi pi-plus" class="mr-2"
+                (onClick)="discountProductCategories()" />
+
+        </ng-template>
+
+        <ng-template pTemplate="right">
+            <p-button severity="danger" label="ลบสินค้าที่เลือก" icon="pi pi-trash" (onClick)="deleteSelectProducts()"
+                [disabled]="!selectedProducts || !selectedProducts.length" />
+        </ng-template>
+    </p-toolbar>
+
+    <p-table #pt [value]="products" [rows]="pageSize" [lazy]="true" [totalRecords]="totalRecords" paginator="true"
+        (onLazyLoad)="getAllProduct($event)" [scrollable]="true" scrollHeight="600px"
+        [tableStyle]="{ 'min-width': '75rem' }" [(selection)]="selectedProducts" [rowHover]="true" dataKey="productId"
+        currentPageReportTemplate="รายการที่ {first} ถึง {last} จากทั้งหมด {totalRecords} รายการ"
+        [showCurrentPageReport]="true">
+        <ng-template pTemplate="caption">
+            <div class="flex align-items-center justify-content-between">
+                <h5 class="m-0 font-bold text-2xl ">การจัดการสินค้า</h5>
+                <span class="p-input-icon-left">
+                    <i class="pi pi-search"></i>
+                    <input pInputText type="text" [(ngModel)]="keyword" placeholder="ค้นหา..."
+                        (keyup)="onFilter(pt, $event)" />
+                </span>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+            <tr>
+                <th style="width: 4rem">
+                    <p-tableHeaderCheckbox />
+                </th>
+                <th>
+                    ภาพ
+                </th>
+                <th pSortableColumn="productName" style="min-width:10rem">
+                    ชื่อสินค้า<p-sortIcon field="productName" />
+                </th>
+
+                <th pSortableColumn="description">
+                    รายละเอียดสินค้า <p-sortIcon field="description" />
+                </th>
+                <th pSortableColumn="price" style="max-width:5rem">
+                    ราคา <p-sortIcon field="price" />
+                </th>
+                <th pSortableColumn="productTotalAmount" style="max-width:5rem">
+                    จำนวนสินค้า <p-sortIcon field="productTotalAmount" />
+                </th>
+                <th pSortableColumn="soldAmount" style="max-width:5rem">
+                    ขายได้ <p-sortIcon field="soldAmount" />
+                </th>
+
+                <th pSortableColumn="inventoryStatus" style="min-width:5rem">
+                    สถานะ <p-sortIcon field="inventoryStatus" />
+                </th>
+                <th pSortableColumn="categories" style="max-width:5rem">
+                    หมวดหมู่ <p-sortIcon field="categories" />
+                </th>
+                <th style="max-width:5rem">
+                    การจัดการ
+                </th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-product>
+            <tr>
+                <td>
+                    <p-tableCheckbox [value]="product" />
+                </td>
+                <td>
+                    <img src="{{rootImgUrl}}/{{product.productImageURL}}" alt={{product.productName}} width="50"
+                        class="shadow-4" />
+                </td>
+                <td>
+                    {{ product.productName }}
+                </td>
+
+                <td>
+                    {{ product.description }}
+                </td>
+                @if (product.isDiscounted) {
+                <td class="text-green-500">
+                    {{ product.discountPrice | currency : '฿' }}
+                </td>
+                }@else {
+                <td>
+                    {{ product.price | currency : '฿' }}
+                </td>
+                }
+
+                <td>
+                    {{ product.productTotalAmount }}
+                </td>
+                <td>
+                    {{ product.productSoldAmount }}
+                </td>
+                <td>
+                    <p-tag [value]="product.inventoryStatus" [severity]="getSeverity(product.inventoryStatus)" />
+                </td>
+                <td style="max-width:5rem">
+                    @for (category of product.categories; track $index) {
+                    <p-tag class="font-medium text-secondary text-sm mr-2" severity="info">{{
+                        category.name
+                        }}</p-tag>
+                    }
+                </td>
+                <td>
+                    <p-button icon="pi pi-pencil" [rounded]="true" [outlined]="true" severity="success"
+                        (onClick)="updateProduct(product)" />
+                    <p-button icon="pi pi-ban" severity="warning" [rounded]="true" [outlined]="true"
+                        (onClick)="changeProductAvailable(product)" />
+                    <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [outlined]="true"
+                        (onClick)="deleteProduct(product)" />
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="paginatorright">
+
+            <div class="card flex justify-content-center align-items-baseline">
+                <label class=" mt-2 mr-2 ">จำนวนรายการ</label>
+                <p-dropdown [options]="pageSizeSelected" [(ngModel)]="pageSize" placeholder="จำนวนรายการ" />
+            </div>
+        </ng-template>
+        <ng-template pTemplate="paginatorleft">
+            <div>
+
+            </div>
+        </ng-template>
+        <!--         <ng-template pTemplate="summary">
+            <div class="flex align-items-center justify-content-between">
+                In total there are {{ products ? products.length : 0 }} products.
+            </div>
+        </ng-template> -->
+    </p-table>
+    <p-confirmDialog [style]="{ width: '450px' }" />
+</div>

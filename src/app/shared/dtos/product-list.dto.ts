@@ -19,4 +19,5 @@ export interface ProductListDto {
   discountRate: number;
   discountPrice: number;
   categories: Array<string>;
+  inventoryStatus: string;
 }

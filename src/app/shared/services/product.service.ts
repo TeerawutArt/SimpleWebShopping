@@ -6,6 +6,7 @@ import { ProductListDto } from '../dtos/product-list.dto';
 import { PagingDto } from '../dtos/paging.dto';
 import { ProductUpdateDto } from '../dtos/product-update.dto';
 import { ProductUpdateAvailableDto } from '../dtos/product-update-available.dto';
+import { ProductCreateDiscountDto } from '../dtos/product-create-discount.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -59,6 +60,12 @@ export class ProductService {
   deleteProduct(id: string) {
     let url = environment.apiBaseUrl + '/Products/' + id;
     return this.http.delete<unknown>(url);
+  }
+  deleteSelectedProducts(selectedProductIds: string[]) {
+    let url = environment.apiBaseUrl + '/Products/Delete/Selected';
+    return this.http.delete<unknown>(url, {
+      body: { SelectedProductId: selectedProductIds },
+    });
   }
   changeProductAvailable(id: string, req: ProductUpdateAvailableDto) {
     let url = environment.apiBaseUrl + '/Products/ChangeAvailable/' + id;

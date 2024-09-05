@@ -30,7 +30,7 @@ import { CommonModule } from '@angular/common';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { ProductService } from '../../../shared/services/product.service';
 import { CategoryService } from '../../../shared/services/category.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-new-product',
@@ -66,11 +66,14 @@ export class NewProductComponent {
   isProductAmountInvalid = false;
   categoriesId: [] = [];
   dateNow!: Date;
+  returnUrl = '';
   constructor(
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
     private productService: ProductService,
-    private categoriesService: CategoryService /* private formBuilder: FormBuilder //ไว้ทำ category tag */
+    private categoriesService: CategoryService /* private formBuilder: FormBuilder //ไว้ทำ category tag */,
+    private router: Router,
+    private route: ActivatedRoute
   ) {}
   ngOnInit(): void {
     this.getCategories();
@@ -125,13 +128,21 @@ export class NewProductComponent {
       },
     });
   }
-
+  cancel() {
+    this.returnUrl =
+      this.route.snapshot.queryParams['returnUrl'] || this.returnUrl;
+    this.router.navigate([this.returnUrl]);
+  }
   createdProduct() {
     if (this.productForm.get('productAmount')?.value == 0) {
       this.isProductAmountInvalid = true;
     } else {
       // prettier-ignore
-      this.categoriesId = this.productForm.get('categories')?.value.map((c: any) => c.id);
+      if(this.categoriesId.length>0) {
+              this.categoriesId = this.productForm
+                .get('categories')
+                ?.value.map((c: any) => c.id);
+      }
       this.productName = this.productForm.get('name')?.value;
       this.confirmationService.confirm({
         header: 'ยืนยันการสร้างสินค้า',
@@ -171,6 +182,7 @@ export class NewProductComponent {
                   life: 2000,
                 });
               },
+
               error: (err: HttpErrorResponse) => {
                 this.messageService.add({
                   summary: 'Something Error!',

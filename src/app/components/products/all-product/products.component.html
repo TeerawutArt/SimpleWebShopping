@@ -1,149 +1,237 @@
-<div class="card flex flex-wrap align-items-center justify-content-center m-8">
-    @if (loading) {
-    <p-progressSpinner ariaLabel="loading" />
-    }@else {
-    @if (products.length==0) {
-    <div class=" flex w-full  mb-3 justify-content-end   align-items-center ">
-        @if (isUserAuthenticated&&hasPermission) {
+<div class="card  mt-6">
 
-        <div
-            class="flex mr-2 align-items-center  align-items-center py-2 px-2 border-round-top-2xl border-round-bottom-2xl bg-green-700 border-black-alpha-10 border-solid text-white">
-            <div><label class="mr-2">โหมดผู้ดูแล</label></div>
-            <div><p-inputSwitch [(ngModel)]="manageProductMode" (onChange)="valueChange()" [disabled]="loading" /></div>
-        </div>
-        <div
-            class=" mr-2 flex align-items-center py-2 px-2 border-round-top-2xl border-round-bottom-2xl bg-red-600 border-black-alpha-10 border-solid text-white">
-            <div><label class=" mr-2">ซ่อนสินค้าที่ระงับไว้</label></div>
-            <div><p-inputSwitch [(ngModel)]="HideDisableProduct" (onChange)="valueChange()" [disabled]="loading" />
-            </div>
-        </div>
+    <p-dataView #dv [value]="products" layout='grid' (onLazyLoad)="getAllProduct($event)" [paginator]="true"
+        [rows]="pageSize" [totalRecords]="totalRecords" [lazy]="true" emptyMessage="ไม่มีสินค้าที่ค้นหา">
+        <ng-template pTemplate="header">
+            <div class=" flex w-full  mb-3 md:justify-content-end grid  align-items-center   mt-5  ">
+                @if (isUserAuthenticated&&hasPermission) {
 
-        }
-        <div>
-            <p-inputGroup>
-                <input type=" text" pInputText placeholder="คำค้นหา" [(ngModel)]="keyword" (keyup)="search($event)" />
-                <button type="button" pButton icon="pi pi-search" class="p-button-warning"
-                    (click)="valueChange()"></button>
-            </p-inputGroup>
-        </div>
-
-    </div>
-    <div class="">
-        <p class="text-2xl label-center">ขณะนี้ยังไม่มีสินค้า</p>
-    </div>
-
-    }@else {
-    <div class=" flex w-full  mb-3 md:justify-content-end grid  align-items-center ">
-        @if (isUserAuthenticated&&isUserAuthenticated&&hasPermission) {
-        <div
-            class="flex mr-2 align-items-center  align-items-center py-2 px-2 border-round-top-2xl border-round-bottom-2xl bg-green-700 border-black-alpha-10 border-solid text-white">
-            <div><label class="mr-2">โหมดผู้ดูแล</label></div>
-            <div><p-inputSwitch [(ngModel)]="manageProductMode" (onChange)="valueChange()" [disabled]="loading" /></div>
-        </div>
-        <div
-            class=" mr-2 flex align-items-center py-2 px-2 border-round-top-2xl border-round-bottom-2xl bg-red-600 border-black-alpha-10 border-solid text-white">
-            <div><label class=" mr-2">ซ่อนสินค้าที่ระงับไว้</label></div>
-            <div><p-inputSwitch [(ngModel)]="HideDisableProduct" (onChange)="valueChange()" [disabled]="loading" />
-            </div>
-        </div>
-
-        }
-        <div>
-            <p-inputGroup>
-                <input type=" text" pInputText placeholder="คำค้นหา" [(ngModel)]="keyword" (keyup)="search($event)" />
-                <button type="button" pButton icon="pi pi-search" class="p-button-warning"
-                    (click)="valueChange()"></button>
-            </p-inputGroup>
-        </div>
-    </div>
-    <div class="grid w-full " style="min-height: 10rem;  max-width: 100rem;">
-
-        @for (item of products; track $index) {
-        <p-card class="col-12 sm:col-6 lg:col-3 xl:col-2 md:col-4 mb-2 align-items-stretch flex  flex-wrap">
-            <ng-template pTemplate="header">
-                <img alt="Card" src="{{rootImgUrl}}/{{item.productImageURL}}" class="h-12rem" />
-                <div class="label-center">
-                    @if (!item.isAvailable) {
-                    <label class=" text-purple-500 font-bold text-100">ระงับการขายสินค้า</label>
-                    }
-
+                <div
+                    class="flex mr-2 align-items-center  align-items-center py-2 px-2 border-round-top-2xl border-round-bottom-2xl bg-green-700 border-black-alpha-10 border-solid text-white">
+                    <div><label class="mr-2">โหมดผู้ดูแล</label></div>
+                    <div><p-inputSwitch [(ngModel)]="manageProductMode" (onChange)="valueChange(dv)"
+                            [disabled]="loading" /></div>
                 </div>
-
-                <div class=" flex justify-content-between flex-wrap">
-                    <div></div>
-                    <div class=" flex align-items-center"><label
-                            class="font-bold text-lg  ">{{item.productName|cutText:[20]}}</label>
-                        <!-- เกิน20ตัวอักษรให้ตัดที่เหลือแล้วเติม...แทน -->
+                <div
+                    class=" mr-2 flex align-items-center py-2 px-2 border-round-top-2xl border-round-bottom-2xl bg-red-600 border-black-alpha-10 border-solid text-white">
+                    <div><label class=" mr-2">ซ่อนสินค้าที่ระงับ</label></div>
+                    <div><p-inputSwitch [(ngModel)]="HideDisableProduct" (onChange)="valueChange(dv)"
+                            [disabled]="loading" />
                     </div>
-                    @if (isUserAuthenticated&&hasPermission&&manageProductMode) {
-                    <div>
-                        <!-- เซ็ตค่าตัวแปร เมื่อกดdropdown -->
-                        <p-splitButton class="text-red-500" (onDropdownClick)="curProduct=item"
-                            (onMenuShow)="menuItems = settingMenu()" severity="contrast" text="true" outlined="true"
-                            [buttonDisabled]="true" [model]="menuItems"><ng-template pTemplate="dropdownicon">
-                                <i class="pi pi-cog " style="color: green;font-size:1.5rem"></i> <!-- เกียร์ไอคอน -->
-                            </ng-template></p-splitButton>
+                </div>
+
+                }
+                <div class="flex">
+                    <p-inputGroup>
+                        <input type=" text" pInputText placeholder="คำค้นหา" [(ngModel)]="keyword"
+                            (keyup)="onFilter(dv, $event)" />
+                        <button type="button" pButton icon="pi pi-search" class="p-button-warning"
+                            (click)="valueChange(dv)"></button>
+                    </p-inputGroup>
+                </div>
+                <div class="ml-8">
+                    <p-dataViewLayoutOptions layout='grid' />
+                </div>
+            </div>
+        </ng-template>
+
+        <!-- List Template -->
+        <ng-template pTemplate="list" let-products>
+            <div class="grid grid-nogutter ">
+                <div class="col-12" *ngFor="let product of products; let first = first">
+                    <div class="flex flex-column sm:flex-row sm:align-items-center p-4 gap-3 "
+                        [ngClass]="{ 'border-top-1 surface-border': !first }">
+                        <div class="md:w-15rem relative col-4">
+                            @if (isUserAuthenticated&&hasPermission&&manageProductMode) {
+                            <div class="flex justify-content-end">
+                                <!-- เซ็ตค่าตัวแปร เมื่อกดdropdown -->
+                                <p-splitButton class="text-red-500" (onDropdownClick)="curProduct=product"
+                                    (onMenuShow)="menuItems = settingMenu()" severity="contrast" text="true"
+                                    outlined="true" [buttonDisabled]="true" [model]="menuItems">
+                                    <ng-template pTemplate="dropdownicon">
+                                        <i class="pi pi-cog " style="color: grey;font-size:1.5rem"></i>
+                                        <!-- เกียร์ไอคอน -->
+                                    </ng-template>
+                                </p-splitButton>
+                            </div>
+                            }@else { <div></div> }
+
+                            <img class="block xl:block mx-auto border-round w-full "
+                                src="{{rootImgUrl}}/{{product.productImageURL}}" alt={{product.productName}} />
+                            @if (!product.isAvailable) {
+                            <p-tag value="ระงับการขาย" severity=danger class="absolute" [style.left.px]="4"
+                                [style.top.px]="4"></p-tag>
+
+                            }
+
+
+
+                            @else if (product.inventoryStatus=="INSTOCK") {
+                            <p-tag value="พร้อมขาย" severity=success class="absolute" [style.left.px]="4"
+                                [style.top.px]="4"></p-tag>
+                            }
+                            @else if (product.inventoryStatus=="OUTOFSTOCK") {
+                            <p-tag value="สินค้าหมด" severity=warning class="absolute" [style.left.px]="4"
+                                [style.top.px]="4"></p-tag>
+                            }
+
+                        </div>
+                        <div
+                            class="flex flex-column md:flex-row justify-content-between md:align-items-center flex-1 gap-4 ">
+                            <div
+                                class="flex flex-row md:flex-column justify-content-between align-items-start gap-1 w-1 ">
+
+
+                                <div class="text-lg font-medium text-900 mt-2  ">
+                                    <label>{{ product.productName }}</label>
+                                </div>
+
+                                <div class="surface-100 p-1" style="border-radius: 30px">
+                                    <div class="surface-0 flex align-items-center gap-2 justify-content-center py-1 px-2"
+                                        style="border-radius: 30px; box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.04), 0px 1px 2px 0px rgba(0, 0, 0, 0.06)">
+                                        <span class="text-900 font-medium text-sm">{{ product.totalScore }}</span>
+                                        <i class="pi pi-star-fill text-yellow-500"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="w-full">
+
+                                <div>
+
+                                    @for (category of product.categories; track $index) {
+                                    <p-tag class="font-medium text-secondary text-sm mr-2" severity="info">{{
+                                        category.name
+                                        }}</p-tag>
+                                    }
+                                </div>
+                                <div>
+                                    <p>{{product.description}}</p>
+                                </div>
+
+                            </div>
+
+                            <div class="flex flex-column md:align-items-end gap-4 ">
+
+                                @if (!product.isDiscounted) {
+                                <div class="">
+                                    <label class="text-lg font-bold"> {{product.price|currency:'฿'}}</label>
+                                    <!-- currencyPipe Angular -->
+                                </div>
+                                }@else{
+                                <label class="text-green-700"> {{product.discountPrice|currency:'฿'}}</label>
+                                <br>
+                                <small
+                                    class="line-through text-gray-400 text-lg font-bold">{{product.price|currency:'฿'}}</small>
+                                @if (product.isDiscountPercent) {
+                                <small class="ml-1 bg-red-500 text-white-alpha-90">-{{product.discountRate}}%</small>
+                                }@else {
+                                <small class="ml-1 bg-red-500 text-white-alpha-90">-
+                                    {{product.discountRate|currency:'฿'}}</small>
+                                }
+                                }
+                                <div class="flex flex-row-reverse md:flex-row gap-2">
+                                    <p-button icon="" class="flex-auto md:flex-initial white-space-nowrap"
+                                        label="ซื้อสินค้า" [disabled]="product.inventoryStatus === 'OUTOFSTOCK'" />
+                                    <p-button icon="pi pi-shopping-cart" [outlined]="true" />
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    }@else { <div></div> }
                 </div>
-            </ng-template>
-            <ng-template pTemplate="subtitle">
-                @if (curDate>=item.discountStartDate) {
-                @if (item.remainTimeDay==0&&item.remainTimeHour>=0 &&item.remainTimeMin>=0) {
-                <div class="text-center">
-                    <label class="text-red-500 col-12  font-bold text-sm">หมดเวลาลดราคาวันนี้</label>
-                </div>
-                <div class="text-center">
-                    <label class="col-12 text-sm">เหลือเวลา {{item.remainTimeHour}} ชั่วโมง {{item.remainTimeMin}}
-                        นาที</label>
-                </div>
-                }@else if (item.remainTimeDay<=0&&item.remainTimeHour<=0 &&item.remainTimeMin<=0) { <br>
-                    <br>
-                    }@else {
-                    <label>ลดราคา {{item.remainTimeDay}} วัน</label>
-                    }
-                    }@else {
-                    <!-- ตรงนี้ใช้ DatePipe ของ angular  ในการจัด format (ไปinject locale th ด้วย)-->
-                    <label class="text-orange-500 ">จะลดราคาในวันที่ {{item.discountStartDate| date: 'วันที่ d MMMM yyyy
-                        เวลา
-                        HH:mm นาฬิกา'}}</label>
-                    }
-            </ng-template>
-            <!--             <ng-template pTemplate="content">
-                <div class="mb-3 ">
+            </div>
+        </ng-template>
+        <!-- Grid template -->
+        <ng-template let-product pTemplate="grid" let-products>
+            <div class="grid grid-nogutter">
+                <div class="col-12 sm:col-6 md:col-4 lg:col-3 xl:col-2 p-2 align-items-stretch flex  flex-wrap"
+                    *ngFor="let product of products">
+                    <div class="p-4 border-1 surface-border surface-card border-round flex flex-column">
+                        @if (isUserAuthenticated&&hasPermission&&manageProductMode) {
+                        <div class="flex justify-content-end">
+                            <!-- เซ็ตค่าตัวแปร เมื่อกดdropdown -->
+                            <p-splitButton class="text-red-500" (onDropdownClick)="onDropDownClickSetup(product,dv)"
+                                (onMenuShow)="menuItems = settingMenu()" severity="contrast" text="true" outlined="true"
+                                [buttonDisabled]="true" [model]="menuItems"><ng-template pTemplate="dropdownicon">
+                                    <i class="pi pi-cog " style="color: grey;font-size:1.5rem"></i>
+                                    <!-- เกียร์ไอคอน -->
+                                </ng-template></p-splitButton>
+                        </div>
+                        }@else { <div></div> }
+                        <div class="surface-50 flex justify-content-center border-round p-3">
+                            <div class="relative mx-auto">
 
-                    <p-scrollPanel [style]="{ width: '100%', height: '30px' ,marginTop:'0.5rem' }">
-                        <p class="p-0 m-0">{{item.productDescription}}</p>
-                    </p-scrollPanel>
-                </div>
-            </ng-template> -->
-            <ng-template pTemplate="footer">
-                @if (!item.isDiscounted) {
-                <div class="">
-                    <label class=""> {{item.price|currency:'฿'}}</label> <!-- currencyPipe Angular -->
-                </div>
-                }@else{
-                <label class="text-green-700"> {{item.discountPrice|currency:'฿'}}</label>
-                <br>
-                <small class="line-through text-gray-400">{{item.price|currency:'฿'}}</small>
-                @if (item.isDiscountPercent) {
-                <small class="ml-1 bg-red-500 text-white-alpha-90">-{{item.discountRate}}%</small>
-                }@else {
-                <small class="ml-1 bg-red-500 text-white-alpha-90">- {{item.discountRate|currency:'฿'}}</small>
-                }
-                }
-                <br><br>
-                <small>{{item.totalScore}}</small>
-                <!-- //rating score (total score) ขอทำ reviewให้เสร็จก่อนค่อยกลับมาทำ -->
-
-            </ng-template>
+                                @if (!product.isAvailable) {
+                                <p-tag value="ระงับการขาย" severity=danger></p-tag>
+                                }
+                                @else if (product.inventoryStatus=="INSTOCK") {
+                                <p-tag value="พร้อมขาย" severity=success></p-tag>
+                                }
+                                @else if (product.inventoryStatus=="OUTOFSTOCK") {
+                                <p-tag value="สินค้าหมด" severity=warning></p-tag>
+                                }
+                                <img class="border-round w-full" src="{{rootImgUrl}}/{{product.productImageURL}}"
+                                    alt={{product.name}} style="max-width: 300px;" />
 
 
-        </p-card>
-        }
-        <p-paginator class="col-12 " (onPageChange)="onPageChange($event)" [first]="activePage" [rows]="pageSize"
-            [totalRecords]="totalRecords" />
-    </div>
-    }
-    }
+
+                            </div>
+                        </div>
+                        <div class="pt-4">
+                            <div class="flex flex-row justify-content-between align-items-start gap-2">
+                                <div>
+                                    @if (product.categories.length>0) {
+                                    <i class="pi pi-tag text-sm"></i>
+                                    <label class="text-xs" [pTooltip]="tooltipCategories" tooltipPosition="bottom">
+                                        Tags
+                                    </label>
+                                    <ng-template #tooltipCategories>
+                                        <ul>
+                                            @for (category of product.categories; track $index) {
+                                            <li>{{category.name}}</li>
+                                            }
+                                        </ul>
+                                    </ng-template>
+                                    }
+
+                                    <div class="text-lg font-medium text-900 mt-1">{{ product.productName
+                                        |cutText:[20]}}</div>
+                                </div>
+                                <div class="surface-100 p-1" style="border-radius: 30px">
+                                    <div class="surface-0 flex align-items-center gap-2 justify-content-center py-1 px-2"
+                                        style="border-radius: 30px; box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.04), 0px 1px 2px 0px rgba(0, 0, 0, 0.06)">
+                                        <span class="text-900 font-medium text-sm">{{ product.totalScore }}</span>
+                                        <i class="pi pi-star-fill text-yellow-500"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-4">
+                                @if (!product.isDiscounted) {
+                                <div class="">
+                                    <label class="text-lg font-bold"> {{product.price|currency:'฿'}}</label>
+                                    <!-- currencyPipe Angular -->
+                                </div>
+                                }@else{
+                                <label class="text-green-700 text-lg"> {{product.discountPrice|currency:'฿'}}</label>
+                                <br>
+                                <small
+                                    class="line-through text-gray-400  font-bold ">{{product.price|currency:'฿'}}</small>
+                                @if (product.isDiscountPercent) {
+                                <small class="ml-1 bg-red-500 text-white-alpha-90">-{{product.discountRate}}%</small>
+                                }@else {
+                                <small class="ml-1 bg-red-500 text-white-alpha-90">-
+                                    {{product.discountRate|currency:'฿'}}</small>
+                                }
+                                }
+                                <div class="flex gap-2 justify-content-center mt-2">
+                                    <p-button icon="" class="flex-auto md:flex-initial white-space-nowrap"
+                                        label="ซื้อสินค้า" [disabled]="product.inventoryStatus === 'OUTOFSTOCK'" />
+                                    <p-button icon="pi pi-shopping-cart" [outlined]="true" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ng-template>
+    </p-dataView>
 </div>

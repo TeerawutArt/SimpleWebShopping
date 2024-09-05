@@ -1,0 +1,105 @@
+<div class="card m-7">
+
+    <p-table #pt [value]="discounts" dataKey="discountId" [tableStyle]="" [expandedRowKeys]="expandedRows">
+        <ng-template pTemplate="caption">
+            <div class="flex flex-wrap justify-content-end gap-2">
+            </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+            <tr>
+                <th style="width: 5rem"></th>
+                <th>ชื่อลดราคา </th>
+                <th>รายละเอียด</th>
+                <th>วันเริ่มลดราคา </th>
+                <th>วันสิ้นสุดราคา </th>
+                <th>เรทลดราคา </th>
+                <th>ประเภทลดราคา </th>
+                <th>การจัดการ </th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-discount let-expanded="expanded">
+            <tr class="bg-blue-50">
+                <td>
+                    <p-button type="button" pRipple [pRowToggler]="discount" [text]="true" [rounded]="true"
+                        [plain]="true" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" />
+                </td>
+                <td>{{ discount.discountName }}</td>
+                <td>{{ discount.description }}</td>
+
+                <td>{{ discount.startTime | date : 'short' }}</td>
+                <td>{{ discount.endTime| date : 'short' }}</td>
+                @if (discount.isDiscounted) {
+                <td>
+                    {{discount.discountRate}}%
+                </td>
+                }@else {
+                <td>
+                    {{discount.discountRate}}
+                </td>
+                }
+                @if (discount.isDiscounted) {
+                <td>
+                    เปอร์เซ็นต์
+                </td>
+                }
+                @else {
+                <td>
+                    โดยตรง
+                </td>
+                }
+                <td>
+                    <p-button icon="pi pi-pencil" [rounded]="true" [outlined]="true" severity="success"
+                        (onClick)="updateDiscountProduct(discount)" />
+                    <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [outlined]="true"
+                        (onClick)="deleteDiscount(discount)" />
+                </td>
+            </tr>
+
+        </ng-template>
+        <ng-template pTemplate="rowexpansion" let-discount>
+            <tr>
+                <td colspan="10">
+                    <div class="p-1">
+                        <p-table #pt2 [value]="discount.discountProduct" dataKey="productId"
+                            [(selection)]="selectedProducts" selectionMode="multiple">
+                            <ng-template pTemplate="header">
+            <tr>
+                <th style="width: 4rem">
+                    <p-tableHeaderCheckbox />
+                </th>
+                <th>ไอดีสินค้า</th>
+                <th pSortableColumn="productName">ชื่อสินค้า <p-sortIcon field="productName" /></th>
+                <th pSortableColumn="price">ราคาเต็ม <p-sortIcon field="price" /></th>
+                <th pSortableColumn="discountPrice">ราคาลดราคา <p-sortIcon field="discountPrice" /></th>
+                <th>รายละเอียด</th>
+                <th><p-button (onClick)="cancelProductDiscount(selectedProducts)" type="button" severity="warning"
+                        label="ยกเลิกลดราคา" [outlined]="true" /></th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-product>
+            <tr>
+                <td>
+                    <p-tableCheckbox [value]="product" />
+                </td>
+                <td>{{ product.productId }}</td>
+                <td>{{ product.productName }}</td>
+                <td>{{ product.price|currency:'฿' }}</td>
+                <td class="text-green-500">{{ product.discountPrice | currency:'฿' }}</td>
+                <td><p-button (onClick)="logInfo()" type="button" icon="pi pi-search" [outlined]="true" /></td>
+                <td><p-button icon="pi pi-replay" severity="warning" [rounded]="true" [outlined]="true"
+                        (onClick)="cancelProductDiscount([product])" /></td>
+
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="6">ยังไม่มีสินค้าที่ลดราคา</td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>
+</td>
+</tr>
+</ng-template>
+</p-table>
+</div>

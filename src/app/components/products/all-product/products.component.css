@@ -6,7 +6,10 @@
 ::ng-deep .small-calendar .p-datepicker-calendar th {
   padding: 0;
 }
-
+::ng-deep .p-dataview-header {
+  padding: 0;
+  padding-right: 12px;
+}
 ::ng-deep .p-timepicker {
   height: 70px;
   padding: 0;

@@ -1,10 +1,11 @@
 import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { catchError, throwError } from 'rxjs';
 import { AccountService, authKey } from '../shared/services/account.service';
 import { ComponentHelperService } from '../shared/services/component-helper.service';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { Location } from '@angular/common';
 
 export const errorInterceptor: HttpInterceptorFn = (req, next) => {
   const router = inject(Router);
@@ -12,12 +13,13 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
   const componentHelper = inject(ComponentHelperService);
   const jwtHelper = inject(JwtHelperService);
   const accessToken = localStorage.getItem(authKey.accessToken);
-
+  const location = inject(Location); // Inject Location @angular/common ดูดีๆมี 2 อัน
   return next(req).pipe(
     catchError((err: HttpErrorResponse) => {
       console.log(err);
       let message = '';
-
+      let currentUrl = router.routerState.snapshot.url;
+      console.log(router.url);
       if (err.status === 400) {
         if (router.url.startsWith('/account/register')) {
           message = getErrorMessage(err);
@@ -37,11 +39,19 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
           message = getErrorMessage(err);
         } else {
           message = err.error ? err.error.errors : err.message;
+
           componentHelper.setLoginVisible(true);
           accountService.notifyAuthChange(false);
-          router.navigate(['/forbidden'], {
-            queryParams: { returnUrl: router.url },
-          });
+          const currentUrl = location.path(true); // 'true' includes query params
+          const hasReturnUrl = currentUrl.includes('returnUrl');
+          //ตรงนี้ตรวจว่าขณะหมดสิทธิ์ มี returnUrl อยู่แล้วหรือยัง
+          if (!hasReturnUrl) {
+            router.navigate(['/forbidden'], {
+              queryParams: { returnUrl: router.url },
+            });
+          } else {
+            router.navigate(['/forbidden']);
+          }
         }
       }
 

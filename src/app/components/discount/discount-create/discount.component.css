@@ -1,0 +1,13 @@
+::ng-deep .p-datepicker-header,
+::ng-deep .small-calendar .p-datepicker-calendar td,
+::ng-deep .small-calendar .p-datepicker-calendar th {
+  padding: 0;
+}
+
+::ng-deep .p-timepicker {
+  height: 70px;
+  padding: 0;
+}
+::ng-deep .p-timepicker span {
+  font-size: 14px;
+}

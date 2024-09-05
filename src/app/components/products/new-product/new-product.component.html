@@ -82,8 +82,12 @@
                 <label class="text-red-500 font-italic mb-3">กรุณาตรวจดูจำนวนสินค้าอีกครั้ง</label>
                 <br>
                 }
-                <button pButton type="submit" label="สร้างสินค้า" [disabled]="productForm.invalid"
-                    [loading]="isProcessing" class="w-full md:w-4"></button>
+                <div class="field col-12 text-center flex justify-content-between">
+                    <button pButton type="button" (click)="cancel()" label="ย้อนกลับ" class="w-full md:w-4"
+                        severity="info"></button>
+                    <button pButton type="submit" label="สร้างสินค้า" [disabled]="productForm.invalid"
+                        [loading]="isProcessing" class="w-full md:w-4"></button>
+                </div>
             </div>
 
 

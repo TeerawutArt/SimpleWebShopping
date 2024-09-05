@@ -1,4 +1,4 @@
-import {
+/* import {
   ChangeDetectionStrategy,
   Component,
   OnInit,
@@ -51,11 +51,7 @@ import { ProductService } from '../../../shared/services/product.service';
 import { PagingDto } from '../../../shared/dtos/paging.dto';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ProductUpdateAvailableDto } from '../../../shared/dtos/product-update-available.dto';
-import {
-  DataView,
-  DataViewLayoutOptions,
-  DataViewModule,
-} from 'primeng/dataview';
+import { DataViewLayoutOptions, DataViewModule } from 'primeng/dataview';
 import { RatingModule } from 'primeng/rating';
 import { TagModule } from 'primeng/tag';
 @Component({
@@ -93,7 +89,6 @@ import { TagModule } from 'primeng/tag';
 })
 export class ProductsComponent implements OnInit {
   @ViewChild(FileUpload) fileUploadComponent!: FileUpload;
-  @ViewChild('dataView') dataView!: DataView;
   visible: boolean = false;
   loading: boolean = false;
 
@@ -118,7 +113,6 @@ export class ProductsComponent implements OnInit {
   isTotalAmountInvalid = false;
   isUserAuthenticated = false;
   returnUrl = '';
-  dataViewState!: DataView;
 
   sortField: string = '';
   // prettier-ignore
@@ -141,8 +135,10 @@ export class ProductsComponent implements OnInit {
         this.accountService.isUserInRole('Admin')
       ) {
         this.hasPermission = true;
+        this.getAllProduct();
       }
     });
+    this.loading = false;
     this.dateNow = new Date();
     this.minDate = new Date();
     this.updateProductForm = new FormGroup({
@@ -159,7 +155,7 @@ export class ProductsComponent implements OnInit {
     this.curDate = new Date();
     this.curDate.setFullYear(this.curDate.getFullYear() + 543); //แปลงเป็น พ.ศ ด้วย
     this.activePage = 0;
-
+    this.getAllProduct();
     this.menuItems = this.settingMenu();
   }
   settingMenu(): MenuItem[] {
@@ -182,13 +178,9 @@ export class ProductsComponent implements OnInit {
         label: labelText,
         icon: 'pi pi-stop-circle',
         command: () =>
-          this.changeProductAvailable(
-            this.curProduct.productId,
-            {
-              isAvailable: !this.curProduct.isAvailable,
-            },
-            this.dataViewState
-          ),
+          this.changeProductAvailable(this.curProduct.productId, {
+            isAvailable: !this.curProduct.isAvailable,
+          }),
       },
       {
         label: 'ลบ',
@@ -209,28 +201,9 @@ export class ProductsComponent implements OnInit {
       }
     );
   }
-  onDropDownClickSetup(product: ProductListDto, dv: DataView) {
-    this.curProduct = product;
-    this.dataViewState = dv;
-    console.log(this.dataViewState);
-  }
-
-  valueChange(dv: DataView) {
-    this.getAllProduct(dv);
-  }
-  onFilter(dv: DataView, event: any) {
-    if (
-      event.code === 'Enter' ||
-      (event.code === 'NumpadEnter' && this.keyword)
-    )
-      this.getAllProduct(dv);
-  }
-  getAllProduct(e: LazyLoadMeta) {
-    this.pageIndex = Math.floor(e.first! / e.rows!) + 1;
-    this.pageSize = e.rows!;
+  getAllProduct() {
     console.log(this.isUserAuthenticated);
     this.loading = true;
-
     this.productService
       .getAllProduct(
         this.manageProductMode,
@@ -275,8 +248,30 @@ export class ProductsComponent implements OnInit {
 
     this.pageIndex = Math.floor(product.first! / product.rows!) + 1;
     this.pageSize = product.rows!;
+    this.getAllProduct();
   }
+  search(product: any) {
+    if (
+      product.code === 'Enter' ||
+      (product.code === 'NumpadEnter' && this.keyword)
+    ) {
+      this.valueChange();
+    }
+  }
+  getSeverity(product: ProductListDto) {
+    switch (product.inventoryStatus) {
+      case 'INSTOCK':
+        return 'success';
+      case 'OUTOFSTOCK':
+        return 'danger';
 
+      default:
+        return null;
+    }
+  }
+  valueChange() {
+    this.getAllProduct();
+  }
   deleteProduct(item: ProductListDto) {
     this.confirmationService.confirm({
       message: 'คุณกำลังจะลบสินค้า ' + '"' + item.productName + '"',
@@ -295,6 +290,7 @@ export class ProductsComponent implements OnInit {
               severity: 'success',
               detail: 'สินค้า' + '"' + item.productName + '"' + ' ถูกลบแล้ว',
             });
+            this.getAllProduct();
           },
           error: (error: HttpErrorResponse) => {
             this.messageService.add({
@@ -334,11 +330,7 @@ export class ProductsComponent implements OnInit {
     return control?.hasError(errorName);
   }
 
-  changeProductAvailable(
-    id: string,
-    req: ProductUpdateAvailableDto,
-    dv: DataView
-  ) {
+  changeProductAvailable(id: string, req: ProductUpdateAvailableDto) {
     let messageConfirm = '';
     !req.isAvailable
       ? (messageConfirm = 'คุณกำลังจะปิดการขายสินค้า')
@@ -368,7 +360,8 @@ export class ProductsComponent implements OnInit {
                 detail: `สินค้า "${this.curProduct.productName} เปิดขายอีกครั้ง"`,
               });
             }
-            this.getAllProduct(dv);
+
+            this.getAllProduct();
           },
           error: (error: HttpErrorResponse) => {
             this.messageService.add({
@@ -390,3 +383,4 @@ export class ProductsComponent implements OnInit {
     });
   }
 }
+ */
