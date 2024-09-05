@@ -14,6 +14,7 @@ import { adminGuard } from './shared/guards/admin.guard';
 import { DiscountComponent } from './components/discount/discount-create/discount.component';
 import { DiscountListComponent } from './components/discount/discount-list/discount-list.component';
 import { DiscountUpdateComponent } from './components/discount/discount-update/discount-update.component';
+import { CartSelectProductComponent } from './components/cart/cart-select-product/cart-select-product.component';
 
 export const routes: Routes = [
   {
@@ -76,6 +77,11 @@ export const routes: Routes = [
         canActivate: [authGuard],
       },
     ],
+  },
+  {
+    path: 'cart',
+    title: 'ตะกร้าสินค้า',
+    component: CartSelectProductComponent,
   },
   {
     path: 'news',

@@ -72,7 +72,7 @@ export class AccountRegisterUserComponent implements OnInit {
   ) {}
   ngOnInit(): void {
     this.genders = ['ชาย', 'หญิง', 'อื่นๆ'];
-    this.prefixes = ['นาย', 'นางสาว', 'นาง'];
+    this.prefixes = ['นาย', 'นางสาว', 'นาง', '-'];
 
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
     this;

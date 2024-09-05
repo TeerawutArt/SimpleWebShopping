@@ -27,7 +27,8 @@ import { environment } from '../../../environments/environment.development';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ComponentHelperService } from '../../shared/services/component-helper.service';
 import { PasswordModule } from 'primeng/password';
-
+import { BadgeModule } from 'primeng/badge';
+import { CartService } from '../../shared/services/cart.service';
 @Component({
   selector: 'app-header',
   standalone: true,
@@ -41,6 +42,7 @@ import { PasswordModule } from 'primeng/password';
     FloatLabelModule,
     AvatarModule,
     PasswordModule,
+    BadgeModule,
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
@@ -56,6 +58,8 @@ export class HeaderComponent implements OnInit {
   advancedPermission = false;
   imgUserURL = '';
   rootImgUrl = environment.imageUrl;
+  productsInCart: number = 0;
+  isProductAddCart: boolean = false;
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -63,7 +67,7 @@ export class HeaderComponent implements OnInit {
     private messageService: MessageService,
     private confirm: ConfirmationService,
     private componentHelper: ComponentHelperService,
-    private cdr: ChangeDetectorRef
+    private cartService: CartService
   ) {
     accountService.authChanged.subscribe((res) => {
       this.isUserAuthenticated = res;
@@ -72,6 +76,7 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.upDateCart();
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
     this.accountService
       .isUserAuthenticated()
@@ -90,41 +95,43 @@ export class HeaderComponent implements OnInit {
     this.componentHelper.loginVisibleModal.subscribe((res) => {
       this.visible = res;
     });
+    this.cartService.cartChanged.subscribe((res) => {
+      this.isProductAddCart = res;
+      this.upDateCart();
+    });
   }
   navBar() {
     this.items = [];
-    this.items.push({ label: 'Home', routerLink: '/' });
+    this.items.push({ label: 'หน้าหลัก', routerLink: '/' });
     //
     if (this.isUserAuthenticated) {
       if (this.advancedPermission) {
         this.items.push({
-          label: 'Product',
+          label: 'สินค้า',
           items: [
             {
-              label: 'All',
+              label: 'รายการสินค้า',
               icon: PrimeIcons.LIST,
               routerLink: '/product/list',
             },
             {
-              label: 'New',
+              label: 'สร้างสินค้า',
               icon: PrimeIcons.PLUS,
               command: () => this.newProduct(),
             },
             {
-              label: 'จัดการ',
+              label: 'จัดการสินค้า',
               icon: PrimeIcons.PLUS,
               routerLink: '/product/manage',
             },
           ],
         });
-        this.items.push({ label: 'Discount', routerLink: 'discount/list' });
+        this.items.push({ label: 'การลดราคา', routerLink: 'discount/list' });
       } else {
-        this.items.push({ label: 'Product', routerLink: 'product/list' });
-        this.items.push({ label: 'News', routerLink: 'news' });
+        this.items.push({ label: 'รายการสินค้า', routerLink: 'product/list' });
       }
     } else {
-      this.items.push({ label: 'Product', routerLink: 'product/list' });
-      this.items.push({ label: 'News', routerLink: 'news' });
+      this.items.push({ label: 'รายการสินค้า', routerLink: 'product/list' });
     }
   }
   showLogin() {
@@ -135,6 +142,17 @@ export class HeaderComponent implements OnInit {
     this.returnUrl = this.router.url;
     this.router.navigate(['/product/new'], {
       queryParams: { returnUrl: this.returnUrl },
+    });
+  }
+  upDateCart() {
+    this.cartService.GetUserCart().subscribe({
+      next: (res) => {
+        console.log(res);
+        this.productsInCart = res.length;
+      },
+      error: (err: HttpErrorResponse) => {
+        console.log(err);
+      },
     });
   }
 

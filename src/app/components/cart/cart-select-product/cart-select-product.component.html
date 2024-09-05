@@ -1,0 +1,71 @@
+<div class="card m-7 grid">
+    <div class="table col-12 lg:col-8">
+
+        <p-table [value]="products" [(selection)]="selectedProducts" dataKey="productId"
+            (onEditComplete)="UpdateProductQuantityCart($event)" class="responsive-table">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th style="width: 1rem"><p-tableHeaderCheckbox /></th>
+                    <th style="width: 5rem"></th>
+                    <th>Name</th>
+                    <th></th>
+                    <th>ราคา</th>
+                    <th>จำนวน</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </ng-template>
+
+            <ng-template pTemplate="body" let-product let-editing="editing">
+                <tr class="responsive-row">
+                    <td>
+                        <p-tableCheckbox [value]=" product" />
+                    </td>
+                    <td>
+                        <img src="{{rootImgUrl}}/{{product.productImageURL}}" alt={{product.productName}} width="100" />
+                    </td>
+                    <td data-label="Name">{{product.productName}}</td>
+                    <td data-label="Description">{{product.description}}</td>
+                    <td data-label="Price">{{product.productPrice| currency: '฿'}}</td>
+                    <td [pEditableColumn]="product.quantity" pEditableColumnField="{{product.productId}}">
+                        <p-cellEditor>
+                            <ng-template pTemplate="input">
+                                <p-inputNumber [(ngModel)]="product.quantity" mode="decimal" inputId="withoutgrouping"
+                                    [useGrouping]="false" inputStyleClass="w-4rem" min="1" max="1000"
+                                    allowEmpty="false" />
+                            </ng-template>
+                            <ng-template pTemplate="output">
+
+                                {{ product.quantity }}
+                                <i class="pi pi-pencil" style="color: slateblue"></i>
+
+                            </ng-template>
+                        </p-cellEditor>
+                    </td>
+                    <td>
+                        <div class="w-full h-full">
+                            <p-button class="top-100" icon="pi pi-times" severity="danger" [rounded]="true"
+                                [text]="true" (onClick)="deleteProductInCart(product.productId)" />
+                        </div>
+
+                    </td>
+                </tr>
+
+            </ng-template>
+        </p-table>
+    </div>
+    <div class="card col-12 lg:col-4">
+        <p-panel header="Header">
+            <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
+                dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
+                ex
+                ea commodo
+                consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+                pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim
+                id
+                est laborum.
+            </p>
+        </p-panel>
+    </div>
+</div>

@@ -1,0 +1,32 @@
+/* Font size and padding for small screens (mobile) */
+@media screen and (max-width: 576px) {
+  .responsive-table th,
+  .responsive-table td,
+  .responsive-row,
+  .card p {
+    font-size: 12px;
+    padding: 4px 8px;
+  }
+}
+
+/* Font size and padding for medium screens (tablets) */
+@media screen and (min-width: 577px) and (max-width: 768px) {
+  .responsive-table th,
+  .responsive-table td,
+  .responsive-row,
+  .card p {
+    font-size: 14px;
+    padding: 6px 12px;
+  }
+}
+
+/* Font size and padding for large screens (desktops) */
+@media screen and (min-width: 769px) {
+  .responsive-table th,
+  .responsive-table td,
+  .responsive-row,
+  .card p {
+    font-size: 16px;
+    padding: 8px 16px;
+  }
+}

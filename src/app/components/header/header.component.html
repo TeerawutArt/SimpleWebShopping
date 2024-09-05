@@ -11,6 +11,10 @@
             <div class="flex flex-wrap align-items-center justify-content-center">
                 <p-avatar image="{{rootImgUrl}}/{{imgUserURL}}" shape="circle" class="mr-2" />
                 <span class="vertical-align-middle">{{userName}}</span>
+                <p-button [text]="true" severity="secondary" styleClass="ml-1 w-2 flex justify-content-center"
+                    routerLink="/cart">
+                    <i class="pi pi-shopping-cart text-xl" pBadge value="{{productsInCart}}" severity="success"></i>
+                </p-button>
                 <p-button label="Log out" [link]="true" (onClick)="logout()" />
             </div>
 

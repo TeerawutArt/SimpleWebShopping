@@ -58,6 +58,7 @@ import {
 } from 'primeng/dataview';
 import { RatingModule } from 'primeng/rating';
 import { TagModule } from 'primeng/tag';
+import { CartService } from '../../../shared/services/cart.service';
 @Component({
   selector: 'app-products',
   standalone: true,
@@ -129,7 +130,8 @@ export class ProductsComponent implements OnInit {
     private productService: ProductService,
     private confirmationService: ConfirmationService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private cartService:CartService
   ) {
   }
   ngOnInit(): void {
@@ -189,6 +191,11 @@ export class ProductsComponent implements OnInit {
             },
             this.dataViewState
           ),
+      },
+      {
+        label: 'ลดราคา',
+        icon: 'pi pi-dollar',
+        command: () => this.discountProduct([this.curProduct]),
       },
       {
         label: 'ลบ',
@@ -276,7 +283,55 @@ export class ProductsComponent implements OnInit {
     this.pageIndex = Math.floor(product.first! / product.rows!) + 1;
     this.pageSize = product.rows!;
   }
-
+  addProductToCart(product: ProductListDto) {
+    var req = { productId: product.productId, quantity: 1 };
+    this.messageService.clear();
+    this.cartService.AddProductCart(req).subscribe({
+      next: (_) => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'เพิ่มสินค้าเรียบร้อยแล้ว',
+          detail: `สินค้า ${product.productName} ถูกเพิ่มในตะกร้า`,
+        });
+        this.cartService.setUpdateCart(true);
+      },
+      error: () => {
+        this.messageService.add({
+          summary: 'Something Error',
+          severity: 'danger',
+          detail: 'something error',
+        });
+      },
+    });
+  }
+  discountProduct(selectedProduct: ProductListDto[]) {
+    this.messageService.clear();
+    const filterProductsNotDiscount = selectedProduct.filter(
+      (p) => p.isDiscounted == false
+    );
+    if (filterProductsNotDiscount.length === 0) {
+      this.messageService.add({
+        summary: 'ไม่สามารถลดราคาได้',
+        severity: 'warn',
+        detail:
+          'ลดราคาสินค้าที่ลดราคาอยู่แล้วไม่ได้<br>กรุณายกเลิกการลดราคาก่อน',
+        life: 5000,
+      });
+      return;
+    }
+    const discountProducts = filterProductsNotDiscount.map((p) => ({
+      productId: p.productId,
+      productImageURL: p.productImageURL,
+      productName: p.productName,
+      categories: p.categories,
+      price: p.price,
+    }));
+    this.returnUrl = this.router.url;
+    this.router.navigate(['/discount/products'], {
+      state: { saveProduct: discountProducts },
+      queryParams: { returnUrl: this.returnUrl },
+    });
+  }
   deleteProduct(item: ProductListDto) {
     this.confirmationService.confirm({
       message: 'คุณกำลังจะลบสินค้า ' + '"' + item.productName + '"',

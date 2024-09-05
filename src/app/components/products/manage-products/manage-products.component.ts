@@ -85,9 +85,9 @@ export class ManageProductsComponent implements OnInit {
   ngOnInit() {
     this.pageSizeSelected = [10, 25, 50];
     this.statuses = [
-      { label: 'INSTOCK', value: 'instock' },
-      { label: 'LOWSTOCK', value: 'lowstock' },
-      { label: 'OUTOFSTOCK', value: 'outofstock' },
+      { label: 'INSTOCK', value: 'มีสินค้า' },
+      { label: 'LOWSTOCK', value: 'สินค้าใกล้หมด' },
+      { label: 'OUTOFSTOCK', value: 'สินค้าหมด' },
     ];
   }
   newProduct() {
@@ -104,7 +104,21 @@ export class ManageProductsComponent implements OnInit {
     });
   }
   discountProduct(selectedProduct: ProductListDto[]) {
-    const discountProducts = selectedProduct.map((p) => ({
+    this.messageService.clear();
+    const filterProductsNotDiscount = selectedProduct.filter(
+      (p) => p.isDiscounted == false
+    );
+    if (filterProductsNotDiscount.length === 0) {
+      this.messageService.add({
+        summary: 'ไม่สามารถลดราคาได้',
+        severity: 'warn',
+        detail:
+          'ลดราคาสินค้าที่ลดราคาอยู่แล้วไม่ได้<br>กรุณายกเลิกการลดราคาก่อน',
+        life: 5000,
+      });
+      return;
+    }
+    const discountProducts = filterProductsNotDiscount.map((p) => ({
       productId: p.productId,
       productImageURL: p.productImageURL,
       productName: p.productName,
@@ -165,7 +179,8 @@ export class ManageProductsComponent implements OnInit {
             }else if(e.isDiscounted){
               e.inventoryStatus = 'ลดราคา';
             }else{
-              e.inventoryStatus = e.productTotalAmount > 0 ? 'INSTOCK' : 'OUTOFSTOCK';  
+              e.inventoryStatus =
+                e.productTotalAmount > 0 ? 'มีสินค้า' : 'สินค้าหมด';  
             }
             
 
@@ -229,11 +244,9 @@ export class ManageProductsComponent implements OnInit {
 
   getSeverity(status: string) {
     switch (status) {
-      case 'INSTOCK':
+      case 'มีสินค้า':
         return 'success';
-      case 'LOWSTOCK':
-        return 'warning';
-      case 'OUTOFSTOCK':
+      case 'สินค้าหมด':
         return 'danger';
       case 'ระงับการขาย':
         return 'danger';
