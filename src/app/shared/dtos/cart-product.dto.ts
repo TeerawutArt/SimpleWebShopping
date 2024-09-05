@@ -3,6 +3,8 @@ export interface CartProductDto {
   productImageURL: string;
   productName: string;
   description: string;
+  discountId: string;
   productPrice: number;
+  productDiscountPrice: number;
   quantity: number;
 }
