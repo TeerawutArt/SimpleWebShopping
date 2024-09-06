@@ -20,7 +20,7 @@
         (onLazyLoad)="getAllProduct($event)" [scrollable]="true" scrollHeight="600px"
         [tableStyle]="{ 'min-width': '75rem' }" [(selection)]="selectedProducts" [rowHover]="true" dataKey="productId"
         currentPageReportTemplate="รายการที่ {first} ถึง {last} จากทั้งหมด {totalRecords} รายการ"
-        [showCurrentPageReport]="true">
+        [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50]">
         <ng-template pTemplate="caption">
             <div class="flex align-items-center justify-content-between">
                 <h5 class="m-0 font-bold text-2xl ">การจัดการสินค้า</h5>
@@ -121,10 +121,9 @@
         </ng-template>
         <ng-template pTemplate="paginatorright">
 
-            <div class="card flex justify-content-center align-items-baseline">
-                <label class=" mt-2 mr-2 ">จำนวนรายการ</label>
-                <p-dropdown [options]="pageSizeSelected" [(ngModel)]="pageSize" placeholder="จำนวนรายการ" />
-            </div>
+
+
+
         </ng-template>
         <ng-template pTemplate="paginatorleft">
             <div>

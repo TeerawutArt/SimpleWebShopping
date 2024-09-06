@@ -75,6 +75,7 @@ export class AccountService {
 
     return false;
   }
+
   getUserInfo() {
     const token = localStorage.getItem(authKey.accessToken);
     if (token) {

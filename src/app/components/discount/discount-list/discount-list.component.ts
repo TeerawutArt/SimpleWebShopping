@@ -13,6 +13,7 @@ import { SplitButtonModule } from 'primeng/splitbutton';
 import { DiscountProductDetailDto } from '../../../shared/dtos/discount-product-detail';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DiscountProductCancelDto } from '../../../shared/dtos/discount-product-cancel';
+import { CardModule } from 'primeng/card';
 
 @Component({
   selector: 'app-discount-list',
@@ -25,6 +26,7 @@ import { DiscountProductCancelDto } from '../../../shared/dtos/discount-product-
     TagModule,
     CommonModule,
     SplitButtonModule,
+    CardModule,
   ],
   templateUrl: './discount-list.component.html',
   styleUrl: './discount-list.component.css',

@@ -94,4 +94,9 @@ export const routes: Routes = [
     component: ForbiddenComponent,
     canActivate: [isLoginGuard],
   },
+  {
+    path: '',
+    title: 'หน้าแรก',
+    component: ProductsComponent,
+  },
 ];

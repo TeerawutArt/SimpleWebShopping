@@ -13,6 +13,10 @@ import { InputTextModule } from 'primeng/inputtext';
 import { MessageService } from 'primeng/api';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { CartProductUpdateDto } from '../../../shared/dtos/cart-product-update.dto';
+import { ProfileService } from '../../../shared/services/profile.service';
+import { AccountAddressDto } from '../../../shared/dtos/account-address.dto';
+import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
+import { InputGroupModule } from 'primeng/inputgroup';
 
 @Component({
   selector: 'app-cart-select-product',
@@ -25,6 +29,8 @@ import { CartProductUpdateDto } from '../../../shared/dtos/cart-product-update.d
     ButtonModule,
     InputTextModule,
     InputNumberModule,
+    InputGroupModule,
+    InputGroupAddonModule,
   ],
   templateUrl: './cart-select-product.component.html',
   styleUrl: './cart-select-product.component.css',
@@ -35,14 +41,20 @@ export class CartSelectProductComponent implements OnInit {
   cloneProducts!: CartProductDto[]; //ไว้สำหรับตรวจเงื่อนไขเฉยๆ
   rootImgUrl = environment.imageUrl;
   selectedProducts!: CartProductDto[];
+  totalProductQuantity = 0;
+  transportPrice = 0;
+  totalPrice = 0;
+  netPrice = 0;
   productQuantity!: number;
-
+  defaultAddress!: AccountAddressDto;
   constructor(
     private cartService: CartService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private profileService: ProfileService
   ) {}
   ngOnInit(): void {
     this.getProductInCart();
+    this.getUserAddress();
   }
   getProductInCart() {
     this.loading = true;
@@ -52,12 +64,30 @@ export class CartSelectProductComponent implements OnInit {
         this.selectedProducts = res;
         this.cloneProducts = this.products.map((product) => ({ ...product })); //deep copy เพื่อไม่ให้ array ชี้ไปที่ mem เดียวกัน
         this.loading = false;
+        console.log(this.selectedProducts);
+        this.UpdateProductQuantity();
       },
       error: (err: HttpErrorResponse) => {
         console.log(err);
         this.loading = false;
       },
     });
+  }
+  UpdateProductQuantity() {
+    this.totalProductQuantity = 0;
+    this.transportPrice = 0;
+    this.totalPrice = 0;
+    this.netPrice = 0;
+    this.selectedProducts.forEach((p) => {
+      this.totalProductQuantity += p.quantity;
+      if (p.discountId) {
+        this.totalPrice += p.productDiscountPrice * p.quantity;
+      } else {
+        this.totalPrice += p.productPrice * p.quantity;
+      }
+      this.transportPrice += (p.productPrice * p.quantity) / 100; //มั่วสูตร
+    });
+    this.netPrice = this.totalPrice + this.transportPrice;
   }
 
   UpdateProductQuantityCart(event: any) {
@@ -84,6 +114,7 @@ export class CartSelectProductComponent implements OnInit {
               summary: 'แก้ไขเสร็จสิ้น',
               detail: 'แก้ไขจำนวนสินค้าแล้ว',
             });
+            this.UpdateProductQuantity();
             this.loading = false;
             //อัปเดท cloneProducts อ่านยากหน่อยใช้ ternary operator กับ spread (...)
             this.cloneProducts = this.cloneProducts.map((p) =>
@@ -110,6 +141,23 @@ export class CartSelectProductComponent implements OnInit {
         this.getProductInCart();
         this.cartService.setUpdateCart(true); //ส่งสัญญาณไปให้ตะกร้าใน header
         this.loading = false;
+      },
+      error: (err: HttpErrorResponse) => {
+        console.log(err);
+        this.loading = false;
+      },
+    });
+  }
+  //User Sections
+  getUserAddress() {
+    this.profileService.getUserAddress().subscribe({
+      next: (res) => {
+        const haveDefaultAddress = res.find((a) => a.isDefault);
+        if (haveDefaultAddress) {
+          this.defaultAddress = haveDefaultAddress;
+        } else {
+          this.defaultAddress = res[0];
+        }
       },
       error: (err: HttpErrorResponse) => {
         console.log(err);

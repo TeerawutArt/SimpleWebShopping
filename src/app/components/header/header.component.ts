@@ -148,7 +148,7 @@ export class HeaderComponent implements OnInit {
     this.cartService.GetUserCart().subscribe({
       next: (res) => {
         console.log(res);
-        this.productsInCart = res.length;
+        this.productsInCart = res?.length;
       },
       error: (err: HttpErrorResponse) => {
         console.log(err);
@@ -190,6 +190,7 @@ export class HeaderComponent implements OnInit {
         this.advancedPermission = this.advancePermission(userInfo?.role);
         this.accountService.notifyAuthChange(true);
         this.navBar();
+        this.upDateCart();
         this.imgUserURL = userInfo?.imgUrl;
         this.returnUrl =
           this.route.snapshot.queryParams['returnUrl'] || this.returnUrl;
