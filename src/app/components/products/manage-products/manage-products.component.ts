@@ -104,6 +104,7 @@ export class ManageProductsComponent implements OnInit {
     });
   }
   discountProduct(selectedProduct: ProductListDto[]) {
+    if (selectedProduct.length == 0) return;
     this.messageService.clear();
     const filterProductsNotDiscount = selectedProduct.filter(
       (p) => p.isDiscounted == false
@@ -319,7 +320,7 @@ export class ManageProductsComponent implements OnInit {
           })
           .subscribe({
             next: (_) => {
-              if (!product.isAvailable) {
+              if (product.isAvailable) {
                 this.messageService.add({
                   summary: 'ระงับสินค้าเรียบร้อยแล้ว',
                   severity: 'success',

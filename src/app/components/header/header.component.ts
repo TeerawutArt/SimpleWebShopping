@@ -49,7 +49,7 @@ import { CartService } from '../../shared/services/cart.service';
 })
 export class HeaderComponent implements OnInit {
   visible: boolean = false;
-  items: MenuItem[] | undefined;
+  productMenu: MenuItem[] | undefined;
   loginForm!: FormGroup;
   isProcessing = false;
   returnUrl = '';
@@ -101,12 +101,12 @@ export class HeaderComponent implements OnInit {
     });
   }
   navBar() {
-    this.items = [];
-    this.items.push({ label: 'หน้าหลัก', routerLink: '/' });
+    this.productMenu = [];
+    this.productMenu.push({ label: 'หน้าหลัก', routerLink: '/' });
     //
     if (this.isUserAuthenticated) {
       if (this.advancedPermission) {
-        this.items.push({
+        this.productMenu.push({
           label: 'สินค้า',
           items: [
             {
@@ -126,12 +126,30 @@ export class HeaderComponent implements OnInit {
             },
           ],
         });
-        this.items.push({ label: 'การลดราคา', routerLink: 'discount/list' });
+        this.productMenu.push({
+          label: 'การลดราคา',
+          items: [
+            {
+              label: 'จัดการสินค้าลดราคา',
+              routerLink: 'discount/list',
+            },
+            {
+              label: 'จัดการคูปอง',
+              routerLink: 'coupon/list',
+            },
+          ],
+        });
       } else {
-        this.items.push({ label: 'รายการสินค้า', routerLink: 'product/list' });
+        this.productMenu.push({
+          label: 'รายการสินค้า',
+          routerLink: 'product/list',
+        });
       }
     } else {
-      this.items.push({ label: 'รายการสินค้า', routerLink: 'product/list' });
+      this.productMenu.push({
+        label: 'รายการสินค้า',
+        routerLink: 'product/list',
+      });
     }
   }
   showLogin() {

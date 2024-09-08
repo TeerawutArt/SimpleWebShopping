@@ -15,6 +15,9 @@ import { DiscountComponent } from './components/discount/discount-create/discoun
 import { DiscountListComponent } from './components/discount/discount-list/discount-list.component';
 import { DiscountUpdateComponent } from './components/discount/discount-update/discount-update.component';
 import { CartSelectProductComponent } from './components/cart/cart-select-product/cart-select-product.component';
+import { CouponComponent } from './components/coupon/coupon-create/coupon.component';
+import { CouponListComponent } from './components/coupon/coupon-list/coupon-list.component';
+import { CouponUpdateComponent } from './components/coupon/coupon-update/coupon-update.component';
 
 export const routes: Routes = [
   {
@@ -74,6 +77,29 @@ export const routes: Routes = [
         path: ':id/update',
         title: 'แก้ไขลดราคาสินค้า',
         component: DiscountUpdateComponent,
+        canActivate: [authGuard],
+      },
+    ],
+  },
+  {
+    path: 'coupon',
+    children: [
+      {
+        path: 'list',
+        title: 'คูปอง',
+        component: CouponListComponent,
+        canActivate: [authGuard],
+      },
+      {
+        path: 'new',
+        title: 'สร้างคูปอง',
+        component: CouponComponent,
+        canActivate: [authGuard],
+      },
+      {
+        path: ':id/update',
+        title: 'แก้ไขคูปอง',
+        component: CouponUpdateComponent,
         canActivate: [authGuard],
       },
     ],

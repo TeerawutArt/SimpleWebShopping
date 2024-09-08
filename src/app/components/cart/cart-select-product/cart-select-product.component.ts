@@ -85,7 +85,7 @@ export class CartSelectProductComponent implements OnInit {
       } else {
         this.totalPrice += p.productPrice * p.quantity;
       }
-      this.transportPrice += (p.productPrice * p.quantity) / 100; //มั่วสูตร
+      this.transportPrice += Math.round((p.productPrice * p.quantity) / 100); //มั่วสูตร
     });
     this.netPrice = this.totalPrice + this.transportPrice;
   }
