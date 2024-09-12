@@ -44,8 +44,7 @@ export class DiscountListComponent implements OnInit {
     private discountService: DiscountService,
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
-    private router: Router,
-    private route: ActivatedRoute
+    private router: Router
   ) {}
   ngOnInit(): void {
     this.getDiscountList();

@@ -55,7 +55,6 @@ import { CouponCreateDto } from '../../../shared/dtos/coupon-create.dto';
     FormsModule,
     CheckboxModule,
     TooltipModule,
-    PickListModule, //ลง npm i @angular/cdk ด้วย
   ],
   templateUrl: './coupon.component.html',
   styleUrl: './coupon.component.css',
@@ -64,8 +63,8 @@ export class CouponComponent implements OnInit {
   constructor(
     private messageService: MessageService,
     private router: Router,
-    private customValidator: CustomValidatorService,
     private route: ActivatedRoute,
+    private customValidator: CustomValidatorService,
     private couponService: CouponService
   ) {}
 

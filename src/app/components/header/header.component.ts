@@ -139,6 +139,10 @@ export class HeaderComponent implements OnInit {
             },
           ],
         });
+        this.productMenu.push({
+          label: 'หมวดหมู่สินค้า',
+          routerLink: 'category/list',
+        });
       } else {
         this.productMenu.push({
           label: 'รายการสินค้า',

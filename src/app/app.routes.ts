@@ -18,6 +18,9 @@ import { CartSelectProductComponent } from './components/cart/cart-select-produc
 import { CouponComponent } from './components/coupon/coupon-create/coupon.component';
 import { CouponListComponent } from './components/coupon/coupon-list/coupon-list.component';
 import { CouponUpdateComponent } from './components/coupon/coupon-update/coupon-update.component';
+import { CategoryListComponent } from './components/categories/category-list/category-list.component';
+import { CategoryUpdateComponent } from './components/categories/category-update/category-update.component';
+import { CategoryCreateComponent } from './components/categories/category-create/category-create.component';
 
 export const routes: Routes = [
   {
@@ -100,6 +103,29 @@ export const routes: Routes = [
         path: ':id/update',
         title: 'แก้ไขคูปอง',
         component: CouponUpdateComponent,
+        canActivate: [authGuard],
+      },
+    ],
+  },
+  {
+    path: 'category',
+    children: [
+      {
+        path: 'list',
+        title: 'หมวดหมู่สินค้า',
+        component: CategoryListComponent,
+        canActivate: [authGuard],
+      },
+      {
+        path: 'new',
+        title: 'สร้างหมวดหมู่สินค้า',
+        component: CategoryCreateComponent,
+        canActivate: [authGuard],
+      },
+      {
+        path: ':id/update',
+        title: 'แก้ไขหมวดหมู่สินค้า',
+        component: CategoryUpdateComponent,
         canActivate: [authGuard],
       },
     ],

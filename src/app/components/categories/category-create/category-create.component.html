@@ -1,0 +1,43 @@
+<div class="card_container flex flex-wrap align-items-center justify-content-center mt-8">
+    <p-card class="static w-full md:w-8 lg:w-10 xl:w-8  ">
+        <ng-template pTemplate="header">
+            <div class="text-center text-2xl pt-3 ">
+                <span>สร้างหมวดหมู่สินค้า</span>
+            </div>
+        </ng-template>
+        <form [formGroup]="categoryForm" (ngSubmit)="createCategory()">
+            <div class="formGrid grid">
+                <div class="field col-12">
+                    <label class="text-red-500">*</label><label for="name">ชื่อหมวดหมู่สินค้า</label>
+                    <br>
+                    <input pInputText id="name" type="text" formControlName="name" required class="w-full" />
+                    @if (validateControl('name') && hasError('name', 'required')) {
+                    <small class="text-red-500 font-italic">กรุณากรอกชื่อหมวดหมู่สินค้า</small>
+                    }
+                </div>
+                <div class="field col-12">
+                    <label class="text-red-500">*</label><label for="codeName">ชื่อรหัส</label>
+                    <br>
+                    <input pInputText id="codeName" type="text" formControlName="codeName" required class="w-full" />
+                    @if (validateControl('codeName') && hasError('codeName', 'required')) {
+                    <small class="text-red-500 font-italic">กรุณากรอกชื่อย่อ</small>
+                    }
+                </div>
+                <div class="field col-12 ">
+                    <label for="description">รายละเอียด</label>
+                    <br>
+                    <textarea id="description" rows="5" cols="30" pInputTextarea formControlName="description"
+                        class="w-full"></textarea>
+                </div>
+                <div class="field col-12 text-center flex justify-content-between">
+                    <button pButton type="button" (click)="cancel()" label="ย้อนกลับ" class="w-full md:w-4"
+                        severity="info"></button>
+                    <button pButton type="submit" label="สร้างหมวดหมู่สินค้า" [disabled]="categoryForm.invalid"
+                        [loading]="loading" class="w-full md:w-4"></button>
+                </div>
+            </div>
+        </form>
+
+
+    </p-card>
+</div>

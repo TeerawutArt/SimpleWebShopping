@@ -56,6 +56,9 @@
                 <th style="min-width:5rem">
                     ราคาสินค้าต่ำสุด
                 </th>
+                <th style="min-width:5rem">
+                    วันหมดอายุ
+                </th>
 
                 <th style="min-width:5rem">
                     สถานะ
@@ -102,7 +105,9 @@
                 <td>
                     {{ coupon.minimumPrice | currency : '฿'}}
                 </td>
-
+                <td>
+                    {{coupon.endTime|date:'short'}}
+                </td>
                 <td>
                     <p-tag [value]="coupon.status" [severity]="getSeverity(coupon.status)" />
                 </td>

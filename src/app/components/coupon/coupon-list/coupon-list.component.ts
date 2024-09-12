@@ -53,7 +53,7 @@ import { CouponDto } from '../../../shared/dtos/coupon.dto';
 })
 export class CouponListComponent implements OnInit {
   couponDialog: boolean = false;
-
+  curDate!: Date;
   cols!: unknown[];
   coupons!: CouponDto[];
   returnUrl = '';
@@ -82,6 +82,7 @@ export class CouponListComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.curDate = new Date();
     this.pageSizeSelected = [10, 25, 50];
     this.statuses = [
       { label: 'INSTOCK', value: 'มีคูปอง' },
@@ -122,10 +123,11 @@ export class CouponListComponent implements OnInit {
         // prettier-ignore
         this.coupons.forEach((e) => {
             if(!e.isCouponAvailable){
-              e.status = "ระงับคูปอง"
-            }else{
-              e.status =
-                e.amount > 0 ? 'มีคูปอง' : 'คูปองหมด';  
+              e.status ="ระงับคูปอง";
+            }else if (new Date(e.endTime) <= this.curDate) {
+              e.status = 'หมดอายุ';
+            } else {
+              e.status = e.amount > 0 ? 'มีคูปอง' : 'คูปองหมด';
             }
                 console.log(res);
 

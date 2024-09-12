@@ -1,0 +1,87 @@
+<div class="card m-7">
+    <p-toolbar styleClass="mb-4 gap-2">
+        <ng-template pTemplate="left">
+            <p-button severity="success" label="สร้างหมวดหมู่" icon="pi pi-plus" class="mr-2"
+                (onClick)="newCategory()" />
+
+
+        </ng-template>
+
+        <ng-template pTemplate="right">
+            <p-button severity="danger" label="ลบหมวดหมู่ที่เลือก" icon="pi pi-trash"
+                [disabled]="!selectedCategory || !selectedCategory.length" (onClick)="deleteSelectCategory()" />
+        </ng-template>
+    </p-toolbar>
+
+    <p-table #pt [value]="categories" [rows]="pageSize" [lazy]="true" [totalRecords]="totalRecords" paginator="true"
+        (onLazyLoad)="getAllCategories($event)" [scrollable]="true" scrollHeight="600px"
+        [tableStyle]="{ 'min-width': '75rem' }" [(selection)]="selectedCategory" [rowHover]="true" dataKey="id"
+        currentPageReportTemplate="รายการที่ {first} ถึง {last} จากทั้งหมด {totalRecords} รายการ"
+        [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50]">
+        <ng-template pTemplate="caption">
+            <div class="flex align-items-center justify-content-between">
+                <h5 class="m-0 font-bold text-2xl ">การจัดการหมวดหมู่สินค้า</h5>
+                <span class="p-input-icon-left">
+                    <i class="pi pi-search"></i>
+                    <input pInputText type="text" [(ngModel)]="keyword" placeholder="ค้นหา..."
+                        (keyup)="onFilter(pt, $event)" />
+                </span>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+            <tr>
+                <th style="width: 4rem">
+                    <p-tableHeaderCheckbox />
+                </th>
+
+                <th style="min-width:10rem">
+                    ชื่อหมวดหมู่
+                </th>
+                <th style="max-width:5rem">
+                    ชื่อรหัส
+                </th>
+                <th>
+                    รายละเอียด
+                </th>
+                <th style="max-width:5rem">
+                    การจัดการ
+                </th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-category>
+            <tr>
+                <td>
+                    <p-tableCheckbox [value]="category" />
+                </td>
+
+                <td>
+                    {{ category.name }}
+                </td>
+                <td>
+                    {{ category.code }}
+                </td>
+                <td>
+                    {{ category.description }}
+                </td>
+                <td>
+                    <p-button icon="pi pi-pencil" [rounded]="true" [outlined]="true" severity="success"
+                        (onClick)="updateCategory(category)" />
+                    <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [outlined]="true"
+                        (onClick)="deleteCategory(category)" />
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="paginatorright">
+
+
+
+
+        </ng-template>
+        <ng-template pTemplate="paginatorleft">
+            <div>
+
+            </div>
+        </ng-template>
+    </p-table>
+
+</div>
