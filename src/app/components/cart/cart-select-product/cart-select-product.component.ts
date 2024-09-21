@@ -91,12 +91,10 @@ export class CartSelectProductComponent implements OnInit {
   }
 
   UpdateProductQuantityCart(event: any) {
-    this.loading = true;
     this.messageService.clear();
     const updatedProductId = event.field;
     const updateProductQuantity = event.data;
     console.log(this.cloneProducts);
-
     const req: CartProductUpdateDto = {
       quantity: event.data,
     };
@@ -105,15 +103,16 @@ export class CartSelectProductComponent implements OnInit {
     );
     if (selectedProduct?.quantity === updateProductQuantity) return; //ถ้าเท่าเดิมก็ไม่ต้อง fetch data
     if (typeof updateProductQuantity === 'number') {
+      this.loading = true;
       this.cartService
         .UpdateProductQuantityCart(updatedProductId, req)
         .subscribe({
           next: () => {
-            this.messageService.add({
+            /*             this.messageService.add({
               severity: 'success',
               summary: 'แก้ไขเสร็จสิ้น',
               detail: 'แก้ไขจำนวนสินค้าแล้ว',
-            });
+            }); */
             this.UpdateProductQuantity();
             this.loading = false;
             //อัปเดท cloneProducts อ่านยากหน่อยใช้ ternary operator กับ spread (...)
