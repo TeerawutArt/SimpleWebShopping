@@ -76,7 +76,9 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.upDateCart();
+    if (this.isUserAuthenticated) {
+      this.upDateCart();
+    }
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
     this.accountService
       .isUserAuthenticated()

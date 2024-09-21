@@ -292,6 +292,7 @@ export class ProductsComponent implements OnInit {
           severity: 'success',
           summary: 'เพิ่มสินค้าเรียบร้อยแล้ว',
           detail: `สินค้า ${product.productName} ถูกเพิ่มในตะกร้า`,
+          life: 1000,
         });
         this.cartService.setUpdateCart(true);
       },
