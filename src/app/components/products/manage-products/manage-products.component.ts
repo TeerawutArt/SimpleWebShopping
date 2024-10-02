@@ -23,6 +23,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { environment } from '../../../../environments/environment.development';
 import { ProductListDto } from '../../../shared/dtos/product-list.dto';
 import { ActivatedRoute, Router } from '@angular/router';
+import { CutTextPipe } from '../../../shared/pipe/cut-text.pipe';
 
 @Component({
   selector: 'app-manage-products',
@@ -48,6 +49,7 @@ import { ActivatedRoute, Router } from '@angular/router';
     InputTextModule,
     FormsModule,
     InputNumberModule,
+    CutTextPipe,
   ],
   providers: [MessageService, ConfirmationService, ProductService],
 })

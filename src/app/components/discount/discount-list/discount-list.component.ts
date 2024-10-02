@@ -14,6 +14,7 @@ import { DiscountProductDetailDto } from '../../../shared/dtos/discount-product-
 import { ActivatedRoute, Router } from '@angular/router';
 import { DiscountProductCancelDto } from '../../../shared/dtos/discount-product-cancel';
 import { CardModule } from 'primeng/card';
+import { CutTextPipe } from '../../../shared/pipe/cut-text.pipe';
 
 @Component({
   selector: 'app-discount-list',
@@ -27,6 +28,7 @@ import { CardModule } from 'primeng/card';
     CommonModule,
     SplitButtonModule,
     CardModule,
+    CutTextPipe,
   ],
   templateUrl: './discount-list.component.html',
   styleUrl: './discount-list.component.css',
@@ -179,9 +181,9 @@ export class DiscountListComponent implements OnInit {
       reject: () => {
         this.messageService.add({
           severity: 'error',
-          summary: 'ยกเลิก',
-          detail: 'ยกเลิกการลบสินค้า',
-          life: 3000,
+          summary: 'Cancel',
+          detail: 'ยกเลิก',
+          life: 1000,
         });
       },
     });

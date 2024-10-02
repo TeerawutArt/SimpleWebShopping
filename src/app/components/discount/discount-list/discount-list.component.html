@@ -90,7 +90,7 @@
                 <th pSortableColumn="price">ราคาเต็ม <p-sortIcon field="price" /></th>
                 <th pSortableColumn="discountPrice">ราคาลดราคา <p-sortIcon field="discountPrice" /></th>
                 <th>รายละเอียด</th>
-                <th><p-button (onClick)="cancelProductDiscount(selectedProducts)" type="button" severity="warning"
+                <th><p-button (onClick)="cancelProductDiscount(selectedProducts)" type="button" severity="danger"
                         label="ยกเลิกลดราคา" [outlined]="true" /></th>
             </tr>
         </ng-template>
@@ -100,11 +100,11 @@
                     <p-tableCheckbox [value]="product" />
                 </td>
                 <td>{{ product.productId }}</td>
-                <td>{{ product.productName }}</td>
+                <td>{{ product.productName|cutText:[50] }}</td>
                 <td>{{ product.price|currency:'฿' }}</td>
                 <td class="text-green-500">{{ product.discountPrice | currency:'฿' }}</td>
                 <td><p-button (onClick)="logInfo()" type="button" icon="pi pi-search" [outlined]="true" /></td>
-                <td><p-button icon="pi pi-replay" severity="warning" [rounded]="true" [outlined]="true"
+                <td><p-button icon="pi pi-stop" severity="danger" [rounded]="true" [outlined]="true"
                         (onClick)="cancelProductDiscount([product])" /></td>
 
             </tr>

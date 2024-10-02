@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -55,7 +55,7 @@ import { ActivatedRoute, Router } from '@angular/router';
   templateUrl: './new-product.component.html',
   styleUrl: './new-product.component.css',
 })
-export class NewProductComponent {
+export class NewProductComponent implements OnInit {
   @ViewChild(FileUpload) fileUploadComponent!: FileUpload;
   categoriesItem!: MenuItem[];
   productName: string = '';
@@ -138,11 +138,7 @@ export class NewProductComponent {
       this.isProductAmountInvalid = true;
     } else {
       // prettier-ignore
-      if(this.categoriesId.length>0) {
-              this.categoriesId = this.productForm
-                .get('categories')
-                ?.value.map((c: any) => c.id);
-      }
+      this.categoriesId = this.productForm.get('categories') ?.value.map((c: any) => c.id);
       this.productName = this.productForm.get('name')?.value;
       this.confirmationService.confirm({
         header: 'ยืนยันการสร้างสินค้า',

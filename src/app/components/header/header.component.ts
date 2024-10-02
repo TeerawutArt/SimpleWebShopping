@@ -75,23 +75,24 @@ export class HeaderComponent implements OnInit {
     });
   }
 
-  ngOnInit() {
-    if (this.isUserAuthenticated) {
+  async ngOnInit() {
+    this.loginForm = new FormGroup({
+      userName: new FormControl('', [Validators.required]),
+      password: new FormControl('', [Validators.required]),
+    });
+
+    if (await this.accountService.isUserAuthenticated()) {
       this.upDateCart();
+      this.accountService
+        .isUserAuthenticated()
+        .then((v) => (this.isUserAuthenticated = v));
     }
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
-    this.accountService
-      .isUserAuthenticated()
-      .then((v) => (this.isUserAuthenticated = v));
     this.advancedPermission = this.advancePermission(
       this.accountService.getUserInfo()?.role
     );
     this.imgUserURL = this.accountService.getUserInfo()?.imgUrl;
     this.navBar();
-    this.loginForm = new FormGroup({
-      userName: new FormControl('', [Validators.required]),
-      password: new FormControl('', [Validators.required]),
-    });
 
     this.userName = this.accountService.getUserInfo()?.userName;
     this.componentHelper.loginVisibleModal.subscribe((res) => {

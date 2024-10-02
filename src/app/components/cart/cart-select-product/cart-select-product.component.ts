@@ -17,6 +17,7 @@ import { ProfileService } from '../../../shared/services/profile.service';
 import { AccountAddressDto } from '../../../shared/dtos/account-address.dto';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { InputGroupModule } from 'primeng/inputgroup';
+import { CutTextPipe } from '../../../shared/pipe/cut-text.pipe';
 
 @Component({
   selector: 'app-cart-select-product',
@@ -31,6 +32,7 @@ import { InputGroupModule } from 'primeng/inputgroup';
     InputNumberModule,
     InputGroupModule,
     InputGroupAddonModule,
+    CutTextPipe,
   ],
   templateUrl: './cart-select-product.component.html',
   styleUrl: './cart-select-product.component.css',
@@ -64,7 +66,6 @@ export class CartSelectProductComponent implements OnInit {
         this.selectedProducts = res;
         this.cloneProducts = this.products.map((product) => ({ ...product })); //deep copy เพื่อไม่ให้ array ชี้ไปที่ mem เดียวกัน
         this.loading = false;
-        console.log(this.selectedProducts);
         this.UpdateProductQuantity();
       },
       error: (err: HttpErrorResponse) => {
@@ -78,6 +79,7 @@ export class CartSelectProductComponent implements OnInit {
     this.transportPrice = 0;
     this.totalPrice = 0;
     this.netPrice = 0;
+    console.log(this.selectedProducts);
     this.selectedProducts.forEach((p) => {
       this.totalProductQuantity += p.quantity;
       if (p.discountId) {
@@ -93,29 +95,66 @@ export class CartSelectProductComponent implements OnInit {
   UpdateProductQuantityCart(event: any) {
     this.messageService.clear();
     const updatedProductId = event.field;
-    const updateProductQuantity = event.data;
-    console.log(this.cloneProducts);
-    const req: CartProductUpdateDto = {
-      quantity: event.data,
-    };
+    let updateProductQuantity = event.data;
     const selectedProduct = this.cloneProducts.find(
       (p) => p.productId === updatedProductId
     );
-    if (selectedProduct?.quantity === updateProductQuantity) return; //ถ้าเท่าเดิมก็ไม่ต้อง fetch data
+    const req: CartProductUpdateDto = {
+      quantity:
+        event.data > selectedProduct!.productTotalAmount
+          ? selectedProduct?.productTotalAmount
+          : event.data,
+    };
+    if (
+      selectedProduct?.quantity === updateProductQuantity &&
+      updateProductQuantity < selectedProduct!.productTotalAmount
+    )
+      return; //ถ้าเท่าเดิมก็ไม่ต้อง fetch data
+    // prettier-ignore
+    this.products = this.products.map((p) => //ตรวจสอบสินค้าว่ามีพอไหม อ่านยากหน่อยใช้ ternary operator กับ spread (...)
+      p.productId === selectedProduct?.productId
+        ? {
+            ...p,
+            quantity:
+              updateProductQuantity > selectedProduct!.productTotalAmount
+                ? selectedProduct.productTotalAmount
+                : updateProductQuantity,
+          }
+        : p
+    );
+    if (updateProductQuantity > selectedProduct!.productTotalAmount) {
+      this.messageService.clear();
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'จำนวนสินค้าที่เลือกเกินสินค้าที่มีทั้งหมด',
+        detail: `${selectedProduct?.productName} มีสินค้าทั้งหมด ${selectedProduct?.productTotalAmount} ชิ้น`,
+        life: 3000,
+      });
+    }
+
     if (typeof updateProductQuantity === 'number') {
       this.loading = true;
       this.cartService
         .UpdateProductQuantityCart(updatedProductId, req)
         .subscribe({
           next: () => {
-            /*             this.messageService.add({
-              severity: 'success',
-              summary: 'แก้ไขเสร็จสิ้น',
-              detail: 'แก้ไขจำนวนสินค้าแล้ว',
-            }); */
+            //แก้ selectProducts บัค (ไม่ยอมอัปเดทค่าที่ได้รับในฟิล)
+            this.selectedProducts = this.selectedProducts.map((sp) =>
+              sp.productId === selectedProduct?.productId
+                ? {
+                    ...sp,
+                    quantity:
+                      updateProductQuantity >
+                      selectedProduct!.productTotalAmount
+                        ? selectedProduct.productTotalAmount
+                        : updateProductQuantity,
+                  }
+                : sp
+            );
+
             this.UpdateProductQuantity();
             this.loading = false;
-            //อัปเดท cloneProducts อ่านยากหน่อยใช้ ternary operator กับ spread (...)
+            //อัปเดท cloneProducts
             this.cloneProducts = this.cloneProducts.map((p) =>
               p.productId === updatedProductId
                 ? { ...p, quantity: updateProductQuantity }

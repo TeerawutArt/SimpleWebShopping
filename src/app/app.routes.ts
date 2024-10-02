@@ -21,6 +21,7 @@ import { CouponUpdateComponent } from './components/coupon/coupon-update/coupon-
 import { CategoryListComponent } from './components/categories/category-list/category-list.component';
 import { CategoryUpdateComponent } from './components/categories/category-update/category-update.component';
 import { CategoryCreateComponent } from './components/categories/category-create/category-create.component';
+import { UserProfileComponent } from './components/profile/user-profile/user-profile.component';
 
 export const routes: Routes = [
   {
@@ -30,6 +31,11 @@ export const routes: Routes = [
         path: 'register',
         title: 'Register',
         component: AccountRegisterUserComponent,
+      },
+      {
+        path: 'profile',
+        title: 'Profile',
+        component: UserProfileComponent,
       },
     ],
   },

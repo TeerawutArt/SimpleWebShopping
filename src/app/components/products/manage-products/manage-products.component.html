@@ -76,12 +76,12 @@
                     <img src="{{rootImgUrl}}/{{product.productImageURL}}" alt={{product.productName}} width="50"
                         class="shadow-4" />
                 </td>
-                <td>
-                    {{ product.productName }}
+                <td style="max-width:10rem">
+                    {{ product.productName|cutText:[50] }}
                 </td>
 
-                <td>
-                    {{ product.description }}
+                <td style="max-width:20rem">
+                    {{ product.description|cutText:[100] }}
                 </td>
                 @if (product.isDiscounted) {
                 <td class="text-green-500">

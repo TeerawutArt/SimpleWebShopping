@@ -6,5 +6,6 @@ export interface CartProductDto {
   discountId: string;
   productPrice: number;
   productDiscountPrice: number;
+  productTotalAmount: number;
   quantity: number;
 }

@@ -146,7 +146,7 @@
             <div class="grid grid-nogutter">
                 <div class="col-12 sm:col-6 md:col-4 lg:col-3 xl:col-2 p-2 align-items-stretch flex  flex-wrap"
                     *ngFor="let product of products">
-                    <div class="p-4 border-1 surface-border surface-card border-round flex flex-column">
+                    <div class="p-4 border-1 surface-border surface-card border-round flex flex-column ">
                         @if (isUserAuthenticated&&hasPermission&&manageProductMode) {
                         <div class="flex justify-content-end">
                             <!-- เซ็ตค่าตัวแปร เมื่อกดdropdown -->
@@ -170,14 +170,15 @@
                                 @else if (product.inventoryStatus=="OUTOFSTOCK") {
                                 <p-tag value="สินค้าหมด" severity=warning></p-tag>
                                 }
-                                <img class="border-round w-full" src="{{rootImgUrl}}/{{product.productImageURL}}"
-                                    alt={{product.name}} style="max-width: 300px;" />
+                                <img class="border-round w-full " src="{{rootImgUrl}}/{{product.productImageURL}}"
+                                    alt={{product.name}}
+                                    style=" min-height:200px; max-height:200px; max-width: 300px;" />
 
 
 
                             </div>
                         </div>
-                        <div class="pt-4">
+                        <div class="pt-4 bottom-100">
                             <div class="flex flex-row justify-content-between align-items-start gap-2">
                                 <div>
                                     @if (product.categories.length>0) {

@@ -1,0 +1,102 @@
+@if (loading) {
+<div class="m-8">
+    <!-- ถ้าเวลาเหลือจะมาไล่ใส่ loading ให้ทุก component  ตอนนี้เอาหน้าเปล่าไปก่อน-->
+</div>
+}@else {
+<div class=" align-items-center justify-content-center m-8">
+    <div class="grid ">
+        <div class="col-12 lg:col-4 bg-gray-100 ">
+            <div class="card flex justify-content-center">
+                <p-image src="{{rootImgUrl}}/{{profile.userImageURL}}" alt="Image" width="250" />
+            </div>
+            <div class="  text-center">
+                <label>{{profile.firstName}}&nbsp;&nbsp;{{profile.lastName}}</label>
+                <br>
+                <label>เพศ : {{profile.gender}}</label>
+                <br>
+                <label>อีเมล : {{profile.email}}</label>
+                <br>
+                <label>วันเกิด : {{profile.birthDate| date: 'วันที่ d MMMM yyyy'}}</label>
+                <br>
+                <label>เบอร์โทรศัพท์ : {{profile.phoneNumber}}</label>
+                <br>
+            </div>
+            @if (profile.addresses.length==0) {
+            <div class="text-center mt-5">
+                <label class="text-red-500">คุณยังไม่ได้เพิ่มที่อยู่ในการจัดส่งของ!</label>
+                <br>
+                <a [href]="'/account/forgotpassword?returnUrl=' + returnUrl">เพิ่มที่อยู่</a>
+            </div>
+
+            }
+            @else {
+            <div class="card flex justify-content-center mt-5">
+
+                <p-accordion [activeIndex]="0">
+                    <p-accordionTab header="Header I">
+                        <p>
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+                            incididunt ut
+                            labore et
+                            dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+                            laboris nisi
+                            ut
+                            aliquip
+                            ex ea commodo
+                            consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
+                            dolore eu
+                            fugiat nulla
+                            pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia
+                            deserunt
+                            mollit anim
+                            id est laborum.
+                        </p>
+                    </p-accordionTab>
+                    <p-accordionTab header="Header II">
+                        <p>
+                            Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium
+                            doloremque
+                            laudantium, totam
+                            rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae
+                            vitae
+                            dicta
+                            sunt
+                            explicabo. Nemo enim
+                            ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia
+                            consequuntur
+                            magni
+                            dolores
+                            eos qui ratione voluptatem sequi nesciunt. Consectetur, adipisci velit, sed quia non
+                            numquam
+                            eius modi.
+                        </p>
+                    </p-accordionTab>
+                    <p-accordionTab header="Header III">
+                        <p>
+                            At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis
+                            praesentium
+                            voluptatum
+                            deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati
+                            cupiditate
+                            non
+                            provident, similique sunt in culpa
+                            qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem
+                            rerum
+                            facilis est
+                            et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio
+                            cumque nihil
+                            impedit quo
+                            minus.
+                        </p>
+                    </p-accordionTab>
+                </p-accordion>
+            </div>
+            }
+        </div>
+
+        <div class="col-12 lg:col-8 bg-green-500">
+
+        </div>
+    </div>
+</div>
+}

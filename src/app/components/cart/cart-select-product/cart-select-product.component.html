@@ -10,7 +10,7 @@
                     <th style="width: 1rem"><p-tableHeaderCheckbox /></th>
                     <th style="width: 5rem"></th>
                     <th>Name</th>
-                    <th></th>
+                    <th>รายละเอียด</th>
                     <th>ราคา</th>
                     <th>จำนวน</th>
                     <th></th>
@@ -27,7 +27,7 @@
                         <img src="{{rootImgUrl}}/{{product.productImageURL}}" alt={{product.productName}} width="100" />
                     </td>
                     <td data-label="Name">{{product.productName}}</td>
-                    <td data-label="Description">{{product.description}}</td>
+                    <td data-label="Description">{{product.description|cutText:[100]}}</td>
                     @if (product.discountId) {
                     <td data-label="Price">
                         <label for="price" class="text-green-500">{{product.productDiscountPrice| currency:
@@ -51,6 +51,7 @@
 
                                 {{ product.quantity }}
                                 <i class="pi pi-pencil" style="color: slateblue"></i>
+
 
                             </ng-template>
                         </p-cellEditor>
