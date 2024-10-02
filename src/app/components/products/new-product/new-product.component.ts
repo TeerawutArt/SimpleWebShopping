@@ -138,7 +138,7 @@ export class NewProductComponent implements OnInit {
       this.isProductAmountInvalid = true;
     } else {
       // prettier-ignore
-      this.categoriesId = this.productForm.get('categories') ?.value.map((c: any) => c.id);
+      this.categoriesId =this.productForm.get('categories')?.value? this.productForm.get('categories') ?.value.map((c: any) => c.id):[]; //ternary
       this.productName = this.productForm.get('name')?.value;
       this.confirmationService.confirm({
         header: 'ยืนยันการสร้างสินค้า',
