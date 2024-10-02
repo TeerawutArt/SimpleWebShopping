@@ -1,10 +1,8 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment.development';
 import { HttpClient } from '@angular/common/http';
-import {
-  AccountAddressDto,
-  AccountProfileDto,
-} from '../dtos/account-address.dto';
+import { AccountAddressDto } from '../dtos/account-address.dto';
+import { AccountProfileDto } from '../dtos/account-profile.dto';
 
 @Injectable({
   providedIn: 'root',

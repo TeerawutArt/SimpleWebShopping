@@ -14,10 +14,10 @@ import { MessageService } from 'primeng/api';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { CartProductUpdateDto } from '../../../shared/dtos/cart-product-update.dto';
 import { ProfileService } from '../../../shared/services/profile.service';
-import { AccountAddressDto } from '../../../shared/dtos/account-address.dto';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { CutTextPipe } from '../../../shared/pipe/cut-text.pipe';
+import { AccountAddressDto } from '../../../shared/dtos/account-address.dto';
 
 @Component({
   selector: 'app-cart-select-product',

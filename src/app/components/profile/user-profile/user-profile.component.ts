@@ -2,10 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { ImageModule } from 'primeng/image';
 import { ProfileService } from '../../../shared/services/profile.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { AccountProfileDto } from '../../../shared/dtos/account-address.dto';
+
 import { AccordionModule } from 'primeng/accordion';
 import { environment } from '../../../../environments/environment.development';
 import { CommonModule } from '@angular/common';
+import { AccountProfileDto } from '../../../shared/dtos/account-profile.dto';
 
 @Component({
   selector: 'app-user-profile',
