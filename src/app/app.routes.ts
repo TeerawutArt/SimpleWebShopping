@@ -37,11 +37,13 @@ export const routes: Routes = [
         path: 'profile',
         title: 'Profile',
         component: UserProfileComponent,
+        canActivate: [authGuard],
       },
       {
         path: 'profile/address',
         title: 'Address',
         component: CreateAddressComponent,
+        canActivate: [authGuard],
       },
     ],
   },
