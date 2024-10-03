@@ -68,10 +68,9 @@ export class CouponUpdateComponent implements OnInit {
     private messageService: MessageService,
     private couponService: CouponService,
     private confirmationService: ConfirmationService,
-    private categoriesService: CategoryService /* private formBuilder: FormBuilder //ไว้ทำ category tag */,
     private router: Router,
-    private customValidator: CustomValidatorService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private customValidator: CustomValidatorService
   ) {}
   storedCoupon!: CouponDto;
   couponForm!: FormGroup;
@@ -105,8 +104,6 @@ export class CouponUpdateComponent implements OnInit {
       );
     // prettier-ignore
     if (this.storedCoupon) {
-      
-      console.log(this.storedCoupon)
       this.couponForm.get('name')?.setValue(this.storedCoupon.couponName)
       this.couponForm.get('description')?.setValue(this.storedCoupon.description);
       this.couponForm.get('couponRate')?.setValue(this.storedCoupon.discountRate);

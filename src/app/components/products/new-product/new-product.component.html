@@ -50,21 +50,6 @@
                     <p-multiSelect [options]="categoriesItem" formControlName="categories" optionLabel="name"
                         placeholder="แท็กสินค้า" />
                 </div>
-
-                <!-- เผื่อได้ใช้ 
-                    <div formArrayName="categories">
-                    <button type="button" (click)="addCategoryField()">Add Category</button>
-                    <div *ngFor="let category of categories.controls; let i = index">
-                        <div>
-                            <label for="category-{{i}}">Category</label>
-                            <input id="category-{{i}}" type="text" formControlName="{{i}}">
-                            <button type="button" (click)="removeCategoryField(i)">remove</button>
-                        </div>
-                    </div>
-                </div> -->
-
-
-
                 <div class="field col-12 ">
                     <label>รูปสินค้า</label>
                     <br>

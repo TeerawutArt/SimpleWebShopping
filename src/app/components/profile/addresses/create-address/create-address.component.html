@@ -1,0 +1,185 @@
+@if (!isProcessing&&thaiData.length>0) {
+<div class="card_container flex flex-wrap align-items-center justify-content-center mt-8">
+    <p-card class="static w-full md:w-10 lg:w-8 xl:w-6  ">
+        <ng-template pTemplate="header">
+            <div class="text-center text-2xl pt-3 ">
+                <span>ที่อยู่ในการส่งสินค้า</span>
+            </div>
+        </ng-template>
+        <form [formGroup]="AddressForm" (ngSubmit)="createAddress()">
+            <div class="formGrid grid">
+                <div class="field col-12">
+                    <label class="text-red-500">*</label><label for="addressName">ตั้งชื่อที่อยู่</label>
+                    <br>
+                    <input pInputText id="addressName" type="text" formControlName="addressName" required
+                        class="w-full" />
+                    @if (validateControl('addressName') && hasError('addressName', 'required')) {
+                    <small class="text-red-500 font-italic">กรุณาตั้งชื่อที่อยู่</small>
+                    }
+                </div>
+                <div class="field col-6 ">
+                    <label class="text-red-500">*</label><label for="receiverName">ชื่อผู้รับ</label>
+                    <br>
+                    <input pInputText id="receiverName" type="text" formControlName="receiverName" required
+                        class="w-full" />
+                    @if (validateControl('receiverName') && hasError('receiverName', 'required')) {
+                    <small class="text-red-500 font-italic">กรุณากรอกชื่อผู้รับ</small>
+                    }
+                </div>
+                <div class="field col-6  p-fluid">
+                    <label class="text-red-500">*</label>
+                    <label for="receiverPhoneNumber">เบอร์โทรศัพท์</label>
+                    <br>
+                    <input id="receiverPhoneNumber" type="text" pInputText formControlName="receiverPhoneNumber"
+                        required class="w-full" />
+                    @if (validateControl('receiverPhoneNumber') && hasError('receiverPhoneNumber', 'required')) {
+                    <small class="text-red-500 font-italic">กรุณากรอกเบอร์โทรศัพท์ </small>
+                    }
+                    @if (validateControl('receiverPhoneNumber') && hasError('receiverPhoneNumber', 'pattern')) {
+                    <small class="text-red-500 font-italic">กรุณากรอกตัวเลขเท่านั้น </small>
+                    }
+                </div>
+                <div class="field col-12 ">
+                    <label for="houseInfo">ที่อยู่</label>
+                    <br>
+                    <input pInputText id="houseInfo" type="text" formControlName="houseInfo" class="w-full" />
+
+                </div>
+                <div class="field col-4 ">
+                    <label for="roadAddress">ถนน</label>
+                    <br>
+                    <input pInputText id="roadAddress" type="text" formControlName="roadAddress" class="w-full" />
+                </div>
+                <div class="field col-4 ">
+                    <label for="alley">ซอย</label>
+                    <br>
+                    <input pInputText id="alley" type="text" formControlName="alley" class="w-full" />
+                </div>
+                <!-- Dropdown จังหวัด -->
+                <div class="field col-12 md:col-4">
+                    <label class="text-red-500">*</label><label for="">จังหวัด</label>
+                    <br>
+                    <p-dropdown [options]="thaiData" formControlName="selectedProvince" optionLabel="name_th"
+                        [filter]="true" filterBy="name_th" [showClear]="true" placeholder="กรุณาเลือกจังหวัด"
+                        emptyFilterMessage="ไม่พบจังหวัดที่ค้นหา" (onChange)="selectProvince($event)"
+                        (onClear)="onClearDropdownValue($event,'Province')" styleClass="w-full">
+                        <ng-template pTemplate="filter" let-options="options">
+                            <div class="flex gap-1">
+                                <div class="p-inputgroup" (click)="$event.stopPropagation()">
+
+                                    <input type="text" pInputText placeholder="ค้นหา"
+                                        formControlName="filterProvinceValue"
+                                        (keyup)="customFilterFunction($event, options)" />
+                                </div>
+                                <button pButton type="button" icon="pi pi-times"
+                                    (click)="resetFunction(options,'filterProvinceValue')"></button>
+                            </div>
+                        </ng-template>
+                        <ng-template pTemplate="selectedItem" let-selectedOption>
+                            <div class="flex align-items-center gap-2">
+                                <div>{{ selectedOption.name_th }}</div>
+                            </div>
+                        </ng-template>
+                        <ng-template let-province pTemplate="item">
+                            <div class="flex align-items-center gap-2">
+                                <div>{{ province.name_th }}</div>
+                            </div>
+                        </ng-template>
+                    </p-dropdown>
+                </div>
+
+                <!-- Dropdown อำเภอ -->
+                <div class="field col-12 md:col-4">
+                    <label class="text-red-500">*</label><label for="">อำเภอ</label>
+                    <br>
+                    <p-dropdown [options]="districtData" formControlName="selectedDistrict" optionLabel="name_th"
+                        emptyFilterMessage="ไม่พบอำเภอที่ค้นหา" [filter]="true" filterBy="name_th" [showClear]="true"
+                        emptyMessage="กรุณาเลือกจังหวัด" placeholder="กรุณาเลือกอำเภอ" styleClass="w-full"
+                        (onChange)="selectDistrict($event)" (onClear)="onClearDropdownValue($event,'District')">
+                        <ng-template pTemplate="filter" let-options="options">
+                            <div class="flex gap-1 ">
+                                <div class="p-inputgroup" (click)="$event.stopPropagation()">
+
+                                    <input type="text" pInputText placeholder="ค้นหา" formControlName="filterDistrict"
+                                        (keyup)="customFilterFunction($event, options)" />
+                                </div>
+                                <button pButton type="button" icon="pi pi-times"
+                                    (click)="resetFunction(options,'filterDistrict')"></button>
+                            </div>
+                        </ng-template>
+                        <ng-template pTemplate="selectedItem" let-selectedOption>
+                            <div class="flex align-items-center gap-2">
+                                <div>{{ selectedOption.name_th }}</div>
+                            </div>
+                        </ng-template>
+                        <ng-template let-province pTemplate="item">
+                            <div class="flex align-items-center gap-2">
+                                <div>{{ province.name_th }}</div>
+                            </div>
+                        </ng-template>
+                    </p-dropdown>
+                </div>
+                <!-- Dropdown ตำบล-->
+                <div class="field col-12 md:col-4">
+                    <label class="text-red-500">*</label><label for="">ตำบล</label>
+                    <br>
+                    <p-dropdown [options]="SubDistrictData" formControlName="selectedSubDistrict" optionLabel="name_th"
+                        emptyFilterMessage="ไม่พบตำบลที่ค้นหา" [filter]="true" filterBy="name_th" [showClear]="true"
+                        emptyMessage="กรุณาเลือกอำเภอ" placeholder="กรุณาเลือกตำบล" styleClass="w-full"
+                        (onChange)="selectSubDistrict($event)" (onClear)="onClearDropdownValue($event,'SubDistrict')">
+                        <ng-template pTemplate="filter" let-options="options">
+                            <div class="flex gap-1 ">
+                                <div class="p-inputgroup" (click)="$event.stopPropagation()">
+
+                                    <input type="text" pInputText placeholder="ค้นหา"
+                                        formControlName="filterSubDistrict"
+                                        (keyup)="customFilterFunction($event, options)" />
+                                </div>
+                                <button pButton type="button" icon="pi pi-times"
+                                    (click)="resetFunction(options,'filterSubDistrict')"></button>
+                            </div>
+                        </ng-template>
+                        <ng-template pTemplate="selectedItem" let-selectedOption>
+                            <div class="flex align-items-center gap-2">
+                                <div>{{ selectedOption.name_th }}</div>
+                            </div>
+                        </ng-template>
+                        <ng-template let-province pTemplate="item">
+                            <div class="flex align-items-center gap-2">
+                                <div>{{ province.name_th }}</div>
+                            </div>
+                        </ng-template>
+                    </p-dropdown>
+                </div>
+                <div class="field col-12 md:col-4">
+                    <label class="text-red-500">*</label><label for="zipCode">รหัสไปรษณีย์</label>
+                    <br>
+                    <input pInputText id="zipCode" type="text" formControlName="zipCode" required class="w-full" />
+                    @if (validateControl('zipCode') && hasError('zipCode', 'required')) {
+                    <small class="text-red-500 font-italic">กรุณากรอกรหัสไปรษณีย์</small>
+                    }
+                </div>
+            </div>
+            <!-- สิ้นสุด Dropdown -->
+
+            <div class="field col-12 text-center">
+                <div class="field col-12 text-center flex justify-content-between">
+                    <button pButton type="button" (click)="cancel()" label="ย้อนกลับ" class="w-full md:w-4"
+                        severity="info"></button>
+                    <button pButton type="submit" severity="success" label="สร้างที่อยู่"
+                        [disabled]="AddressForm.invalid" [loading]="isProcessing" class="w-full md:w-4"></button>
+                </div>
+            </div>
+
+
+        </form>
+
+
+    </p-card>
+</div>
+}
+@else {
+<div>
+    <!-- loading -->
+</div>
+}

@@ -172,7 +172,6 @@ export class HeaderComponent implements OnInit {
   upDateCart() {
     this.cartService.GetUserCart().subscribe({
       next: (res) => {
-        console.log(res);
         this.productsInCart = res?.length;
       },
       error: (err: HttpErrorResponse) => {

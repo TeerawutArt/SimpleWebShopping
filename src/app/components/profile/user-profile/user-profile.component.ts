@@ -7,6 +7,7 @@ import { AccordionModule } from 'primeng/accordion';
 import { environment } from '../../../../environments/environment.development';
 import { CommonModule } from '@angular/common';
 import { AccountProfileDto } from '../../../shared/dtos/account-profile.dto';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-user-profile',
@@ -20,9 +21,14 @@ export class UserProfileComponent implements OnInit {
   profile!: AccountProfileDto;
   rootImgUrl = environment.imageUrl;
   returnUrl = '';
-  constructor(private profileService: ProfileService) {}
+  constructor(
+    private profileService: ProfileService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {
+    this.returnUrl = this.router.url;
     this.loading = true;
     this.getProfile();
   }

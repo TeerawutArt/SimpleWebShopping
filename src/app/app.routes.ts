@@ -22,6 +22,7 @@ import { CategoryListComponent } from './components/categories/category-list/cat
 import { CategoryUpdateComponent } from './components/categories/category-update/category-update.component';
 import { CategoryCreateComponent } from './components/categories/category-create/category-create.component';
 import { UserProfileComponent } from './components/profile/user-profile/user-profile.component';
+import { CreateAddressComponent } from './components/profile/addresses/create-address/create-address.component';
 
 export const routes: Routes = [
   {
@@ -36,6 +37,11 @@ export const routes: Routes = [
         path: 'profile',
         title: 'Profile',
         component: UserProfileComponent,
+      },
+      {
+        path: 'profile/address',
+        title: 'Address',
+        component: CreateAddressComponent,
       },
     ],
   },

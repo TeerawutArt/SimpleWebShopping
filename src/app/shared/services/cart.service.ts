@@ -10,13 +10,13 @@ import { CartProductUpdateDto } from '../dtos/cart-product-update.dto';
   providedIn: 'root',
 })
 export class CartService {
+  constructor(private http: HttpClient) {}
   private isCartAddProduct = new Subject<boolean>();
   cartChanged = this.isCartAddProduct.asObservable();
 
   setUpdateCart(isAddProduct: boolean) {
     this.isCartAddProduct.next(isAddProduct);
   }
-  constructor(private http: HttpClient) {}
   AddProductCart(req: CartCreateDto) {
     let url = environment.apiBaseUrl + '/Carts';
     return this.http.post<unknown>(url, req);

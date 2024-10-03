@@ -23,9 +23,9 @@
             </div>
             @if (profile.addresses.length==0) {
             <div class="text-center mt-5">
-                <label class="text-red-500">คุณยังไม่ได้เพิ่มที่อยู่ในการจัดส่งของ!</label>
+                <label class="text-red-500">คุณยังไม่มีที่อยู่ในการจัดส่งของ!</label>
                 <br>
-                <a [href]="'/account/forgotpassword?returnUrl=' + returnUrl">เพิ่มที่อยู่</a>
+                <a [href]="'/account/profile/address?returnUrl=' + returnUrl">เพิ่มที่อยู่</a>
             </div>
 
             }
