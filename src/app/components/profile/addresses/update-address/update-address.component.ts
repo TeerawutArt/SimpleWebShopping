@@ -30,10 +30,11 @@ import {
   DropdownModule,
 } from 'primeng/dropdown';
 import { MenuItem, MessageService } from 'primeng/api';
-import { AccountCreateAddressDto } from '../../../../shared/dtos/account-create-address.dto';
+import { AccountUpdateAddressDto } from '../../../../shared/dtos/account-update-address.dto';
+import { AccountAddressDto } from '../../../../shared/dtos/account-address.dto';
 
 @Component({
-  selector: 'app-create-address',
+  selector: 'app-update-address',
   standalone: true,
   imports: [
     ReactiveFormsModule,
@@ -55,17 +56,21 @@ import { AccountCreateAddressDto } from '../../../../shared/dtos/account-create-
     TooltipModule,
     DropdownModule,
   ],
-  templateUrl: './create-address.component.html',
-  styleUrl: './create-address.component.css',
+  templateUrl: './update-address.component.html',
+  styleUrl: './update-address.component.css',
 })
-export class CreateAddressComponent implements OnInit {
+export class UpdateAddressComponent implements OnInit {
   isProcessing = false;
   AddressForm!: FormGroup;
   thaiData!: MenuItem[];
   returnUrl = '';
   districtData: Array<any> = [];
   SubDistrictData: Array<any> = [];
-
+  storeAddress!: AccountAddressDto;
+  splitText: Array<string> = [];
+  receiveProvince: any;
+  receiveDistrict: any;
+  receiveSubDistrict: any;
   constructor(
     private addressService: AddressService,
     private router: Router,
@@ -73,26 +78,28 @@ export class CreateAddressComponent implements OnInit {
     private messageService: MessageService
   ) {}
   ngOnInit(): void {
-    this.getThaiProvinceData();
+    this.storeAddress = window.history.state['saveProduct']; //ทำไมต้องใช้ชื่อซ้ำกัน เพราะว่า อยากให้มันทับๆกันไป ไม่สร้างขึ้นมาเรื่อยๆ
+    this.splitText = this.storeAddress.addressInfo.split(' '); //ใช้แบบนี้หละง่ายดี
     this.isProcessing = true;
     this.AddressForm = new FormGroup({
-      addressName: new FormControl(''),
-      receiverName: new FormControl(''),
-      receiverPhoneNumber: new FormControl('', [
-        Validators.required,
-        Validators.pattern('^[0-9]*$'),
-      ]),
-      houseInfo: new FormControl(''),
-      roadAddress: new FormControl(''),
-      alley: new FormControl(''),
+      addressName: new FormControl(this.storeAddress.addressName),
+      receiverName: new FormControl(this.storeAddress.receiverName),
+      receiverPhoneNumber: new FormControl(
+        this.storeAddress.receiverPhoneNumber,
+        [Validators.required, Validators.pattern('^[0-9]*$')]
+      ),
+      houseInfo: new FormControl(this.splitText[0]),
+      roadAddress: new FormControl(this.splitText[2]),
+      alley: new FormControl(this.splitText[4]),
       selectedProvince: new FormControl('', [Validators.required]),
       filterProvinceValue: new FormControl(''),
       selectedDistrict: new FormControl('', [Validators.required]),
       filterDistrict: new FormControl(''),
       selectedSubDistrict: new FormControl('', [Validators.required]),
       filterSubDistrict: new FormControl(''),
-      zipCode: new FormControl('', [Validators.required]),
+      zipCode: new FormControl(this.splitText[12], [Validators.required]),
     });
+    this.getThaiProvinceData();
   }
 
   validateControl(controlName: string) {
@@ -117,10 +124,31 @@ export class CreateAddressComponent implements OnInit {
   customFilterFunction(event: KeyboardEvent, options: DropdownFilterOptions) {
     options.filter!(event);
   }
+  updateForm() {
+    this.AddressForm.get('selectedProvince')?.setValue(this.receiveProvince[0]);
+    this.AddressForm.get('selectedDistrict')?.setValue(this.receiveDistrict[0]);
+    // prettier-ignore
+    this.AddressForm.get('selectedSubDistrict')?.setValue(this.receiveSubDistrict[0]);
+  }
   getThaiProvinceData() {
     this.addressService.getThaiProvinceData().subscribe({
       next: (res) => {
         this.thaiData = res;
+        //อ่านยากมาก อย่าหาทำ  (ควรเขียนตัวแปรมาเก็บดีๆ)
+        this.receiveProvince = this.thaiData.filter(
+          (v: any) => v.name_th == this.splitText[6]
+        );
+        this.districtData = this.receiveProvince[0].amphure;
+        this.receiveDistrict = this.receiveProvince[0].amphure.filter(
+          (v: any) => v.name_th == this.splitText[8]
+        );
+        this.SubDistrictData = this.receiveDistrict[0].tambon;
+        this.receiveSubDistrict = this.receiveDistrict[0].tambon.filter(
+          (v: any) => v.name_th == this.splitText[10]
+        );
+        this.updateForm();
+        //โค้ดด้านบนนี้ คือเซ็ตตัวแปรเข้าไปในฟิล dropdown//
+
         this.isProcessing = false;
       },
       error: (error: HttpErrorResponse) => {
@@ -129,6 +157,7 @@ export class CreateAddressComponent implements OnInit {
     });
   }
   selectProvince(event: DropdownChangeEvent) {
+    console.log(event.value);
     if (event.value) {
       this.districtData = event.value.amphure; //เก็บค่าอำเภอ จากจังหวัดที่เลือก
     } else {
@@ -161,7 +190,7 @@ export class CreateAddressComponent implements OnInit {
     }
     this.AddressForm.get('zipCode')?.setValue('');
   }
-  createAddress() {
+  updateAddress() {
     this.AddressForm.disable();
     this.messageService.clear();
     this.isProcessing = true;
@@ -176,7 +205,7 @@ export class CreateAddressComponent implements OnInit {
     const subDistrict = this.AddressForm.get('selectedSubDistrict')?.value.name_th
       ? this.AddressForm.get('selectedSubDistrict')?.value.name_th
       : ' ';
-    const req: AccountCreateAddressDto = {
+    const req: AccountUpdateAddressDto = {
       addressName: this.AddressForm.get('addressName')?.value,
       receiverName: this.AddressForm.get('receiverName')?.value,
       receiverPhoneNumber: this.AddressForm.get('receiverPhoneNumber')?.value,
@@ -188,29 +217,31 @@ export class CreateAddressComponent implements OnInit {
         this.AddressForm.get('zipCode')?.value
       }`,
     };
-    this.addressService.createAddress(req).subscribe({
-      next: (res) => {
-        this.messageService.add({
-          severity: 'success',
-          summary: 'ทำรายการสำเร็จ',
-          detail: 'สร้างที่อยู่เรียบร้อยแล้ว',
-        });
-        setTimeout(() => {
-          this.isProcessing = false;
+    this.addressService
+      .updateAddress(this.storeAddress.addressId, req)
+      .subscribe({
+        next: (res) => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'ทำรายการสำเร็จ',
+            detail: 'แก้ไขที่อยู่เรียบร้อยแล้ว',
+          });
+          setTimeout(() => {
+            this.isProcessing = false;
+            this.AddressForm.enable();
+            this.router.navigate(['/account/profile']);
+          }, 500);
+        },
+        error: (err: HttpErrorResponse) => {
           this.AddressForm.enable();
-          this.router.navigate(['/account/profile']);
-        }, 500);
-      },
-      error: (err: HttpErrorResponse) => {
-        this.AddressForm.enable();
-        this.messageService.add({
-          severity: 'error',
-          summary: 'ทำรายการไม่สำเร็จ',
-          detail: err.message,
-          sticky: true,
-        });
-        this.isProcessing = false;
-      },
-    });
+          this.messageService.add({
+            severity: 'error',
+            summary: 'ทำรายการไม่สำเร็จ',
+            detail: err.message,
+            sticky: true,
+          });
+          this.isProcessing = false;
+        },
+      });
   }
 }

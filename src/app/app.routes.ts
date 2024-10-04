@@ -23,6 +23,7 @@ import { CategoryUpdateComponent } from './components/categories/category-update
 import { CategoryCreateComponent } from './components/categories/category-create/category-create.component';
 import { UserProfileComponent } from './components/profile/user-profile/user-profile.component';
 import { CreateAddressComponent } from './components/profile/addresses/create-address/create-address.component';
+import { UpdateAddressComponent } from './components/profile/addresses/update-address/update-address.component';
 
 export const routes: Routes = [
   {
@@ -43,6 +44,12 @@ export const routes: Routes = [
         path: 'profile/address',
         title: 'Address',
         component: CreateAddressComponent,
+        canActivate: [authGuard],
+      },
+      {
+        path: 'profile/address/:id/update',
+        title: 'updateAddress',
+        component: UpdateAddressComponent,
         canActivate: [authGuard],
       },
     ],
