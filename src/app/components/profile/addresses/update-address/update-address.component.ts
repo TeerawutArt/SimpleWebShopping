@@ -71,6 +71,10 @@ export class UpdateAddressComponent implements OnInit {
   receiveProvince: any;
   receiveDistrict: any;
   receiveSubDistrict: any;
+  houseInfoIndex = 0;
+  roadAddressIndex = 0;
+  alleyIndex = 0;
+  zipCodeIndex = 0;
   constructor(
     private addressService: AddressService,
     private router: Router,
@@ -79,8 +83,16 @@ export class UpdateAddressComponent implements OnInit {
   ) {}
   ngOnInit(): void {
     this.storeAddress = window.history.state['saveProduct']; //ทำไมต้องใช้ชื่อซ้ำกัน เพราะว่า อยากให้มันทับๆกันไป ไม่สร้างขึ้นมาเรื่อยๆ
+    console.log(this.storeAddress);
     this.splitText = this.storeAddress.addressInfo.split(' '); //ใช้แบบนี้หละง่ายดี
+    //หา index ของ ข้อความที่ split ออกมา
     this.isProcessing = true;
+    this.houseInfoIndex = 0;
+    this.roadAddressIndex = this.splitText.findIndex((t) => t == 'ถนน:') + 1;
+    this.alleyIndex = this.splitText.findIndex((t) => t == 'ซอย:') + 1;
+    this.zipCodeIndex =
+      this.splitText.findIndex((t) => t == 'รหัสไปรษณีย์:') + 1;
+    //////////////////
     this.AddressForm = new FormGroup({
       addressName: new FormControl(this.storeAddress.addressName),
       receiverName: new FormControl(this.storeAddress.receiverName),
@@ -88,16 +100,17 @@ export class UpdateAddressComponent implements OnInit {
         this.storeAddress.receiverPhoneNumber,
         [Validators.required, Validators.pattern('^[0-9]*$')]
       ),
-      houseInfo: new FormControl(this.splitText[0]),
-      roadAddress: new FormControl(this.splitText[2]),
-      alley: new FormControl(this.splitText[4]),
+      houseInfo: new FormControl(this.splitText[this.houseInfoIndex]),
+      roadAddress: new FormControl(this.splitText[this.roadAddressIndex]),
+      alley: new FormControl(this.splitText[this.alleyIndex]),
       selectedProvince: new FormControl('', [Validators.required]),
       filterProvinceValue: new FormControl(''),
       selectedDistrict: new FormControl('', [Validators.required]),
       filterDistrict: new FormControl(''),
       selectedSubDistrict: new FormControl('', [Validators.required]),
       filterSubDistrict: new FormControl(''),
-      zipCode: new FormControl(this.splitText[12], [Validators.required]),
+      // prettier-ignore
+      zipCode: new FormControl(this.splitText[this.zipCodeIndex], [Validators.required,]),
     });
     this.getThaiProvinceData();
   }
@@ -134,17 +147,23 @@ export class UpdateAddressComponent implements OnInit {
     this.addressService.getThaiProvinceData().subscribe({
       next: (res) => {
         this.thaiData = res;
-        //อ่านยากมาก อย่าหาทำ  (ควรเขียนตัวแปรมาเก็บดีๆ)
+        //อัปเดท dropdown
+        const provinceIndex =
+          this.splitText.findIndex((t) => t == 'จังหวัด:') + 1;
+        const districtIndex =
+          this.splitText.findIndex((t) => t == 'อำเภอ:') + 1;
+        const subDistrictIndex =
+          this.splitText.findIndex((t) => t == 'ตำบล:') + 1;
         this.receiveProvince = this.thaiData.filter(
-          (v: any) => v.name_th == this.splitText[6]
+          (v: any) => v.name_th == this.splitText[provinceIndex]
         );
         this.districtData = this.receiveProvince[0].amphure;
         this.receiveDistrict = this.receiveProvince[0].amphure.filter(
-          (v: any) => v.name_th == this.splitText[8]
+          (v: any) => v.name_th == this.splitText[districtIndex]
         );
         this.SubDistrictData = this.receiveDistrict[0].tambon;
         this.receiveSubDistrict = this.receiveDistrict[0].tambon.filter(
-          (v: any) => v.name_th == this.splitText[10]
+          (v: any) => v.name_th == this.splitText[subDistrictIndex]
         );
         this.updateForm();
         //โค้ดด้านบนนี้ คือเซ็ตตัวแปรเข้าไปในฟิล dropdown//
