@@ -40,7 +40,7 @@ export const appConfig: ApplicationConfig = {
     ),
     provideAnimationsAsync(),
 
-    provideZoneChangeDetection({ eventCoalescing: true }), //รวมหลาย product ที่เกิดใกล้เคียงกันแล้วจึงทำงานรอบเดียว
+    provideZoneChangeDetection({ eventCoalescing: true }), //รวมหลาย event ที่เกิดใกล้เคียงกันแล้วจึงทำงานรอบเดียว
     provideRouter(routes),
     { provide: TitleStrategy, useClass: PageTitleStrategy },
   ],

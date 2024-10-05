@@ -99,7 +99,10 @@ export class UpdateProductComponent implements OnInit {
       ?.setValue(this.storedProduct.productTotalAmount);
     this.productForm.get('productPrice')?.setValue(this.storedProduct.price);
     // prettier-ignore
-    this.productForm.get('selectedCategories')?.setValue(this.storedProduct.categories);
+    console.log(this.storedProduct.categories);
+    this.productForm
+      .get('selectedCategories')
+      ?.setValue(this.storedProduct.categories);
   }
 
   validateControl(controlName: string) {

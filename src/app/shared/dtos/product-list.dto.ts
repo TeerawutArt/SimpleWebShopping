@@ -1,3 +1,5 @@
+import { CategoriesListDto } from './categories-list.dto';
+
 export interface ProductListDto {
   productId: string;
   productImageURL: string;
@@ -18,6 +20,6 @@ export interface ProductListDto {
   isDiscountPercent: boolean;
   discountRate: number;
   discountPrice: number;
-  categories: Array<string>;
+  categories: Array<CategoriesListDto>;
   inventoryStatus: string;
 }
