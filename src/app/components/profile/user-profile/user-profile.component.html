@@ -81,7 +81,7 @@
                 </p-accordion>
             </div>
             }
-            @if (profile.addresses.length>0 &&profile.addresses.length<=3) { <div class="text-center">
+            @if (profile.addresses.length>0 &&profile.addresses.length < 3) { <div class="text-center">
                 <a [href]="'/account/profile/address?returnUrl=' + returnUrl">เพิ่มที่อยู่</a>
         </div>
         }
