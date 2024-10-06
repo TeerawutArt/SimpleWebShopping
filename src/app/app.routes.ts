@@ -24,6 +24,7 @@ import { CategoryCreateComponent } from './components/categories/category-create
 import { UserProfileComponent } from './components/profile/user-profile/user-profile.component';
 import { CreateAddressComponent } from './components/profile/addresses/create-address/create-address.component';
 import { UpdateAddressComponent } from './components/profile/addresses/update-address/update-address.component';
+import { ConfirmOrderComponent } from './components/order/confirm-order/confirm-order.component';
 
 export const routes: Routes = [
   {
@@ -155,6 +156,12 @@ export const routes: Routes = [
     path: 'cart',
     title: 'ตะกร้าสินค้า',
     component: CartSelectProductComponent,
+  },
+  {
+    path: 'order/:id',
+    title: 'คำสั่งซื้อสินค้า',
+    component: ConfirmOrderComponent,
+    canActivate: [authGuard],
   },
   {
     path: 'news',

@@ -32,6 +32,7 @@ import {
 import { MenuItem, MessageService } from 'primeng/api';
 import { AccountUpdateAddressDto } from '../../../../shared/dtos/account-update-address.dto';
 import { AccountAddressDto } from '../../../../shared/dtos/account-address.dto';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
   selector: 'app-update-address',
@@ -55,6 +56,7 @@ import { AccountAddressDto } from '../../../../shared/dtos/account-address.dto';
     CheckboxModule,
     TooltipModule,
     DropdownModule,
+    ProgressSpinnerModule,
   ],
   templateUrl: './update-address.component.html',
   styleUrl: './update-address.component.css',
@@ -82,11 +84,11 @@ export class UpdateAddressComponent implements OnInit {
     private messageService: MessageService
   ) {}
   ngOnInit(): void {
+    this.isProcessing = true;
     this.storeAddress = window.history.state['saveProduct']; //ทำไมต้องใช้ชื่อซ้ำกัน เพราะว่า อยากให้มันทับๆกันไป ไม่สร้างขึ้นมาเรื่อยๆ
     console.log(this.storeAddress);
     this.splitText = this.storeAddress.addressInfo.split(' '); //ใช้แบบนี้หละง่ายดี
     //หา index ของ ข้อความที่ split ออกมา
-    this.isProcessing = true;
     this.houseInfoIndex = 0;
     this.roadAddressIndex = this.splitText.findIndex((t) => t == 'ถนน:') + 1;
     this.alleyIndex = this.splitText.findIndex((t) => t == 'ซอย:') + 1;

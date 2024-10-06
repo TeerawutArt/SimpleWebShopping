@@ -33,4 +33,8 @@ export class CartService {
     let url = environment.apiBaseUrl + '/Carts/CartItem/product/' + id;
     return this.http.put<unknown>(url, req);
   }
+  removeAllProduct() {
+    let url = environment.apiBaseUrl + '/Carts/CartItem/Clear';
+    return this.http.delete<unknown>(url);
+  }
 }

@@ -18,6 +18,11 @@ import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { CutTextPipe } from '../../../shared/pipe/cut-text.pipe';
 import { AccountAddressDto } from '../../../shared/dtos/account-address.dto';
+import { OrderService } from '../../../shared/services/order.service';
+import { OrderCreatedDto } from '../../../shared/dtos/order-created.dto';
+import { Router } from '@angular/router';
+import { CardModule } from 'primeng/card';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
   selector: 'app-cart-select-product',
@@ -33,6 +38,8 @@ import { AccountAddressDto } from '../../../shared/dtos/account-address.dto';
     InputGroupModule,
     InputGroupAddonModule,
     CutTextPipe,
+    CardModule,
+    ProgressSpinnerModule,
   ],
   templateUrl: './cart-select-product.component.html',
   styleUrl: './cart-select-product.component.css',
@@ -47,21 +54,29 @@ export class CartSelectProductComponent implements OnInit {
   transportPrice = 0;
   totalPrice = 0;
   netPrice = 0;
+  HaveItemInCart = true;
   productQuantity!: number;
   defaultAddress!: AccountAddressDto;
   constructor(
     private cartService: CartService,
     private messageService: MessageService,
-    private profileService: ProfileService
+    private profileService: ProfileService,
+    private orderService: OrderService,
+    private router: Router
   ) {}
   ngOnInit(): void {
     this.getProductInCart();
-    this.getUserAddress();
   }
   getProductInCart() {
     this.loading = true;
     this.cartService.GetUserCart().subscribe({
       next: (res) => {
+        console.log(res);
+        if (res.length == 0) {
+          this.loading = false;
+          this.HaveItemInCart = false;
+          return;
+        }
         this.products = res;
         this.selectedProducts = res;
         this.cloneProducts = this.products.map((product) => ({ ...product })); //deep copy เพื่อไม่ให้ array ชี้ไปที่ mem เดียวกัน
@@ -186,16 +201,32 @@ export class CartSelectProductComponent implements OnInit {
       },
     });
   }
-  //User Sections
-  getUserAddress() {
-    this.profileService.getUserAddress().subscribe({
-      next: (res) => {
-        const haveDefaultAddress = res.find((a) => a.isDefault);
-        if (haveDefaultAddress) {
-          this.defaultAddress = haveDefaultAddress;
-        } else {
-          this.defaultAddress = res[0];
-        }
+  //nav
+  GoBuyProductPage() {
+    this.router.navigate(['/product/list']);
+  }
+  //go to order section
+  orderCreated() {
+    this.loading = true;
+    const req: OrderCreatedDto[] = [];
+    this.selectedProducts.forEach((p) =>
+      req.push({
+        productId: p.productId,
+        ProductQuantity: p.quantity,
+      })
+    );
+    this.orderService.createOrder(req).subscribe({
+      next: (orderId) => {
+        this.cartService.removeAllProduct().subscribe({
+          next: (_) => {
+            this.cartService.setUpdateCart(true); //ส่งสัญญาณไปให้ตะกร้าใน header
+            setTimeout(() => {
+              this.router.navigate(['/order/' + orderId]);
+              //clear สินค้าออกจากตะกร้า
+              this.loading = false;
+            }, 1000); //ให้มันหมุนเล่นไปก่อนซัก 1 วิ ค่อยไปหน้าอื่น (เหมือนกำลังคำนวณอะไรซักอย่าง)
+          },
+        });
       },
       error: (err: HttpErrorResponse) => {
         console.log(err);

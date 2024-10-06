@@ -1,3 +1,4 @@
+@if (!loading && HaveItemInCart) {
 <div class="card m-7 grid">
     <div class="table col-12 lg:col-8">
 
@@ -9,7 +10,7 @@
                 <tr>
                     <th style="width: 1rem"><p-tableHeaderCheckbox /></th>
                     <th style="width: 5rem"></th>
-                    <th>Name</th>
+                    <th>ชื่อสินค้า
                     <th>รายละเอียด</th>
                     <th>ราคา</th>
                     <th>จำนวน</th>
@@ -106,13 +107,34 @@
                 </div>
                 <div class="col-12">
                     <p-button label="ยืนยันรายการสินค้า" icon="pi pi-check" severity="success" [loading]="loading"
-                        styleClass="w-full" />
+                        styleClass="w-full" (onClick)="orderCreated()" />
                 </div>
             </div>
-
-
-
-
         </p-panel>
     </div>
 </div>
+}@else if (!HaveItemInCart) {
+<p-card class="md:fixed md:top-50 md:left-50 -translate-xy-50 w-full md:w-6 ">
+    <ng-template pTemplate="header">
+        <div class="text-center text-2xl pt-3">
+            <span>คุณยังไม่มีสินค้าในตะกร้า</span>
+        </div>
+        <div class="flex flex-column">
+            <div class="flex  justify-content-center">
+                <p>กรุณาเลือกสินค้าที่ต้องการซื้อ</p>
+            </div>
+            <div class="flex  justify-content-center">
+                <p-button (onClick)="GoBuyProductPage()" label="ร้านค้า" severity="success" icon="pi pi-sign-in"
+                    [link]="true" />
+            </div>
+        </div>
+    </ng-template>
+</p-card>
+}@else if (loading) {
+<div class="md:fixed md:top-50 md:left-50 -translate-xy-50 w-full md:w-6 ">
+    <div class="card flex justify-content-center">
+        <p-progressSpinner ariaLabel="loading" />
+    </div>
+
+</div>
+}

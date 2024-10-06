@@ -31,6 +31,7 @@ import {
 } from 'primeng/dropdown';
 import { MenuItem, MessageService } from 'primeng/api';
 import { AccountCreateAddressDto } from '../../../../shared/dtos/account-create-address.dto';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
   selector: 'app-create-address',
@@ -54,6 +55,7 @@ import { AccountCreateAddressDto } from '../../../../shared/dtos/account-create-
     CheckboxModule,
     TooltipModule,
     DropdownModule,
+    ProgressSpinnerModule,
   ],
   templateUrl: './create-address.component.html',
   styleUrl: './create-address.component.css',
@@ -73,8 +75,8 @@ export class CreateAddressComponent implements OnInit {
     private messageService: MessageService
   ) {}
   ngOnInit(): void {
-    this.getThaiProvinceData();
     this.isProcessing = true;
+    this.getThaiProvinceData();
     this.AddressForm = new FormGroup({
       addressName: new FormControl(''),
       receiverName: new FormControl(''),
@@ -120,8 +122,8 @@ export class CreateAddressComponent implements OnInit {
   getThaiProvinceData() {
     this.addressService.getThaiProvinceData().subscribe({
       next: (res) => {
-        this.thaiData = res;
         this.isProcessing = false;
+        this.thaiData = res;
       },
       error: (error: HttpErrorResponse) => {
         console.log(error);
