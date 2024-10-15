@@ -5,6 +5,8 @@ import { CouponCreateDto } from '../dtos/coupon-create.dto';
 import { CouponUpdateDto } from '../dtos/coupon-update.dto';
 import { CouponDto } from '../dtos/coupon.dto';
 import { CouponAvailableDto } from '../dtos/coupon-available.dto';
+import { CouponCodeDTO } from '../dtos/coupon-code.dto';
+import { CouponUsedDto } from '../dtos/coupon-uesd.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -37,5 +39,17 @@ export class CouponService {
   updateCoupon(id: string, req: CouponUpdateDto) {
     let url = environment.apiBaseUrl + '/Coupons/' + id;
     return this.http.put<unknown>(url, req);
+  }
+  useCoupon(id: string, req: CouponCodeDTO) {
+    let url = environment.apiBaseUrl + '/Coupons/Order/' + id;
+    return this.http.post<unknown>(url, req);
+  }
+  cancelUsedCoupon(id: string) {
+    let url = environment.apiBaseUrl + '/Coupons/Order/' + id;
+    return this.http.delete<unknown>(url);
+  }
+  getUsedCoupon(orderId: string) {
+    let url = environment.apiBaseUrl + '/Coupons/Used?OrderId=' + orderId;
+    return this.http.get<CouponUsedDto[]>(url);
   }
 }

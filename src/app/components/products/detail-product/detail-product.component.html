@@ -1,0 +1,109 @@
+@if (!loading&&product) {
+<div class="card flex justify-content-center  ">
+    <p-card styleClass="card">
+        <div class="grid mb-7">
+            <div class="col-12 lg:col-7">
+                <div class="flex">
+                    <div class="pl-3 w-12 flex">
+                        <img class="w-full border-2 border-transparent border-round" alt="Card"
+                            src="{{rootImgUrl}}/{{product.productImageURL}}" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 lg:col-4 py-3 lg:pl-6">
+                <div class="flex align-items-center text-xl font-medium text-900 mb-4">
+                    <span>{{product.productName}}</span>
+                </div>
+                <div class=" align-items-center justify-content-between mb-2">
+                    @if (product.isDiscounted) {
+                    <label class="text-3xl text-green-700"> {{product.discountPrice|currency:'฿'}}</label>
+                    <br>
+                    <small class="line-through text-gray-400 text-lg font-bold">{{product.price|currency:'฿'}}</small>
+                    @if (product.isDiscountPercent) {
+                    <small class="ml-1 bg-red-500 text-white-alpha-90">-{{product.discountRate}}%</small>
+                    }@else {
+                    <small class="ml-1 bg-red-500 text-white-alpha-90">-
+                        {{product.discountRate|currency:'฿'}}</small>
+                    }
+                    }@else {
+                    <span class="text-900 font-medium text-3xl block">{{product.price|currency:'฿'}} </span>
+                    }
+
+                    <div class="flex align-items-center">
+                        <!--                         <span class="mr-3"><i class="pi pi-star-fill text-yellow-500 mr-1"></i><i
+                                class="pi pi-star-fill text-yellow-500 mr-1"></i><i
+                                class="pi pi-star-fill text-yellow-500 mr-1"></i><i
+                                class="pi pi-star-fill text-yellow-500 mr-1"></i><i
+                                class="pi pi-star text-600 mr-1"></i></span>
+                        <span class="text-sm"><b class="text-900 mr-1">24</b>
+                            <span class="text-500">
+                            </span>reviews</span> --> <!-- ปิดไปก่อนทำไม่ทัน -->
+                    </div>
+                </div>
+                <!-- แจ้งเตือนลดราคา -->
+                @if (curDate>=product.discountStartDate) {
+                @if (product.remainTimeDay==0&&product.remainTimeHour>=0 &&product.remainTimeMin>=0) {
+                <div class="flex flex-wrap align-items-center  ">
+                    <div>
+                        <label class="text-red-500 text-xl  font-bold">หมดเวลาลดราคาวันนี้</label>
+                    </div>
+                    <div>
+                        <label
+                            class=" text-lg">เหลือเวลา{{product.remainTimeHour}}ชั่วโมง{{product.remainTimeMin}}นาที</label>
+                    </div>
+
+                </div>
+                }@else if (product.remainTimeDay<=0&&product.remainTimeHour<=0 &&product.remainTimeMin<=0) { <span
+                    class="text-purple-500 font-bold">หมดเวลาลดราคาแล้ว</span>
+                    <br>
+                    }@else {
+                    <label>เหลือเวลาลดราคา {{product.remainTimeDay}} วัน</label>
+                    }
+                    }@else if( product.discountRate>0) {
+                    <!-- ตรงนี้ใช้ DatePipe ของ angular  ในการจัด format (ไปinject locale th ด้วย)-->
+                    <label class="text-orange-500 ">จะลดราคาใน{{product.discountStartDate| date: 'วันที่ d MMMM
+                        yyyy เวลา HH:mm นาฬิกา'}}</label>
+                    }
+                    <!--  -->
+                    <div class="font-bold text-900 mb-3 mt-3">รายละเอียดสินค้า </div>
+                    <div class="flex align-items-center mb-5">
+                        <label>{{product.productDescription}}</label>
+
+                    </div>
+
+
+                    <div class="font-bold text-900 mb-3">จำนวนสินค้า</div>
+                    <div class="flex flex-column sm:flex-row sm:align-items-center sm:justify-content-between">
+                        <p-inputNumber buttonLayout="horizontal" spinnerMode="horizontal" showButtons="true"
+                            [(ngModel)]="quantity" inputStyleClass="w-3rem text-center"
+                            decrementButtonClass="p-button-text" incrementButtonClass="p-button-text"
+                            incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus" [min]="1" [max]="100">
+                        </p-inputNumber>
+                        <div class="flex align-items-center flex-1 mt-3 sm:mt-0 ml-0 sm:ml-5">
+                            <button class="p-element p-ripple flex-1 mr-5 p-button p-component"
+                                (click)="buyProduct(product.productId)">
+                                <span class="p-button-label">ซื้อสินค้า</span>
+                                <i class="pi pi-cart-plus text-2xl text-white"></i>
+                            </button>
+                        </div>
+                    </div>
+            </div>
+
+        </div>
+        <!--         <p-tabView>
+            <p-tabPanel *ngFor="let tab of tabs" [header]="tab.title">
+                <p>
+                    {{ tab.content }}
+                </p>
+            </p-tabPanel>
+        </p-tabView> --> <!-- ส่วนสำหรับ review และ comment ทำไม่ทัน -->
+    </p-card>
+</div>
+}@else {
+<div class="md:fixed md:top-50 md:left-50 -translate-xy-50 w-full md:w-6 ">
+    <div class=" flex justify-content-center">
+        <p-progressSpinner ariaLabel="loading" />
+    </div>
+
+</div>
+}

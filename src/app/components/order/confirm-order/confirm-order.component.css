@@ -1,0 +1,17 @@
+::ng-deep .p-tieredmenu {
+  z-index: 100;
+}
+
+.behind {
+  z-index: -10;
+}
+::ng-deep .p-splitbutton-defaultbutton {
+  display: none; /* ซ่อนปุ่ม */
+}
+::ng-deep .p-splitbutton-menubutton {
+  padding: 10;
+}
+
+::ng-deep .colorText .p-menuitem-text {
+  color: blue;
+}

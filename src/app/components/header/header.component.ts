@@ -172,12 +172,19 @@ export class HeaderComponent implements OnInit {
   upDateCart() {
     this.cartService.GetUserCart().subscribe({
       next: (res) => {
-        this.productsInCart = res?.length;
+        console.log(res);
+        if (res.length > 0) {
+          this.productsInCart = res?.length;
+          console.log(this.productsInCart);
+        } else this.productsInCart = 0;
       },
       error: (err: HttpErrorResponse) => {
         console.log(err);
       },
     });
+  }
+  onClickSetting() {
+    this.router.navigate(['/account/profile']);
   }
 
   advancePermission(role: string) {

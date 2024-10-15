@@ -7,6 +7,7 @@ import { PagingDto } from '../dtos/paging.dto';
 import { ProductUpdateDto } from '../dtos/product-update.dto';
 import { ProductUpdateAvailableDto } from '../dtos/product-update-available.dto';
 import { ProductCreateDiscountDto } from '../dtos/product-create-discount.dto';
+import { ProductDetailDto } from '../dtos/product-detail.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -56,6 +57,10 @@ export class ProductService {
     url = url + '&HideDisableProduct=' + hideDisableProduct;
     url = url + '&keyword=' + encodeURIComponent(keyword); //encode เพราะจะได้ส่งอักษรพิเศษไปได้ เช่น spacebar
     return this.http.get<PagingDto<ProductListDto>>(url);
+  }
+  getProductDetail(id: string) {
+    let url = environment.apiBaseUrl + '/Products/' + id;
+    return this.http.get<ProductDetailDto[]>(url);
   }
   deleteProduct(id: string) {
     let url = environment.apiBaseUrl + '/Products/' + id;

@@ -50,6 +50,7 @@ export class DiscountListComponent implements OnInit {
   ) {}
   ngOnInit(): void {
     this.getDiscountList();
+    console.log(this.discounts);
   }
   settingMenu(): MenuItem[] {
     const settingItem: MenuItem[] = [

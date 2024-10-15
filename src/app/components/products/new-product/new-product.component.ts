@@ -83,22 +83,9 @@ export class NewProductComponent implements OnInit {
       productAmount: new FormControl('', [Validators.required]),
       productPrice: new FormControl('', [Validators.required]),
       categories: new FormControl(''),
-      /*       categories: new FormArray([]), */
     });
   }
-  //dynamic Form
-  /*   get categories() {
-    //ใช้ getter
-    return this.productForm.controls['categories'] as FormArray;
-  }
-  addCategoryField() {
-    this.categories.push(new FormControl(''));
-    console.log(this.categories);
-  }
-  removeCategoryField(index: number) {
-    this.categories.removeAt(index);
-  }
- */
+
   validateControl(controlName: string) {
     const control = this.productForm.get(controlName);
     return control?.invalid && control?.touched;
@@ -108,11 +95,11 @@ export class NewProductComponent implements OnInit {
     const control = this.productForm.get(controlName);
     return control?.hasError(errorName);
   }
-  onRemoveImage(product: FileRemoveEvent) {
+  onRemoveImage(event: FileRemoveEvent) {
     this.uploadImage = '';
   }
-  onSelectImage(product: FileSelectEvent) {
-    this.uploadImage = product.files[0];
+  onSelectImage(event: FileSelectEvent) {
+    this.uploadImage = event.files[0];
   }
   onClearImage() {
     this.uploadImage = '';

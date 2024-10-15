@@ -25,6 +25,9 @@ import { UserProfileComponent } from './components/profile/user-profile/user-pro
 import { CreateAddressComponent } from './components/profile/addresses/create-address/create-address.component';
 import { UpdateAddressComponent } from './components/profile/addresses/update-address/update-address.component';
 import { ConfirmOrderComponent } from './components/order/confirm-order/confirm-order.component';
+import { ViewOrderComponent } from './components/order/view-order/view-order.component';
+import { UpdateUserProfileComponent } from './components/profile/update-user-profile/update-user-profile.component';
+import { DetailProductComponent } from './components/products/detail-product/detail-product.component';
 
 export const routes: Routes = [
   {
@@ -39,6 +42,12 @@ export const routes: Routes = [
         path: 'profile',
         title: 'Profile',
         component: UserProfileComponent,
+        canActivate: [authGuard],
+      },
+      {
+        path: 'profile/update',
+        title: 'updateProfile',
+        component: UpdateUserProfileComponent,
         canActivate: [authGuard],
       },
       {
@@ -80,6 +89,11 @@ export const routes: Routes = [
         title: 'แก้ไขสินค้า',
         component: UpdateProductComponent,
         canActivate: [authGuard],
+      },
+      {
+        path: ':id/detail',
+        title: 'รายละเอียดสินค้า',
+        component: DetailProductComponent,
       },
     ],
   },
@@ -161,6 +175,12 @@ export const routes: Routes = [
     path: 'order/:id',
     title: 'คำสั่งซื้อสินค้า',
     component: ConfirmOrderComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'viewOrder/:id',
+    title: 'ออเดอร์สินค้า',
+    component: ViewOrderComponent,
     canActivate: [authGuard],
   },
   {

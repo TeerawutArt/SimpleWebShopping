@@ -1,91 +1,242 @@
-@if (order) {
-<div class="card m-7 grid">
-    <div class="table col-12 lg:col-8">
+@if (order&&!loading&&!order.isPaid) {
 
-        <p-table [value]="order.orderProducts" dataKey="productId" class="responsive-table">
-            <ng-template pTemplate="header">
-                <tr>
-
-                    <th style="width: 5rem"></th>
-                    <th>ชื่อสินค้า</th>
-                    <th>ราคา</th>
-                    <th>จำนวน</th>
-
-                </tr>
-            </ng-template>
-
-            <ng-template pTemplate="body" let-product let-editing="editing">
-                <tr class="responsive-row">
-
-                    <td>
-                        <img src="{{rootImgUrl}}/{{product.productImageURL}}" alt={{product.productName}} width="100" />
-                    </td>
-                    <td data-label="Name">{{product.productName}}</td>
-
-                    @if (product.productOriginalPrice>product.unitPrice) {
-                    <td data-label="Price">
-                        <label for="price" class="text-green-500">{{product.unitPrice| currency:
-                            '฿'}}</label>
-                        <br>
-                        <small class=" line-through">{{product.productOriginalPrice| currency: '฿'}}</small>
-                    </td>
-
-                    }@else {
-                    <td data-label="Price">{{product.productOriginalPrice| currency: '฿'}}</td>
-                    }
-                    <td data-label="productQuantity">{{ product.productQuantity }}</td>
-
-                </tr>
-
-            </ng-template>
-        </p-table>
-    </div>
-    <div class=" card col-12 lg:col-4 ">
+<div class="card  lg:mt-8 lg:mr-8 lg:ml-8  grid">
+    <!-- ที่อยู่ -->
+    @if (allAddress.length>0) {
+    <div class=" card col-12 p-1  ">
         <p-panel class="sticky top-0">
             <ng-template pTemplate="header">
-                <span>สรุปการสั่งซื้อ</span>
-            </ng-template>
-            <div class="grid">
-                <div class="col-8 lg:col-6">
-                    <span>จำนวนสินค้าทั้งหมด</span>
+                <div class="col-10">
+                    <i class="pi pi-map-marker pr-1" style="font-size: 1.2rem ;color:orange"></i>
+                    <span class="font-bold">ที่อยู่ในการจัดส่ง</span>
                 </div>
-                <div class="col-4 lg:col-6 text-right">
-                    <span>{{totalProductQuantity}} ชิ้น</span>
-                </div>
-                <div class="col-8 lg:col-6">
-                    <span>ราคารวมสินค้า</span>
-                </div>
-                <div class="col-4 lg:col-6 text-right">
-                    <span>{{totalProductPrice| number:'1.2-2'}} บาท</span>
-                </div>
-                <div class="col-8 lg:col-6">
-                    <span>ราคาขนส่ง</span>
-                </div>
-                <div class="col-4 lg:col-6 text-right">
-                    <span>{{order.transportPrice| number:'1.2-2'}} บาท</span>
-                </div>
-
-                <div class="col-12 ">
-                    <p-inputGroup>
-                        <input type="text" pInputText placeholder="คูปองส่วนลด(ยังไม่ได้ทำ)" />
-                        <button type="button" pButton icon="pi pi-plus" class="p-button-info"></button>
-                    </p-inputGroup>
-                </div>
-                <div class="col-8 lg:col-6">
-                    <span>ราคาทั้งหมด</span>
-                </div>
-                <div class="col-4 lg:col-6 text-right">
-                    <span>{{order.totalPrice| number:'1.2-2'}} บาท</span>
-                </div>
-                <div class="col-12">
-                    <p-button label="ยืนยันรายการสินค้า" icon="pi pi-check" severity="success" [loading]="loading"
-                        styleClass="w-full" />
-                </div>
-            </div>
-        </p-panel>
+                @if (allAddress.length<maxAddressNum) { <div class="col-2 flex justify-content-end align-items-center">
+                    <a [href]="'/account/profile/address?returnUrl=' + returnUrl">เพิ่มที่อยู่</a>
     </div>
+    } </ng-template>
+    <div class="grid">
+        <div class="col-2 ">
+            <span>{{selectedAddress.receiverName}}</span><br>
+            <span>{{selectedAddress.receiverPhoneNumber}}</span>
+        </div>
+        <div class="col-12 md:col-6 xl:col-6 sm:col-12 align-content-center">
+            <span>{{selectedAddress.addressInfo}}</span>
+        </div>
+        @if (selectedAddress.isDefault) {
+        <div class="md:col-1 col-12  align-content-center">
+            <p-tag severity="info" value="ค่าเริ่มต้น" />
+        </div>
+        <div class=" col-12 md:col-3 md:flex justify-content-end align-items-center">
+            <p-button label="แก้ไข" [text]="true" severity="warning" size="small" icon="pi pi-wrench"
+                (onClick)="updateUserAddress(selectedAddress)" />
+            <span class="text-blue-500 mr-1">เปลี่ยน</span>
+            <p-splitButton text="true" [buttonDisabled]="true" [model]="addressMenu">
+                <!-- splitBTN ไม่มีตัวเลือกให้กดปุ่มแล้วโชว์ dropdown ทำไมไม่มี -->
+            </p-splitButton>
+        </div>
+        }@else {
+        <div class=" col-12 md:col-4 md:flex justify-content-end align-items-center">
+            <p-button label="แก้ไข" [text]="true" severity="warning" size="small" icon="pi pi-wrench"
+                (onClick)="updateUserAddress(selectedAddress)" />
+            <span class="text-blue-500 mr-1">เปลี่ยน</span>
+            <p-splitButton text="true" [buttonDisabled]="true" [model]="addressMenu">
+                <!-- splitBTN ไม่มีตัวเลือกให้กดปุ่มแล้วโชว์ dropdown ทำไมไม่มี -->
+            </p-splitButton>
+        </div>
+        }
+    </div>
+    </p-panel>
 </div>
 }@else {
+<div class=" card col-12 p-1">
+    <p-panel class="sticky top-0">
+        <ng-template pTemplate="header">
+            <i class="pi pi-map-marker pr-1" style="font-size: 1.2rem ;color:orange"></i>
+            <span class="font-bold">ที่อยู่ในการจัดส่ง</span>
+        </ng-template>
+        <div class="grid">
+            <div class="col-12 text-center font-bold text-red-500">
+                <span>คุณยังไม่มีที่อยู่ในการจัดส่งสินค้า</span><br>
+                <a [href]="'/account/profile/address?returnUrl=' + returnUrl">เพิ่มที่อยู่</a>
+            </div>
+
+        </div>
+    </p-panel>
+</div>
+
+}
+
+<!--  -->
+<!-- สินค้า -->
+<div class="table behind p-1  col-12 lg:col-12">
+    <p-table [value]="order.orderProducts" dataKey="productId" class="responsive-table">
+        <ng-template pTemplate="header">
+            <tr>
+
+                <th style="width: 5rem"></th>
+                <th>ชื่อสินค้า</th>
+                <th>ราคา</th>
+                <th>จำนวน</th>
+
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-product let-editing="editing">
+            <tr class="responsive-row">
+
+                <td>
+                    <img src="{{rootImgUrl}}/{{product.productImageURL}}" alt={{product.productName}} width="100" />
+                </td>
+                <td data-label="Name">{{product.productName}}</td>
+
+                @if (product.productOriginalPrice>product.unitPrice) {
+                <td data-label="Price">
+                    <label for="price" class="text-green-500">{{product.unitPrice| currency:
+                        '฿'}}</label>
+                    <br>
+                    <small class=" line-through">{{product.productOriginalPrice| currency: '฿'}}</small>
+                </td>
+
+                }@else {
+                <td data-label="Price">{{product.productOriginalPrice| currency: '฿'}}</td>
+                }
+                <td data-label="productQuantity">{{ product.productQuantity }}</td>
+
+            </tr>
+
+        </ng-template>
+    </p-table>
+</div>
+<!--  -->
+
+<!-- สำหรับ ราคาสินค้า -->
+<div class=" card col-12  p-1  ">
+    <p-panel class="sticky top-0">
+        <ng-template pTemplate="header">
+            <span>สรุปการสั่งซื้อ</span>
+        </ng-template>
+        <div class="grid">
+            <div class="col-8 lg:col-6">
+                <span>จำนวนสินค้าทั้งหมด</span>
+            </div>
+            <div class="col-4 lg:col-6 text-right">
+                <span>{{totalProductQuantity}} ชิ้น</span>
+            </div>
+            <div class="col-8 lg:col-6">
+                <span>ราคารวมสินค้า</span>
+            </div>
+            <div class="col-4 lg:col-6 text-right">
+                <span>{{totalProductPrice| number:'1.2-2'}} บาท</span>
+            </div>
+            <div class="col-8 lg:col-6">
+                <span>ราคาขนส่ง</span>
+            </div>
+            <div class="col-4 lg:col-6 text-right">
+                <span>{{order.transportPrice| number:'1.2-2'}} บาท</span>
+            </div>
+            <!--  -->
+
+            <div class="col-12 ">
+                <p-inputGroup>
+                    <input type="text" pInputText placeholder="คูปองส่วนลด" [(ngModel)]="couponCode"
+                        disabled="{{usedCoupon&&usedCoupon.length>0}}" />
+                    @if (usedCoupon&&usedCoupon.length>0) {
+                    <button type="button" pButton icon="pi pi-times" class="p-button-danger"
+                        (click)="onCancelUsedCoupon()"></button>
+                    }@else {
+                    <button type="button" pButton icon="pi pi-plus" class="p-button-info"
+                        (click)="onUsedCoupon()"></button>
+                    }
+
+                </p-inputGroup>
+                @if (errorMessage) {
+                <div class="text-center mt-1">
+                    <small class="text-red-500 font-italic">{{errorMessage}}</small>
+                </div>
+                }
+            </div>
+            @if (usedCoupon&&usedCoupon.length>0) {
+
+            <div class="flex justify-content-center  w-full">
+                <label class="text-xl text-blue-500" [pTooltip]="tooltipCoupon" tooltipPosition="bottom">
+                    รายละเอียดคูปองส่วนลดที่ใช้
+                </label>
+                <i class="ml-1 pi pi-book text-xl" style="color: green" [pTooltip]="tooltipCoupon"
+                    tooltipPosition="bottom"></i>
+            </div>
+            <ng-template #tooltipCoupon>
+                <div>
+                    <div class="">
+                        <span>ชื่อคูปอง: </span>
+                        <span>{{usedCoupon[0].couponName}}</span>
+                    </div>
+                    <div class="">
+                        <span>รายละเอียด: </span>
+                        <span>{{usedCoupon[0].description}}</span>
+                    </div>
+                    @if (usedCoupon[0].isDiscountPercent) {
+                    <div class="">
+                        <span>ลดราคา: </span>
+                        <span>{{usedCoupon[0].discountRate}}%</span>
+                    </div>
+                    }@else {
+                    <div class="">
+                        <span>ลดราคา: </span>
+                        <span>{{usedCoupon[0].discountRate}} บาท</span>
+                    </div>
+                    }
+                </div>
+            </ng-template>
+
+            }
+            <!--  -->
+            <div class="col-8 lg:col-6">
+                <span>ราคาทั้งหมด</span>
+            </div>
+            @if (order.usedCoupon) {
+            <div class="col-4 lg:col-6 text-right">
+                <label class="text-green-700 text-lg"> {{order.netPrice| number:'1.2-2'}} บาท</label>
+                <br>
+                <small class="line-through text-gray-400  font-bold ">{{order.totalPrice+order.transportPrice|
+                    number:'1.2-2'}} บาท</small>
+            </div>
+
+            }@else {
+            <div class="col-4 lg:col-6 text-right">
+                <span>{{order.netPrice| number:'1.2-2'}} บาท</span>
+            </div>
+            }
+
+            <div class="col-12">
+                <p-button label="ชำระเงิน" iconPos="right" icon="pi pi-check" severity="success" [loading]="loading"
+                    styleClass="w-full" (onClick)="confirmOrder($event)" />
+            </div>
+        </div>
+    </p-panel>
+</div>
+<!--  -->
+
+</div>
+
+}@else if (order&&order.isPaid) {
+<p-card class="md:fixed md:top-50 md:left-50 -translate-xy-50 w-full md:w-6 ">
+    <ng-template pTemplate="header">
+        <div class="text-center text-red-500 text-2xl pt-3">
+            <span>การเข้าถึงของคุณไม่ถูกต้อง</span>
+        </div>
+        <div class="flex flex-column">
+            <div class="flex  justify-content-center">
+                <p>กลับไปหน้าหลัก</p>
+            </div>
+            <div class="flex  justify-content-center">
+                <p-button (onClick)="onOrderSSuccess()" label="หน้าหลัก" severity="success" icon="pi pi-sign-in"
+                    [link]="true" />
+            </div>
+        </div>
+    </ng-template>
+</p-card>
+}
+@else {
 <div class="md:fixed md:top-50 md:left-50 -translate-xy-50 w-full md:w-6 ">
     <div class="card flex justify-content-center">
         <p-progressSpinner ariaLabel="loading" />

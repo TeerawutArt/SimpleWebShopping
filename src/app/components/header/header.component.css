@@ -9,3 +9,7 @@ header {
 ::ng-deep .p-menuitem-link-active .p-menuitem-icon {
   color: #1d4ed8;
 }
+::ng-deep .bgButton {
+  padding: 1rem;
+  width: 0.5rem;
+}

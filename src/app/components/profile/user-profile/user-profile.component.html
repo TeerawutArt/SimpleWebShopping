@@ -6,6 +6,9 @@
 <div class=" align-items-center justify-content-center m-8">
     <div class="grid ">
         <div class="col-12 lg:col-4 bg-gray-100 ">
+            <div class="flex justify-content-end m-1">
+                <p-button label="แก้ไขโปรไฟล์" [text]="true" (onClick)="updateUserProfile()" />
+            </div>
             <div class="card flex justify-content-center">
                 <p-image src="{{rootImgUrl}}/{{profile.userImageURL}}" alt="Image" width="250" />
             </div>
@@ -93,8 +96,121 @@
     </div>
 
     <div class="col-12 lg:col-8 bg-green-500">
-        <p class="text-8xl">ตรงนี้จะเป็นตาราง Order แต่ต้องไปทำ Orderให้เสร็จก่อน</p>
+        <p-table #pt [value]="orders" dataKey="orderId" lazy="true" [rows]="pageSize" [totalRecords]="totalRecords"
+            [tableStyle]="" [expandedRowKeys]="expandedRows" (onLazyLoad)="getOrder($event)" paginator="true">
+            <ng-template pTemplate="caption">
+                <div class="flex flex-wrap justify-content-end gap-2">
+                </div>
+            </ng-template>
+            <ng-template pTemplate="header">
+                <tr>
+                    <th style="width: 5rem"></th>
+                    <th>วันสั่งซื้อสินค้า</th>
+                    <th>สถานะ</th>
+                    <th></th>
+                    <th style="width: 15rem" class="text-center">การจัดการ</th>
+
+                </tr>
+            </ng-template>
+
+            <ng-template pTemplate="body" let-order let-expanded="expanded">
+                <tr class="bg-blue-50">
+                    <td>
+                        <p-button type="button" pRipple [pRowToggler]="order" [text]="true" [rounded]="true"
+                            [plain]="true" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" />
+                    </td>
+                    <td>{{ order.orderTime| date : 'short' }}</td>
+
+                    @if (order.status=='รอชำระเงิน') {
+                    <td class="danger">{{ order.status }}</td>
+                    <td class="text-orange-500 font-bold">{{order.expiryTime| date: 'กรุณาชำระภายในวันที่ d MMMM yyyy
+                        ก่อนเวลา
+                        HH:mm นาฬิกา'}}</td>
+                    }@else if (order.status=='อยู่ระหว่างจัดส่ง') {
+                    <td class="info">{{ order.status }}</td>
+                    <td></td>
+                    }@else {
+                    <td class="success">{{ order.status }}</td>
+                    <td></td>
+
+                    }
+
+                    <td><p-button type="button" [label]="getStatusInfo(order.status)" [outlined]="true"
+                            [severity]="getSeverity(order.status)"
+                            (onClick)="onClickManageBtn(order.orderId,order.status)" />
+                        @if (order.status=='รอชำระเงิน') {
+                        <p-button type="button" label="ยกเลิก" [outlined]="true" severity="danger" class="ml-1"
+                            (onClick)="deleteSelectedOrder(order.orderId)" />
+                        }
+
+                    </td>
+
+                </tr>
+
+            </ng-template>
+
+            <ng-template pTemplate="rowexpansion" let-order>
+                <tr>
+                    <td colspan="10">
+                        <div class="p-1">
+                            <p-table #pt2 [value]="order.orderProducts" dataKey="productId"
+                                [(selection)]="selectedOrders" selectionMode="multiple">
+                                <ng-template pTemplate="header">
+                <tr>
+                    <th>รูปสินค้า</th>
+                    <th>ชื่อสินค้า</th>
+                    <th>จำนวน</th>
+                    <th>ราคาต่อชิ้น</th>
+                    <th>ราคารวม</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-product>
+                <tr>
+                    <td>
+                        <img src="{{rootImgUrl}}/{{product.productImageURL}}" alt={{product.productName}} width="100" />
+                    </td>
+                    <td>{{ product.productName|cutText:[50] }}</td>
+                    <td>{{ product.productQuantity}}</td>
+                    <td>{{ product.unitPrice|currency:'฿' }}</td>
+                    <td>{{ product.netPrice|currency:'฿' }}</td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="footer">
+                <tr>
+                    <td colspan="12" class="text-right">
+                        @if (order.usedCoupon) {
+                        <label class="font-medium">ค่าขนส่ง {{order.transportPrice|currency:' '}} บาท</label>
+                        <br>
+                        <small class="line-through text-gray-400  font-bold ">{{order.totalPrice+order.transportPrice|
+                            number:'1.2-2'}} บาท</small>
+                        <br>
+                        <label class="text-green-500">รวม {{order.netPrice|currency:' '}} บาท</label>
+
+                        }@else {
+                        <label class="font-medium">ค่าขนส่ง {{order.transportPrice|currency:' '}} บาท</label>
+                        <br>
+                        <label>รวม {{order.netPrice|currency:' '}} บาท</label>
+                        }
+
+                    </td>
+
+                </tr>
+
+
+
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="6">ยังไม่มีสินค้าที่ลดราคา</td>
+                </tr>
+            </ng-template>
+        </p-table>
     </div>
+    </td>
+    </tr>
+    </ng-template>
+    </p-table>
+</div>
 </div>
 </div>
 }

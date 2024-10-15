@@ -111,9 +111,8 @@ export class AccountRegisterUserComponent implements OnInit {
       password: this.registerForm.get('password')?.value,
       confirmPassword: this.registerForm.get('confirmPassword')?.value,
       email: this.registerForm.get('email')?.value,
-      firstName:
-        this.registerForm.get('prefix')?.value +
-        this.registerForm.get('firstName')?.value,
+      // prettier-ignore
+      firstName:this.registerForm.get('prefix')?.value +' '+this.registerForm.get('firstName')?.value,
       lastName: this.registerForm.get('lastName')?.value,
       birthDate: this.registerForm.get('birthDate')?.value,
       gender: this.registerForm.get('gender')?.value,

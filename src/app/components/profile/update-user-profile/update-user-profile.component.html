@@ -1,0 +1,107 @@
+<div class="card_container flex flex-wrap align-items-center justify-content-center">
+    <p-card class="static  w-full md:w-8 lg:w-10 xl:w-5 mt-8 ">
+        <form [formGroup]="updateProfileForm">
+            <div class="flex flex-column gap-2 mx-auto" style="min-height: 16rem; max-width: 50rem">
+                <div class="text-center mt-3 mb-3 text-xl font-semibold">กรอกข้อมูลส่วนตัวของคุณ</div>
+                <div class="card flex justify-content-center">
+                </div>
+                <div class="formgrid grid">
+                    <div class="field col-12 md:col-2 mt-3">
+                        <p-dropdown id="prefix" [options]="prefixes" class="w-1" placeholder="คำนำ"
+                            formControlName="prefix" />
+                        @if (validateControl('prefix') && isError('prefix', 'required')) {
+                        <small class="text-red-500 font-italic">ระบุคำนำหน้าชื่อ</small>
+                        }
+                    </div>
+                    <div class="field col-12 md:col-5 mt-3">
+                        <p-floatLabel>
+
+                            <input pInputText id="firstName" type="text" formControlName="firstName" required
+                                class="w-full" />
+                            <label for="firstName">ชื่อ</label>
+                        </p-floatLabel>
+
+                        @if (validateControl('firstName') && isError('firstName', 'required')) {
+                        <small class="text-red-500 font-italic">กรุณากรอกชื่อจริง </small>
+                        }
+
+
+
+                    </div>
+                    <div class="field col-12 md:col-5 mt-3">
+                        <p-floatLabel>
+                            <input pInputText id="lastName" type="text" formControlName="lastName" class="w-full" />
+                            <label for="lastName">นามสกุล</label>
+                        </p-floatLabel>
+                        @if (validateControl('lastName') && isError('lastName', 'required')) {
+                        <small class="text-red-500 font-italic">กรุณากรอกนามสกุล </small>
+                        }
+                    </div>
+                    <div class="field col-12 md:col-12 mt-3">
+                        <p-floatLabel>
+                            <input pInputText id="email" type="email" formControlName="email" class="w-full" />
+                            <label for="email">Email</label>
+                        </p-floatLabel>
+                        @if (validateControl('email') && isError('email', 'required')) {
+                        <small class="text-red-500 font-italic">กรุณากรอกอีเมล </small>
+                        }
+                        @if (validateControl('email') && isError('email', 'email')) {
+                        <small class="text-red-500 font-italic">รูปแบบอีเมลไม่ถูกต้อง</small>
+                        }
+                    </div>
+                    <div class="field col-12 md:col-2   ">
+                        <label class="text-red-500">*</label><label for="gender">เพศ</label>
+                        <br>
+                        <p-dropdown id="gender" [options]="genders" placeholder="เพศ" formControlName="gender" />
+
+                        @if (validateControl('gender')&& isError('gender', 'required')) {
+                        <small class="text-red-500 font-italic">กรุณากรอกเพศ </small>
+                        }
+                    </div>
+                    <div class="field col-12  md:col-5">
+                        <label class="text-red-500">*</label><label for="birthDate">วันเกิด
+                            (วัน/เดือน/ค.ศ.)</label>
+                        <br>
+                        <p-calendar inputId="birthDate" formControlName="birthDate" hourFormat="24" styleClass="w-full"
+                            placeholder="วันเกิด" [dateFormat]="'dd/mm/yy'" />
+                        @if (validateControl('birthDate') && isError('birthDate', 'required')) {
+                        <small class="text-red-500 font-italic">กรุณาเลือกวันเกิด</small>
+                        }
+                    </div>
+
+                    <div class="field col-12 md:col-5 p-fluid">
+                        <label class="text-red-500">*</label>
+                        <label for="phoneNumber">เบอร์โทรศัพท์</label>
+                        <br>
+                        <input id="phoneNumber" type="text" pInputText formControlName="phoneNumber" />
+                        @if (validateControl('phoneNumber') && isError('phoneNumber', 'required')) {
+                        <small class="text-red-500 font-italic">กรุณากรอกเบอร์โทรศัพท์ </small>
+                        }
+                        @if (validateControl('phoneNumber') && isError('phoneNumber', 'pattern')) {
+                        <small class="text-red-500 font-italic">กรุณากรอกตัวเลขเท่านั้น </small>
+                        }
+                    </div>
+                    <div class="field col-12 ">
+                        <label>รูปสินค้า</label>
+                        <br>
+                        <p-fileUpload mode="advanced" showUploadButton="false" chooseLabel="Choose"
+                            showCancelButton="true" chooseIcon="pi pi-upload" accept="image/,.jpg,.jpeg,.png"
+                            maxFileSize="1048576" (onSelect)="onSelectImage($event)" (onRemove)="onRemoveImage($event)"
+                            (onClear)="onClearImage()" previewWidth="150"
+                            invalidFileSizeMessageSummary="ขนาดรูปภาพต้องไม่เกิน 1024KB" chooseLabel="เลือกรูป"
+                            cancelLabel="ลบรูป" cancelStyleClass="bg-red-500" />
+
+
+                    </div>
+                    <div class="field col-12 text-center flex justify-content-between">
+                        <p-button label="ย้อนกลับ" severity="secondary" icon="pi pi-arrow-left" />
+                        <p-button type="submit" label="แก้ไขข้อมูล" [disabled]="updateProfileForm.invalid"
+                            [loading]="isProcessing" (onClick)="updateProfile()" />
+
+                    </div>
+
+                </div>
+            </div>
+        </form>
+    </p-card>
+</div>

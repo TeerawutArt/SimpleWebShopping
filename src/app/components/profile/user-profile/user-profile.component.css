@@ -1,0 +1,9 @@
+.danger {
+  color: rgb(255, 0, 0);
+}
+.info {
+  color: #0d6efd;
+}
+.success {
+  color: green;
+}

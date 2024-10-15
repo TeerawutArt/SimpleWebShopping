@@ -53,6 +53,8 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
             router.navigate(['/forbidden']);
           }
         }
+      } else {
+        message = err.error;
       }
 
       return throwError(() => Error(message));

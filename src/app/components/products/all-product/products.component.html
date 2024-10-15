@@ -4,6 +4,14 @@
         [rows]="pageSize" [totalRecords]="totalRecords" [lazy]="true" emptyMessage="ไม่มีสินค้าที่ค้นหา">
         <ng-template pTemplate="header">
             <div class=" flex w-full  mb-3 md:justify-content-end grid  align-items-center   mt-5  ">
+                <div class="flex align-content-center">
+                    <p-inputGroup>
+                        <input type=" text" pInputText placeholder="คำค้นหา" [(ngModel)]="keyword"
+                            (keyup)="onFilter(dv, $event)" class="w-full" />
+                        <button type="button" pButton icon="pi pi-search" class="p-button-warning"
+                            (click)="valueChange(dv)"></button>
+                    </p-inputGroup>
+                </div>
                 @if (isUserAuthenticated&&hasPermission) {
 
                 <div
@@ -21,14 +29,7 @@
                 </div>
 
                 }
-                <div class="flex">
-                    <p-inputGroup>
-                        <input type=" text" pInputText placeholder="คำค้นหา" [(ngModel)]="keyword"
-                            (keyup)="onFilter(dv, $event)" />
-                        <button type="button" pButton icon="pi pi-search" class="p-button-warning"
-                            (click)="valueChange(dv)"></button>
-                    </p-inputGroup>
-                </div>
+
                 <div class="ml-8">
                     <p-dataViewLayoutOptions layout='grid' />
                 </div>
@@ -63,11 +64,8 @@
                                 [style.top.px]="4"></p-tag>
 
                             }
-
-
-
                             @else if (product.inventoryStatus=="INSTOCK") {
-                            <p-tag value="พร้อมขาย" severity=success class="absolute" [style.left.px]="4"
+                            <p-tag value="มีสินค้า" severity=success class="absolute" [style.left.px]="4"
                                 [style.top.px]="4"></p-tag>
                             }
                             @else if (product.inventoryStatus=="OUTOFSTOCK") {
@@ -83,7 +81,8 @@
 
 
                                 <div class="text-lg font-medium text-900 mt-2  ">
-                                    <label>{{ product.productName }}</label>
+                                    <a routerLink="/product/{{product.productId}}/detail">{{
+                                        product.productName|cutText:[30]}}</a>
                                 </div>
 
                                 <div class="surface-100 p-1" style="border-radius: 30px">
@@ -131,7 +130,8 @@
                                 }
                                 <div class="flex flex-row-reverse md:flex-row gap-2">
                                     <p-button icon="" class="flex-auto md:flex-initial white-space-nowrap"
-                                        label="ซื้อสินค้า" [disabled]="product.inventoryStatus === 'OUTOFSTOCK'" />
+                                        label="ซื้อสินค้า" [disabled]="product.inventoryStatus === 'OUTOFSTOCK'"
+                                        (onClick)="buyProduct(product)" />
                                     <p-button icon="pi pi-shopping-cart" [outlined]="true"
                                         (onClick)="addProductToCart(product)" />
                                 </div>
@@ -164,8 +164,14 @@
                                 @if (!product.isAvailable) {
                                 <p-tag value="ระงับการขาย" severity=danger></p-tag>
                                 }
+                                @else if (product.inventoryStatus=="INSTOCK"&& product.isDiscounted) {
+                                <p-tag value="ลดราคา" severity=success></p-tag>
+                                }
+                                @else if (product.inventoryStatus=="INSTOCK"&& product.discountRate>0) {
+                                <p-tag value="กำลังจะลดราคา" severity=warning></p-tag>
+                                }
                                 @else if (product.inventoryStatus=="INSTOCK") {
-                                <p-tag value="พร้อมขาย" severity=success></p-tag>
+                                <p-tag value="มีสินค้า" severity=info></p-tag>
                                 }
                                 @else if (product.inventoryStatus=="OUTOFSTOCK") {
                                 <p-tag value="สินค้าหมด" severity=warning></p-tag>
@@ -184,7 +190,7 @@
                                     @if (product.categories.length>0) {
                                     <i class="pi pi-tag text-sm"></i>
                                     <label class="text-xs" [pTooltip]="tooltipCategories" tooltipPosition="bottom">
-                                        Tags
+                                        ประเภทสินค้า
                                     </label>
                                     <ng-template #tooltipCategories>
                                         <ul>
@@ -195,8 +201,10 @@
                                     </ng-template>
                                     }
 
-                                    <div class="text-lg font-medium text-900 mt-1">{{ product.productName
-                                        |cutText:[20]}}</div>
+                                    <div class="text-lg font-medium text-900 mt-1">
+                                        <a routerLink="/product/{{product.productId}}/detail">{{
+                                            product.productName|cutText:[20]}}</a>
+                                    </div>
                                 </div>
                                 <div class="surface-100 p-1" style="border-radius: 30px">
                                     <div class="surface-0 flex align-items-center gap-2 justify-content-center py-1 px-2"
@@ -226,7 +234,8 @@
                                 }
                                 <div class="flex gap-2 justify-content-center mt-2">
                                     <p-button icon="" class="flex-auto md:flex-initial white-space-nowrap"
-                                        label="ซื้อสินค้า" [disabled]="product.inventoryStatus === 'OUTOFSTOCK'" />
+                                        label="ซื้อสินค้า" [disabled]="product.inventoryStatus === 'OUTOFSTOCK'"
+                                        (onClick)="buyProduct(product)" />
                                     <p-button icon="pi pi-shopping-cart" [outlined]="true"
                                         (onClick)="addProductToCart(product)" />
                                 </div>

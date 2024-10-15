@@ -9,11 +9,16 @@
         <ng-template pTemplate="end">
             @if (isUserAuthenticated){
             <div class="flex flex-wrap align-items-center justify-content-center">
-                <p-avatar image="{{rootImgUrl}}/{{imgUserURL}}" shape="circle" class="mr-2" />
+                <a routerLink="/account/profile" routerLinkActive="active" ariaCurrentWhenActive="page">
+                    <p-avatar image="{{rootImgUrl}}/{{imgUserURL}}" shape="circle" />
+                </a>
+
                 <span class="vertical-align-middle"><a class="text-green-600 font-bold no-underline"
                         [href]="'/account/profile'">{{userName}}</a></span>
-
-                <p-button [text]="true" severity="secondary" styleClass="ml-1 w-2 flex justify-content-center"
+                <a routerLink="/account/profile" routerLinkActive="active" ariaCurrentWhenActive="page">
+                    <i class=" ml-2 pi pi-cog text-xl text-blue-500"></i>
+                </a>
+                <p-button [text]="true" severity="secondary" styleClass="ml-1  flex justify-content-center "
                     routerLink="/cart">
                     <i class="pi pi-shopping-cart text-xl" pBadge value="{{productsInCart}}" severity="success"></i>
                 </p-button>

@@ -250,7 +250,9 @@ export class UpdateAddressComponent implements OnInit {
           setTimeout(() => {
             this.isProcessing = false;
             this.AddressForm.enable();
-            this.router.navigate(['/account/profile']);
+            this.returnUrl =
+              this.route.snapshot.queryParams['returnUrl'] || this.returnUrl;
+            this.router.navigate([this.returnUrl]);
           }, 500);
         },
         error: (err: HttpErrorResponse) => {

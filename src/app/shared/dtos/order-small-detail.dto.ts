@@ -1,18 +1,14 @@
 import { OrderProductsDto } from './order-products.dto';
 
-export interface OrderDto {
+export interface OrderSmallDetailDto {
   orderId: string;
-  userId: string;
-  orderUserName: string;
   orderTime: Date;
   expiryTime: Date;
-  transactionTime: Date;
   isPaid: boolean;
-  status: string;
-  transportInfo: string;
-  totalPrice: number;
-  transportPrice: number;
   usedCoupon: boolean;
+  status: string;
+  totalPrice: number;
   netPrice: number;
+  transportPrice: number;
   orderProducts: Array<OrderProductsDto>;
 }

@@ -235,9 +235,7 @@ export class ProductsComponent implements OnInit {
   getAllProduct(e: LazyLoadMeta) {
     this.pageIndex = Math.floor(e.first! / e.rows!) + 1;
     this.pageSize = e.rows!;
-    console.log(this.isUserAuthenticated);
     this.loading = true;
-
     this.productService
       .getAllProduct(
         this.manageProductMode,
@@ -279,9 +277,24 @@ export class ProductsComponent implements OnInit {
   }
   onPageChange(product: PaginatorState) {
     this.activePage = product.first!;
-
     this.pageIndex = Math.floor(product.first! / product.rows!) + 1;
     this.pageSize = product.rows!;
+  }
+  buyProduct(product: ProductListDto) {
+    var req = { productId: product.productId, quantity: 1 };
+    this.cartService.AddProductCart(req).subscribe({
+      next: (_) => {
+        this.cartService.setUpdateCart(true);
+        this.router.navigate(['cart']);
+      },
+      error: () => {
+        this.messageService.add({
+          summary: 'Something Error',
+          severity: 'danger',
+          detail: 'something error',
+        });
+      },
+    });
   }
   addProductToCart(product: ProductListDto) {
     var req = { productId: product.productId, quantity: 1 };
@@ -370,24 +383,6 @@ export class ProductsComponent implements OnInit {
         });
       },
     });
-  }
-
-  onRemoveImage(product: FileRemoveEvent) {
-    this.uploadImage = '';
-  }
-  onSelectImage(product: FileSelectEvent) {
-    this.uploadImage = product.files[0];
-  }
-  onClearImage() {
-    this.uploadImage = '';
-  }
-  validateControl(controlName: string) {
-    const control = this.updateProductForm.get(controlName);
-    return control?.invalid && control?.touched;
-  }
-  hasError(controlName: string, errorName: string) {
-    const control = this.updateProductForm.get(controlName);
-    return control?.hasError(errorName);
   }
 
   changeProductAvailable(
