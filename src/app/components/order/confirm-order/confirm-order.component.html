@@ -1,6 +1,6 @@
 @if (order&&!loading&&!order.isPaid) {
 
-<div class="card  lg:mt-8 lg:mr-8 lg:ml-8  grid">
+<div class="card  m-8 mb-0  grid">
     <!-- ที่อยู่ -->
     @if (allAddress.length>0) {
     <div class=" card col-12 p-1  ">
@@ -208,8 +208,13 @@
             }
 
             <div class="col-12">
+                @if (selectedAddress) {
                 <p-button label="ชำระเงิน" iconPos="right" icon="pi pi-check" severity="success" [loading]="loading"
                     styleClass="w-full" (onClick)="confirmOrder($event)" />
+                }@else {
+                <p-button label="กรุณาเลือกที่อยู่" severity="danger" disabled="true" styleClass="w-full" />
+                }
+
             </div>
         </div>
     </p-panel>

@@ -4,6 +4,7 @@ import { environment } from '../../../environments/environment.development';
 import { CategoriesListDto } from '../dtos/categories-list.dto';
 import { CategoryCreateDto } from '../dtos/category-create.dto';
 import { CategoryUpdateDto } from '../dtos/category-update.dto';
+import { PagingDto } from '../dtos/paging.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -14,10 +15,16 @@ export class CategoryService {
     let url = environment.apiBaseUrl + '/Category';
     return this.http.get<CategoriesListDto[]>(url);
   }
-  getCategoriesWithKeyword(keyword: string) {
-    let url = environment.apiBaseUrl + '/Category';
-    url += '?keyword=' + encodeURIComponent(keyword); //encode เพราะจะได้ส่งอักษรพิเศษไปได้ เช่น spacebar
-    return this.http.get<CategoriesListDto[]>(url);
+  getCategoriesWithKeyword(
+    keyword: string,
+    pageIndex: number,
+    pagesize: number
+  ) {
+    let reqUrl = environment.apiBaseUrl + '/Category';
+    reqUrl += '?keyword=' + encodeURIComponent(keyword); //encode เพราะจะได้ส่งอักษรพิเศษไปได้ เช่น spacebar
+    reqUrl = reqUrl + '&PageIndex=' + pageIndex;
+    reqUrl = reqUrl + '&PageSize=' + pagesize;
+    return this.http.get<PagingDto<CategoriesListDto>>(reqUrl);
   }
   createCategory(req: CategoryCreateDto) {
     let url = environment.apiBaseUrl + '/Category';

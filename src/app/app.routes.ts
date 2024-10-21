@@ -195,8 +195,14 @@ export const routes: Routes = [
     canActivate: [isLoginGuard],
   },
   {
-    path: '',
+    path: 'index',
     title: 'หน้าแรก',
     component: ProductsComponent,
+  },
+  //redirect
+  {
+    path: '',
+    pathMatch: 'full',
+    redirectTo: 'index',
   },
 ];

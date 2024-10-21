@@ -1,9 +1,10 @@
 <header class="fixed top-0 w-full margin-btm-15">
 
-    <p-menubar [model]="productMenu">
+    <p-menubar [model]="productMenu" styleClass="bgHeaderColor">
         <ng-template pTemplate="start">
-            <a routerLink="/home" routerLinkActive="active" ariaCurrentWhenActive="page" class="mr-2"><img
-                    src="favicon.ico" height="32px" alt="profile"></a>
+            <a routerLink="/index" routerLinkActive="active" ariaCurrentWhenActive="page" class="mr-2"><img
+                    src="logoWeb.png" height="48px" alt="profile"></a>
+
         </ng-template>
 
         <ng-template pTemplate="end">
@@ -69,21 +70,11 @@
                     }
                 </div>
                 <div class="field col-12 mt-3 text-center">
-                    <button pButton type="submit" label="Submit" [disabled]="loginForm.invalid" [loading]="isProcessing"
+                    <button pButton type="submit" label="login" [disabled]="loginForm.invalid" [loading]="isProcessing"
                         title="submit" class="w-full md:w-4"></button>
                 </div>
             </div>
         </form>
-        <ng-template pTemplate="footer">
-            <div class="grid">
-                <div class="col-6 text-left ">
-                    <span><a [href]="'/account/forgotpassword?returnUrl=' + returnUrl">Forgot
-                            password?</a></span>
-                </div>
-                <div class="col-6 text-right">
-                    <span><a [href]="'/account/register?returnUrl=' + returnUrl">New account?</a></span>
-                </div>
-            </div>
-        </ng-template>
+
     </p-dialog>
 </div>

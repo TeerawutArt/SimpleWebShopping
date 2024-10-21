@@ -1,5 +1,5 @@
 @if (loading) {
-<div class="m-8">
+<div class="m-8 mb-0">
     <!-- ถ้าเวลาเหลือจะมาไล่ใส่ loading ให้ทุก component  ตอนนี้เอาหน้าเปล่าไปก่อน-->
 </div>
 }@else {
@@ -95,7 +95,7 @@
 
     </div>
 
-    <div class="col-12 lg:col-8 bg-green-500">
+    <div class="col-12 lg:col-8 bg-blue-100">
         <p-table #pt [value]="orders" dataKey="orderId" lazy="true" [rows]="pageSize" [totalRecords]="totalRecords"
             [tableStyle]="" [expandedRowKeys]="expandedRows" (onLazyLoad)="getOrder($event)" paginator="true">
             <ng-template pTemplate="caption">

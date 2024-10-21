@@ -112,16 +112,18 @@ export class CouponListComponent implements OnInit {
       this.getAllCoupon(pt);
   }
   getAllCoupon(e: LazyLoadMeta) {
-    console.log(e.sortField); //ค่อยทำ
-    console.log(e.sortOrder);
-
+    this.pageIndex = Math.floor(e.first! / e.rows!) + 1;
+    this.pageSize = e.rows!;
     this.loading = true;
 
-    this.couponService.getCouponList(this.keyword).subscribe({
-      next: (res: CouponDto[]) => {
-        this.coupons = res;
-        // prettier-ignore
-        this.coupons.forEach((e) => {
+    this.couponService
+      .getCouponList(this.keyword, this.pageIndex, this.pageSize)
+      .subscribe({
+        next: (res: PagingDto<CouponDto>) => {
+          this.coupons = res.items;
+          this.totalRecords = res.totalRecords;
+          // prettier-ignore
+          this.coupons.forEach((e) => {
             if(!e.isCouponAvailable){
               e.status ="ระงับคูปอง";
             }else if (new Date(e.endTime) <= this.curDate) {
@@ -129,21 +131,20 @@ export class CouponListComponent implements OnInit {
             } else {
               e.status = e.amount > 0 ? 'มีคูปอง' : 'คูปองหมด';
             }
-                console.log(res);
 
           });
-        this.loading = false;
-      },
-      error: (err: HttpErrorResponse) => {
-        this.messageService.add({
-          summary: 'Something Error!',
-          detail: 'Please try again.',
-          severity: 'warn',
-          life: 3000,
-        });
-        this.loading = false;
-      },
-    });
+          this.loading = false;
+        },
+        error: (err: HttpErrorResponse) => {
+          this.messageService.add({
+            summary: 'Something Error!',
+            detail: 'Please try again.',
+            severity: 'warn',
+            life: 3000,
+          });
+          this.loading = false;
+        },
+      });
   }
   deleteCoupon(item: CouponDto) {
     this.confirmationService.confirm({
@@ -203,7 +204,7 @@ export class CouponListComponent implements OnInit {
   deleteSelectCoupons() {
     const selectedCouponIds = this.selectedCoupons.map((sp) => sp.couponId);
     this.confirmationService.confirm({
-      message: `คุณกำลังจะลบคูปองจำนวน ${selectedCouponIds.length} ชิ้น`,
+      message: `คุณกำลังจะลบคูปองจำนวน ${selectedCouponIds.length} คูปอง`,
       header: 'Confirmation',
       icon: 'pi pi-exclamation-triangle',
       acceptIcon: 'none',
@@ -217,7 +218,7 @@ export class CouponListComponent implements OnInit {
             this.messageService.add({
               summary: 'ลบคูปองเรียบร้อย',
               severity: 'success',
-              detail: `คูปองจำนวน ${selectedCouponIds.length} ชิ้น ถูกลบแล้ว `,
+              detail: `คูปองจำนวน ${selectedCouponIds.length} คูปอง ถูกลบแล้ว `,
             });
             this.valueChange();
           },
@@ -245,8 +246,8 @@ export class CouponListComponent implements OnInit {
   changeCouponAvailable(coupon: CouponDto) {
     let messageConfirm = '';
     coupon.isCouponAvailable
-      ? (messageConfirm = 'คุณกำลังจะปิดการขายคูปอง')
-      : (messageConfirm = 'คุณกำลังเปิดขายคูปอง');
+      ? (messageConfirm = 'คุณกำลังจะระงับคูปอง')
+      : (messageConfirm = 'คุณกำลังยกเลิกการระงับคูปอง');
     this.confirmationService.confirm({
       message: `${messageConfirm} "${coupon.couponName}"`,
       header: 'Confirmation',
@@ -267,13 +268,13 @@ export class CouponListComponent implements OnInit {
                 this.messageService.add({
                   summary: 'ระงับคูปองเรียบร้อยแล้ว',
                   severity: 'success',
-                  detail: `คูปอง "${coupon.couponName} ถูกระงับแล้ว"`,
+                  detail: `คูปอง ${coupon.couponName} ถูกระงับแล้ว`,
                 });
               } else {
                 this.messageService.add({
-                  summary: 'เปิดขายคูปองเรียบร้อยแล้ว',
+                  summary: 'ยกเลิกการระงับคูปองเรียบร้อยแล้ว',
                   severity: 'success',
-                  detail: `คูปอง "${coupon.couponName} เปิดขายอีกครั้ง"`,
+                  detail: `คูปอง ${coupon.couponName} ยกเลิกการระงับ`,
                 });
               }
               this.valueChange();

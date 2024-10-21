@@ -28,6 +28,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { CouponDto } from '../../../shared/dtos/coupon.dto';
 import { CategoryService } from '../../../shared/services/category.service';
 import { CategoriesListDto } from '../../../shared/dtos/categories-list.dto';
+import { PagingDto } from '../../../shared/dtos/paging.dto';
 
 @Component({
   selector: 'app-category-list',
@@ -84,22 +85,27 @@ export class CategoryListComponent implements OnInit {
       this.getAllCategories(pt);
   }
   getAllCategories(e: LazyLoadMeta) {
+    this.pageIndex = Math.floor(e.first! / e.rows!) + 1;
+    this.pageSize = e.rows!;
     this.loading = true;
-    this.categoryService.getCategoriesWithKeyword(this.keyword).subscribe({
-      next: (res: CategoriesListDto[]) => {
-        this.categories = res;
-        this.loading = false;
-      },
-      error: (err: HttpErrorResponse) => {
-        this.messageService.add({
-          summary: 'Something Error!',
-          detail: 'Please try again.',
-          severity: 'warn',
-          life: 3000,
-        });
-        this.loading = false;
-      },
-    });
+    this.categoryService
+      .getCategoriesWithKeyword(this.keyword, this.pageIndex, this.pageSize)
+      .subscribe({
+        next: (res: PagingDto<CategoriesListDto>) => {
+          this.categories = res.items;
+          this.totalRecords = res.totalRecords;
+          this.loading = false;
+        },
+        error: (err: HttpErrorResponse) => {
+          this.messageService.add({
+            summary: 'Something Error!',
+            detail: 'Please try again.',
+            severity: 'warn',
+            life: 3000,
+          });
+          this.loading = false;
+        },
+      });
   }
   newCategory() {
     this.returnUrl = this.router.url;

@@ -1,10 +1,10 @@
-<div class="card  m-7">
+<div class="card  m-7 mb-0">
 
     <p-dataView #dv [value]="products" layout='grid' (onLazyLoad)="getAllProduct($event)" [paginator]="true"
         [rows]="pageSize" [totalRecords]="totalRecords" [lazy]="true" emptyMessage="ไม่มีสินค้าที่ค้นหา">
         <ng-template pTemplate="header">
-            <div class=" flex w-full  mb-3 md:justify-content-end grid  align-items-center   mt-5  ">
-                <div class="flex align-content-center">
+            <div class=" flex w-full  mb-3 md:justify-content-end grid  align-items-center  mt-4   ">
+                <div class="flex align-content-center  ">
                     <p-inputGroup>
                         <input type=" text" pInputText placeholder="คำค้นหา" [(ngModel)]="keyword"
                             (keyup)="onFilter(dv, $event)" class="w-full" />
@@ -85,13 +85,7 @@
                                         product.productName|cutText:[30]}}</a>
                                 </div>
 
-                                <div class="surface-100 p-1" style="border-radius: 30px">
-                                    <div class="surface-0 flex align-items-center gap-2 justify-content-center py-1 px-2"
-                                        style="border-radius: 30px; box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.04), 0px 1px 2px 0px rgba(0, 0, 0, 0.06)">
-                                        <span class="text-900 font-medium text-sm">{{ product.totalScore }}</span>
-                                        <i class="pi pi-star-fill text-yellow-500"></i>
-                                    </div>
-                                </div>
+
                             </div>
                             <div class="w-full">
 
@@ -144,7 +138,7 @@
         <!-- Grid template -->
         <ng-template let-product pTemplate="grid" let-products>
             <div class="grid grid-nogutter">
-                <div class="col-12 sm:col-6 md:col-4 lg:col-3 xl:col-2 p-2 align-items-stretch flex  flex-wrap"
+                <div class="col-12 sm:col-6 md:col-4 lg:col-3  p-2 align-items-stretch flex  flex-wrap"
                     *ngFor="let product of products">
                     <div class="p-4 border-1 surface-border surface-card border-round flex flex-column ">
                         @if (isUserAuthenticated&&hasPermission&&manageProductMode) {
@@ -179,9 +173,6 @@
                                 <img class="border-round w-full " src="{{rootImgUrl}}/{{product.productImageURL}}"
                                     alt={{product.name}}
                                     style=" min-height:150px; max-height:300px; max-width: 300px;" />
-
-
-
                             </div>
                         </div>
                         <div class="pt-4 bottom-100">
@@ -204,13 +195,6 @@
                                     <div class="text-lg font-medium text-900 mt-1">
                                         <a routerLink="/product/{{product.productId}}/detail">{{
                                             product.productName|cutText:[20]}}</a>
-                                    </div>
-                                </div>
-                                <div class="surface-100 p-1" style="border-radius: 30px">
-                                    <div class="surface-0 flex align-items-center gap-2 justify-content-center py-1 px-2"
-                                        style="border-radius: 30px; box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.04), 0px 1px 2px 0px rgba(0, 0, 0, 0.06)">
-                                        <span class="text-900 font-medium text-sm">{{ product.totalScore }}</span>
-                                        <i class="pi pi-star-fill text-yellow-500"></i>
                                     </div>
                                 </div>
                             </div>

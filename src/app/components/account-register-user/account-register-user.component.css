@@ -1,3 +1,4 @@
-.margin-top-10 {
-  margin-top: 10rem;
+.card-box {
+  border: 3px solid rgb(202, 202, 202); /* สร้างเส้นขอบขนาด 2px สีดำ */
+  box-sizing: border-box; /* รวมขอบและ padding เข้ากับขนาดของกล่อง */
 }

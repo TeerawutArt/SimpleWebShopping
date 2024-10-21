@@ -1,5 +1,5 @@
-<div class="card flex justify-content-center margin-top-10 ">
-    <form [formGroup]="registerForm" (ngSubmit)="registerUser()">
+<div class="card flex justify-content-center m-8   ">
+    <form [formGroup]="registerForm" (ngSubmit)="registerUser()" class="card-box">
         <p-stepper [(activeStep)]="active">
             <p-stepperPanel>
                 <ng-template pTemplate="header" let-onClick="onClick" let-index="index">

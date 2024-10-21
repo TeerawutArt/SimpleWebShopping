@@ -1,4 +1,4 @@
-<div class="card m-7">
+<div class="card m-7 mb-0">
     <p-toast />
     <p-toolbar styleClass="mb-4 gap-2">
         <ng-template pTemplate="left">
@@ -34,21 +34,21 @@
                     <p-tableHeaderCheckbox />
                 </th>
 
-                <th pSortableColumn="couponName" style="min-width:10rem">
-                    ชื่อสินค้า<p-sortIcon field="couponName" />
+                <th style="min-width:5rem">
+                    ชื่อคูปอง
                 </th>
 
                 <th>
-                    รายละเอียดสินค้า
+                    รายละเอียด
                 </th>
                 <th style="max-width:5rem">
                     รหัสคูปอง
                 </th>
-                <th pSortableColumn="amount" style="max-width:5rem">
-                    จำนวนคูปอง <p-sortIcon field="amount" />
+                <th style="max-width:5rem">
+                    จำนวนคูปอง
                 </th>
-                <th pSortableColumn="discountRate" style="max-width:5rem">
-                    ลดราคา <p-sortIcon field="discountRate" />
+                <th style="max-width:5rem">
+                    ลดราคา
                 </th>
                 <th style="min-width:5rem">
                     ลดสูงสุด
@@ -114,8 +114,14 @@
                 <td>
                     <p-button icon="pi pi-pencil" [rounded]="true" [outlined]="true" severity="success"
                         (onClick)="updateCoupon(coupon)" />
+                    @if (coupon.isCouponAvailable) {
                     <p-button icon="pi pi-ban" severity="warning" [rounded]="true" [outlined]="true"
                         (onClick)="changeCouponAvailable(coupon)" />
+                    }@else {
+                    <p-button icon="pi pi-replay" severity="info" [rounded]="true" [outlined]="true"
+                        (onClick)="changeCouponAvailable(coupon)" />
+                    }
+
                     <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [outlined]="true"
                         (onClick)="deleteCoupon(coupon)" />
                 </td>

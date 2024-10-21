@@ -105,7 +105,7 @@ export class HeaderComponent implements OnInit {
   }
   navBar() {
     this.productMenu = [];
-    this.productMenu.push({ label: 'หน้าหลัก', routerLink: '/' });
+    this.productMenu.push({ label: 'หน้าหลัก', routerLink: '/index' });
     //
     if (this.isUserAuthenticated) {
       if (this.advancedPermission) {
@@ -146,17 +146,7 @@ export class HeaderComponent implements OnInit {
           label: 'หมวดหมู่สินค้า',
           routerLink: 'category/list',
         });
-      } else {
-        this.productMenu.push({
-          label: 'รายการสินค้า',
-          routerLink: 'product/list',
-        });
       }
-    } else {
-      this.productMenu.push({
-        label: 'รายการสินค้า',
-        routerLink: 'product/list',
-      });
     }
   }
   showLogin() {
@@ -172,7 +162,6 @@ export class HeaderComponent implements OnInit {
   upDateCart() {
     this.cartService.GetUserCart().subscribe({
       next: (res) => {
-        console.log(res);
         if (res.length > 0) {
           this.productsInCart = res?.length;
           console.log(this.productsInCart);

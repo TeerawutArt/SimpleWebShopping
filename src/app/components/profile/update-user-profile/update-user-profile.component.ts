@@ -61,6 +61,7 @@ export class UpdateUserProfileComponent implements OnInit {
   @ViewChild(FileUpload) fileUploadComponent!: FileUpload;
   genders = new Array();
   prefixes = new Array();
+  returnUrl = '';
   uploadImage: File | string = '';
   updateProfileForm!: FormGroup;
   isProcessing = false;
@@ -118,6 +119,11 @@ export class UpdateUserProfileComponent implements OnInit {
   }
   onClearImage() {
     this.uploadImage = '';
+  }
+  cancel() {
+    this.returnUrl =
+      this.route.snapshot.queryParams['returnUrl'] || this.returnUrl;
+    this.router.navigate([this.returnUrl]);
   }
   updateProfile() {
     this.confirmationService.confirm({

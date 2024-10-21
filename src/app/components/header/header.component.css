@@ -1,7 +1,9 @@
 header {
   z-index: 1000;
 }
-
+::ng-deep .bgHeaderColor {
+  background-color: rgb(255, 230, 193);
+}
 ::ng-deep .p-menuitem-link-active .p-menuitem-text {
   color: #1d4ed8;
 }
