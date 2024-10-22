@@ -71,7 +71,7 @@ export class NewProductComponent implements OnInit {
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
     private productService: ProductService,
-    private categoriesService: CategoryService /* private formBuilder: FormBuilder //ไว้ทำ category tag */,
+    private categoriesService: CategoryService,
     private router: Router,
     private route: ActivatedRoute
   ) {}
@@ -107,7 +107,6 @@ export class NewProductComponent implements OnInit {
   getCategories() {
     this.categoriesService.getCategories().subscribe({
       next: (res) => {
-        console.log(res);
         this.categoriesItem = res;
       },
       error: (err: HttpErrorResponse) => {

@@ -48,7 +48,8 @@ export class ProductService {
     keyword: string,
     pageIndex: number,
     pagesize: number,
-    hideDisableProduct: boolean
+    hideDisableProduct: boolean,
+    categoryId: string | null = null //default value เป็น null
   ) {
     let url = environment.apiBaseUrl + '/Products';
     url = url + '?PageIndex=' + pageIndex;
@@ -56,6 +57,9 @@ export class ProductService {
     url = url + '&ManageProductMode=' + manageProductMode;
     url = url + '&HideDisableProduct=' + hideDisableProduct;
     url = url + '&keyword=' + encodeURIComponent(keyword); //encode เพราะจะได้ส่งอักษรพิเศษไปได้ เช่น spacebar
+    if (categoryId && categoryId != '000') {
+      url = url + '&CategoryId=' + categoryId;
+    }
     return this.http.get<PagingDto<ProductListDto>>(url);
   }
   getProductDetail(id: string) {

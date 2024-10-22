@@ -20,7 +20,7 @@ export class CategoryService {
     pageIndex: number,
     pagesize: number
   ) {
-    let reqUrl = environment.apiBaseUrl + '/Category';
+    let reqUrl = environment.apiBaseUrl + '/Category/Paging';
     reqUrl += '?keyword=' + encodeURIComponent(keyword); //encode เพราะจะได้ส่งอักษรพิเศษไปได้ เช่น spacebar
     reqUrl = reqUrl + '&PageIndex=' + pageIndex;
     reqUrl = reqUrl + '&PageSize=' + pagesize;

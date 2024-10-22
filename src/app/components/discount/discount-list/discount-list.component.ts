@@ -147,9 +147,10 @@ export class DiscountListComponent implements OnInit {
   valueChange() {
     this.getDiscountList();
   }
-  logInfo() {
-    console.log(this.selectedProducts);
+  productDetail(productId: string) {
+    this.router.navigate([`/product/${productId}/detail`]);
   }
+
   deleteDiscount(discount: DiscountListDto) {
     this.confirmationService.confirm({
       message: `คุณกำลังจะลบ  ${discount.discountName} `,

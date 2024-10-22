@@ -1,12 +1,8 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import {
   FormControl,
   FormGroup,
+  FormsModule,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
@@ -16,7 +12,6 @@ import {
   LazyLoadMeta,
   MenuItem,
   MessageService,
-  SelectItem,
 } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
@@ -28,16 +23,11 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { SplitButtonModule } from 'primeng/splitbutton';
-import { CommonModule, DatePipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { ScrollPanelModule } from 'primeng/scrollpanel';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { DialogModule } from 'primeng/dialog';
-import {
-  FileRemoveEvent,
-  FileSelectEvent,
-  FileUpload,
-  FileUploadModule,
-} from 'primeng/fileupload';
+import { FileUpload, FileUploadModule } from 'primeng/fileupload';
 import { CalendarModule } from 'primeng/calendar';
 import { SpeedDialModule } from 'primeng/speeddial';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
@@ -51,14 +41,13 @@ import { ProductService } from '../../../shared/services/product.service';
 import { PagingDto } from '../../../shared/dtos/paging.dto';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ProductUpdateAvailableDto } from '../../../shared/dtos/product-update-available.dto';
-import {
-  DataView,
-  DataViewLayoutOptions,
-  DataViewModule,
-} from 'primeng/dataview';
+import { DataView, DataViewModule } from 'primeng/dataview';
 import { RatingModule } from 'primeng/rating';
 import { TagModule } from 'primeng/tag';
 import { CartService } from '../../../shared/services/cart.service';
+import { CategoryService } from '../../../shared/services/category.service';
+import { CategoriesListDto } from '../../../shared/dtos/categories-list.dto';
+import { DropdownChangeEvent, DropdownModule } from 'primeng/dropdown';
 @Component({
   selector: 'app-products',
   standalone: true,
@@ -87,6 +76,8 @@ import { CartService } from '../../../shared/services/cart.service';
     ProgressSpinnerModule,
     DataViewModule,
     RatingModule,
+    DropdownModule,
+    FormsModule,
     TagModule,
   ],
   templateUrl: './products.component.html',
@@ -97,7 +88,9 @@ export class ProductsComponent implements OnInit {
   @ViewChild('dataView') dataView!: DataView;
   visible: boolean = false;
   loading: boolean = false;
-
+  categoriesItem!: CategoriesListDto[];
+  selectedCategory!: CategoriesListDto;
+  selectedCategoryId: string | null = null;
   isProcessing = false;
   updateProductForm!: FormGroup;
   uploadImage: File | string = '';
@@ -120,8 +113,6 @@ export class ProductsComponent implements OnInit {
   isUserAuthenticated = false;
   returnUrl = '';
   dataViewState!: DataView;
-
-  sortField: string = '';
   // prettier-ignore
   constructor(
     private customValidator: CustomValidatorService,
@@ -129,12 +120,13 @@ export class ProductsComponent implements OnInit {
     private messageService: MessageService,
     private productService: ProductService,
     private confirmationService: ConfirmationService,
-    private route: ActivatedRoute,
     private router: Router,
+    private categoriesService: CategoryService,
     private cartService:CartService
   ) {
   }
   ngOnInit(): void {
+    this.getCategories();
     //จะทำงานเมื่อมีการ login  (ค่าที่ซับฯไว้เปลี่ยนค่า)
     this.accountService.authChanged.subscribe((res) => {
       this.isUserAuthenticated = res;
@@ -242,11 +234,11 @@ export class ProductsComponent implements OnInit {
         this.keyword,
         this.pageIndex,
         this.pageSize,
-        this.HideDisableProduct
+        this.HideDisableProduct,
+        this.selectedCategoryId //default เป็น null
       )
       .subscribe({
         next: (res: PagingDto<ProductListDto>) => {
-          console.log(res);
           this.products = res.items;
           this.totalRecords = res.totalRecords;
           // prettier-ignore
@@ -261,7 +253,6 @@ export class ProductsComponent implements OnInit {
             e.remainTimeMin = this.productService.remainTime(e.discountEndDate).minute;
             e.inventoryStatus = e.productTotalAmount>0?'INSTOCK':'OUTOFSTOCK'
           });
-          console.log(this.products);
           this.loading = false;
         },
         error: (err: HttpErrorResponse) => {
@@ -280,6 +271,7 @@ export class ProductsComponent implements OnInit {
     this.pageIndex = Math.floor(product.first! / product.rows!) + 1;
     this.pageSize = product.rows!;
   }
+
   buyProduct(product: ProductListDto) {
     var req = { productId: product.productId, quantity: 1 };
     this.cartService.AddProductCart(req).subscribe({
@@ -439,5 +431,28 @@ export class ProductsComponent implements OnInit {
         });
       },
     });
+  }
+  /* Category */
+  getCategories() {
+    this.categoriesService.getCategories().subscribe({
+      next: (res) => {
+        this.categoriesItem = []; //อย่าไปเซ็ต = [] ตอน initialize มันจะบัคไม่อัปเดทค่าที่โชว์ (primeng ไม่แก้บัคนี้ซักที)
+        //dummy สำหรับตัวเลือก 'สินค้าทั้งหมด'
+        this.categoriesItem.push({
+          id: '000',
+          name: '--สินค้าทั้งหมด--',
+          code: 'AllPRODUCT',
+          description: 'show all product',
+        });
+        res.forEach((c) => this.categoriesItem.push(c));
+      },
+      error: (err: HttpErrorResponse) => {
+        console.log(err);
+      },
+    });
+  }
+  onSelectDropdownMenu(event: DropdownChangeEvent, dv: DataView) {
+    this.selectedCategoryId = this.selectedCategory?.id;
+    this.getAllProduct(dv);
   }
 }

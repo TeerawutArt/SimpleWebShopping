@@ -124,7 +124,7 @@ export class HeaderComponent implements OnInit {
             },
             {
               label: 'จัดการสินค้า',
-              icon: PrimeIcons.PLUS,
+              icon: PrimeIcons.DATABASE,
               routerLink: '/product/manage',
             },
           ],

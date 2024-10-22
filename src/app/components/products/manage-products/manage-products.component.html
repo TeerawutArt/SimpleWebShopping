@@ -79,7 +79,8 @@
                         class="shadow-4" />
                 </td>
                 <td style="max-width:10rem">
-                    {{ product.productName|cutText:[50] }}
+                    <a routerLink="/product/{{product.productId}}/detail">{{
+                        product.productName|cutText:[50]}}</a>
                 </td>
 
                 <td style="max-width:20rem">

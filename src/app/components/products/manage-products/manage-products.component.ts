@@ -22,7 +22,7 @@ import { PagingDto } from '../../../shared/dtos/paging.dto';
 import { HttpErrorResponse } from '@angular/common/http';
 import { environment } from '../../../../environments/environment.development';
 import { ProductListDto } from '../../../shared/dtos/product-list.dto';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CutTextPipe } from '../../../shared/pipe/cut-text.pipe';
 
 @Component({
@@ -31,6 +31,7 @@ import { CutTextPipe } from '../../../shared/pipe/cut-text.pipe';
   styleUrl: './manage-products.component.css',
   standalone: true,
   imports: [
+    RouterModule,
     TableModule,
     DialogModule,
     RippleModule,
@@ -55,7 +56,6 @@ import { CutTextPipe } from '../../../shared/pipe/cut-text.pipe';
 })
 export class ManageProductsComponent implements OnInit {
   productDialog: boolean = false;
-
   cols!: unknown[];
   products!: ProductListDto[];
   returnUrl = '';
@@ -149,8 +149,6 @@ export class ManageProductsComponent implements OnInit {
       this.getAllProduct(pt);
   }
   getAllProduct(e: LazyLoadMeta) {
-    console.log(e.sortField); //ค่อยทำ
-    console.log(e.sortOrder);
     this.pageIndex = Math.floor(e.first! / e.rows!) + 1;
     this.pageSize = e.rows!;
     this.loading = true;

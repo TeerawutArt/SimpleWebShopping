@@ -3,8 +3,13 @@
     <p-dataView #dv [value]="products" layout='grid' (onLazyLoad)="getAllProduct($event)" [paginator]="true"
         [rows]="pageSize" [totalRecords]="totalRecords" [lazy]="true" emptyMessage="ไม่มีสินค้าที่ค้นหา">
         <ng-template pTemplate="header">
-            <div class=" flex w-full  mb-3 md:justify-content-end grid  align-items-center  mt-4   ">
-                <div class="flex align-content-center  ">
+            <div class=" grid w-full  mb-3  align-items-center  mt-4   ">
+                <div class="col-12 md:col-4 lg:col-2">
+                    <p-dropdown [options]="categoriesItem" [(ngModel)]="selectedCategory" [checkmark]="true"
+                        [showClear]="true" (onChange)="onSelectDropdownMenu($event,dv)" optionLabel="name"
+                        placeholder="ประเภทสินค้า" styleClass="category-menu" />
+                </div>
+                <div class="col-12 md:col-8 lg:col-4 align-content-center  ">
                     <p-inputGroup>
                         <input type=" text" pInputText placeholder="คำค้นหา" [(ngModel)]="keyword"
                             (keyup)="onFilter(dv, $event)" class="w-full" />
@@ -14,23 +19,28 @@
                 </div>
                 @if (isUserAuthenticated&&hasPermission) {
 
-                <div
-                    class="flex mr-2 align-items-center  align-items-center py-2 px-2 border-round-top-2xl border-round-bottom-2xl bg-green-700 border-black-alpha-10 border-solid text-white">
-                    <div><label class="mr-2">โหมดผู้ดูแล</label></div>
-                    <div><p-inputSwitch [(ngModel)]="manageProductMode" (onChange)="valueChange(dv)"
-                            [disabled]="loading" /></div>
+                <div class="col-4  lg:col-2">
+                    <div
+                        class="flex mr-2   align-items-center py-2 px-2 border-round-top-2xl border-round-bottom-2xl bg-green-700 border-black-alpha-10 border-solid text-white">
+                        <div class="w-full"><label class="mr-2">โหมดผู้ดูแล</label></div>
+                        <div><p-inputSwitch [(ngModel)]="manageProductMode" (onChange)="valueChange(dv)"
+                                [disabled]="loading" /></div>
+                    </div>
                 </div>
-                <div
-                    class=" mr-2 flex align-items-center py-2 px-2 border-round-top-2xl border-round-bottom-2xl bg-red-600 border-black-alpha-10 border-solid text-white">
-                    <div><label class=" mr-2">ซ่อนสินค้าที่ระงับ</label></div>
-                    <div><p-inputSwitch [(ngModel)]="HideDisableProduct" (onChange)="valueChange(dv)"
-                            [disabled]="loading" />
+                <div class="col-4  lg:col-2">
+                    <div
+                        class=" mr-2 flex align-items-center py-2 px-2 border-round-top-2xl border-round-bottom-2xl bg-red-600 border-black-alpha-10 border-solid text-white">
+                        <div><label class=" mr-2">ซ่อนสินค้าที่ระงับ</label></div>
+                        <div><p-inputSwitch [(ngModel)]="HideDisableProduct" (onChange)="valueChange(dv)"
+                                [disabled]="loading" />
+                        </div>
                     </div>
                 </div>
 
+
                 }
 
-                <div class="ml-8">
+                <div class="col-4 lg:col-2 ">
                     <p-dataViewLayoutOptions layout='grid' />
                 </div>
             </div>
@@ -103,7 +113,7 @@
 
                             </div>
 
-                            <div class="flex flex-column md:align-items-end gap-4 ">
+                            <div class="flex flex-column md:align-items-end   ">
 
                                 @if (!product.isDiscounted) {
                                 <div class="">
@@ -112,7 +122,7 @@
                                 </div>
                                 }@else{
                                 <label class="text-green-700"> {{product.discountPrice|currency:'฿'}}</label>
-                                <br>
+
                                 <small
                                     class="line-through text-gray-400 text-lg font-bold">{{product.price|currency:'฿'}}</small>
                                 @if (product.isDiscountPercent) {
