@@ -100,7 +100,7 @@ export class ProductsComponent implements OnInit {
   curDate!: Date;
   activePage!: number;
   pageIndex = 1;
-  pageSize = 12;
+  pageSize = 8;
   hasPermission = false;
   keyword: string = '';
   manageProductMode = false;
