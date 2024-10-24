@@ -30,7 +30,7 @@
                 <div class="col-4  lg:col-2">
                     <div
                         class=" mr-2 flex align-items-center py-2 px-2 border-round-top-2xl border-round-bottom-2xl bg-red-600 border-black-alpha-10 border-solid text-white">
-                        <div><label class=" mr-2">ซ่อนสินค้าที่ระงับ</label></div>
+                        <div class="w-full"><label class=" mr-2">ซ่อนสินค้าที่ระงับ</label></div>
                         <div><p-inputSwitch [(ngModel)]="HideDisableProduct" (onChange)="valueChange(dv)"
                                 [disabled]="loading" />
                         </div>
@@ -204,7 +204,7 @@
 
                                     <div class="text-lg font-medium text-900 mt-1">
                                         <a routerLink="/product/{{product.productId}}/detail">{{
-                                            product.productName|cutText:[20]}}</a>
+                                            product.productName|cutText:[40]}}</a>
                                     </div>
                                 </div>
                             </div>
