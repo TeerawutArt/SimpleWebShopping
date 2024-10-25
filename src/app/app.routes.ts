@@ -5,7 +5,6 @@ import { authGuard } from './shared/guards/auth.guard';
 import { AccountRegisterUserComponent } from './components/account-register-user/account-register-user.component';
 import { ProductsComponent } from './components/products/all-product/products.component';
 import { NewProductComponent } from './components/products/new-product/new-product.component';
-import { NotifyNewsComponent } from './components/notify-news/notify-news.component';
 import { ForbiddenComponent } from './components/forbidden/forbidden.component';
 import { isLoginGuard } from './shared/guards/islogin.guard';
 import { UpdateProductComponent } from './components/products/update-product/update-product.component';
@@ -182,11 +181,6 @@ export const routes: Routes = [
     title: 'ออเดอร์สินค้า',
     component: ViewOrderComponent,
     canActivate: [authGuard],
-  },
-  {
-    path: 'news',
-    title: 'ข่าวสาร',
-    component: NotifyNewsComponent,
   },
   {
     path: 'forbidden',

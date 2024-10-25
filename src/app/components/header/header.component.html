@@ -28,8 +28,8 @@
 
             }
             @else {
-            <p-button id="loginBTN" (onClick)="showLogin()" label="Login" [link]="true" />
-            <p-button label="Register" [link]="true" routerLink="/account/register" />
+            <p-button id="loginBTN" (onClick)="showLogin()" label="เข้าระบบ" [link]="true" />
+            <p-button label="สมัครสมาชิก" [link]="true" routerLink="/account/register" />
             }
 
         </ng-template>
@@ -70,8 +70,8 @@
                     }
                 </div>
                 <div class="field col-12 mt-3 text-center">
-                    <button pButton type="submit" label="login" [disabled]="loginForm.invalid" [loading]="isProcessing"
-                        title="submit" class="w-full md:w-4"></button>
+                    <button pButton type="submit" label="เข้าสู่ระบบ" [disabled]="loginForm.invalid"
+                        [loading]="isProcessing" title="submit" class="w-full md:w-4"></button>
                 </div>
             </div>
         </form>

@@ -15,6 +15,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { DiscountProductCancelDto } from '../../../shared/dtos/discount-product-cancel';
 import { CardModule } from 'primeng/card';
 import { CutTextPipe } from '../../../shared/pipe/cut-text.pipe';
+import { environment } from '../../../../environments/environment.development';
 
 @Component({
   selector: 'app-discount-list',
@@ -41,6 +42,7 @@ export class DiscountListComponent implements OnInit {
   selectedProducts: any[] = [];
   totalDiscount = 0;
   expandedRows = {};
+  rootImgUrl = environment.imageUrl;
   returnUrl = '';
   constructor(
     private discountService: DiscountService,

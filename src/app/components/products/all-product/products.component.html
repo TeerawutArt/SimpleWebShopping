@@ -1,4 +1,4 @@
-<div class="card  m-7 mb-0">
+<div class="card  m-7 mb-0 ">
 
     <p-dataView #dv [value]="products" layout='grid' (onLazyLoad)="getAllProduct($event)" [paginator]="true"
         [rows]="pageSize" [totalRecords]="totalRecords" [lazy]="true" emptyMessage="ไม่มีสินค้าที่ค้นหา">
@@ -165,7 +165,7 @@
                         <div class="surface-50 flex justify-content-center border-round p-3">
                             <div class="relative mx-auto">
 
-                                @if (!product.isAvailable) {
+                                @if (!product.isAvailable&&product.inventoryStatus=="INSTOCK") {
                                 <p-tag value="ระงับการขาย" severity=danger></p-tag>
                                 }
                                 @else if (product.inventoryStatus=="INSTOCK"&& product.isDiscounted) {
@@ -177,12 +177,12 @@
                                 @else if (product.inventoryStatus=="INSTOCK") {
                                 <p-tag value="มีสินค้า" severity=info></p-tag>
                                 }
-                                @else if (product.inventoryStatus=="OUTOFSTOCK") {
+                                @else if (product.inventoryStatus=="OUTOFSTOCK" ) {
                                 <p-tag value="สินค้าหมด" severity=warning></p-tag>
                                 }
                                 <img class="border-round w-full " src="{{rootImgUrl}}/{{product.productImageURL}}"
                                     alt={{product.name}}
-                                    style=" min-height:150px; max-height:300px; max-width: 300px;" />
+                                    style=" min-height:150px; max-height:300px; max-width: 400px;" />
                             </div>
                         </div>
                         <div class="pt-4 bottom-100">

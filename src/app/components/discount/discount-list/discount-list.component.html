@@ -85,6 +85,9 @@
                 <th style="width: 4rem">
                     <p-tableHeaderCheckbox />
                 </th>
+                <th>
+
+                </th>
                 <th pSortableColumn="productName">ชื่อสินค้า <p-sortIcon field="productName" /></th>
                 <th pSortableColumn="price">ราคาเต็ม <p-sortIcon field="price" /></th>
                 <th pSortableColumn="discountPrice">ราคาลดราคา <p-sortIcon field="discountPrice" /></th>
@@ -97,6 +100,10 @@
             <tr>
                 <td>
                     <p-tableCheckbox [value]="product" />
+                </td>
+                <td>
+                    <img src="{{rootImgUrl}}/{{product.productImageURL}}" alt={{product.productName}} width="50"
+                        class="shadow-4" />
                 </td>
                 <td>{{ product.productName|cutText:[50] }}</td>
                 <td>{{ product.price|currency:'฿' }}</td>

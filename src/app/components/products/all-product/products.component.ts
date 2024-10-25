@@ -31,7 +31,6 @@ import { FileUpload, FileUploadModule } from 'primeng/fileupload';
 import { CalendarModule } from 'primeng/calendar';
 import { SpeedDialModule } from 'primeng/speeddial';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
-import { NotifyNewsComponent } from '../../notify-news/notify-news.component';
 import { CutTextPipe } from '../../../shared/pipe/cut-text.pipe';
 import { ProductListDto } from '../../../shared/dtos/product-list.dto';
 import { environment } from '../../../../environments/environment.development';
@@ -61,7 +60,6 @@ import { DropdownChangeEvent, DropdownModule } from 'primeng/dropdown';
     ButtonModule,
     MenuModule,
     CheckboxModule,
-    NotifyNewsComponent,
     CalendarModule,
     InputGroupModule,
     InputGroupAddonModule,
