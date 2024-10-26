@@ -354,6 +354,9 @@ export class ProductsComponent implements OnInit {
               severity: 'success',
               detail: 'สินค้า' + '"' + item.productName + '"' + ' ถูกลบแล้ว',
             });
+            this.products = this.products.filter(
+              (p) => p.productId != item.productId
+            ); //ลบ สินค้าออกจาก array products
           },
           error: (error: HttpErrorResponse) => {
             this.messageService.add({

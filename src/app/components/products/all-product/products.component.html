@@ -69,18 +69,25 @@
 
                             <img class="block xl:block mx-auto border-round w-full "
                                 src="{{rootImgUrl}}/{{product.productImageURL}}" alt={{product.productName}} />
-                            @if (!product.isAvailable) {
-                            <p-tag value="ระงับการขาย" severity=danger class="absolute" [style.left.px]="4"
-                                [style.top.px]="4"></p-tag>
-
+                            @if (!product.isAvailable&&product.inventoryStatus=="INSTOCK") {
+                            <p-tag value="ระงับการขาย" severity=danger [style.left.px]="4" [style.top.px]="4"
+                                class="absolute"></p-tag>
+                            }
+                            @else if (product.inventoryStatus=="INSTOCK"&& product.isDiscounted) {
+                            <p-tag value="ลดราคา" severity=success [style.left.px]="4" [style.top.px]="4"
+                                class="absolute"></p-tag>
+                            }
+                            @else if (product.inventoryStatus=="INSTOCK"&& product.discountRate>0) {
+                            <p-tag value="กำลังจะลดราคา" severity=warning [style.left.px]="4" [style.top.px]="4"
+                                class="absolute"></p-tag>
                             }
                             @else if (product.inventoryStatus=="INSTOCK") {
-                            <p-tag value="มีสินค้า" severity=success class="absolute" [style.left.px]="4"
-                                [style.top.px]="4"></p-tag>
+                            <p-tag value="มีสินค้า" severity=info [style.left.px]="4" [style.top.px]="4"
+                                class="absolute"></p-tag>
                             }
-                            @else if (product.inventoryStatus=="OUTOFSTOCK") {
-                            <p-tag value="สินค้าหมด" severity=warning class="absolute" [style.left.px]="4"
-                                [style.top.px]="4"></p-tag>
+                            @else if (product.inventoryStatus=="OUTOFSTOCK" ) {
+                            <p-tag value="สินค้าหมด" severity=warning [style.left.px]="4" [style.top.px]="4"
+                                class="absolute"></p-tag>
                             }
 
                         </div>

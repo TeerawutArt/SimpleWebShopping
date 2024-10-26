@@ -242,6 +242,7 @@ export class UpdateAddressComponent implements OnInit {
       .updateAddress(this.storeAddress.addressId, req)
       .subscribe({
         next: (res) => {
+          console.log(res);
           this.messageService.add({
             severity: 'success',
             summary: 'ทำรายการสำเร็จ',

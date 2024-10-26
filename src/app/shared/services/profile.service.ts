@@ -5,6 +5,7 @@ import { AccountAddressDto } from '../dtos/account-address.dto';
 import { AccountProfileDto } from '../dtos/account-profile.dto';
 import { AccountDefaultAddress } from '../dtos/account-default-address.dto';
 import { AccountUpdateProfileDto } from '../dtos/account-update-profile.dto';
+import { AccountUpdateImageDto } from '../dtos/account-update-image.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -27,10 +28,10 @@ export class ProfileService {
     if (file !== '') formData.append('userImage', file);
     formData.append('firstName', req.firstName);
     formData.append('lastName', req.lastName);
-    formData.append('birthDate', req.birthDate.toDateString());
+    formData.append('birthDate', req.birthDate.toLocaleDateString()); //แก้บัคติดerr การส่งข้อมูลวันไปหลังบ้าน
     formData.append('email', req.email);
     formData.append('phoneNumber', req.phoneNumber);
     formData.append('gender', req.gender);
-    return this.http.put<unknown>(url, formData);
+    return this.http.put<AccountUpdateImageDto>(url, formData);
   }
 }

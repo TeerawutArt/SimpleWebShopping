@@ -76,6 +76,7 @@ export class HeaderComponent implements OnInit {
   }
 
   async ngOnInit() {
+    this.imgUserURL = localStorage.getItem('UserImageUrl') || ''; //อ่านจากที่เก็บไว้ใน session
     this.loginForm = new FormGroup({
       userName: new FormControl('', [Validators.required]),
       password: new FormControl('', [Validators.required]),
@@ -91,8 +92,8 @@ export class HeaderComponent implements OnInit {
     this.advancedPermission = this.advancePermission(
       this.accountService.getUserInfo()?.role
     );
-    this.imgUserURL = this.accountService.getUserInfo()?.imgUrl;
-    this.navBar();
+    /*     this.imgUserURL = this.accountService.getUserInfo()?.imgUrl; */
+    // prettier-ignore
 
     this.userName = this.accountService.getUserInfo()?.userName;
     this.componentHelper.loginVisibleModal.subscribe((res) => {
@@ -101,6 +102,11 @@ export class HeaderComponent implements OnInit {
     this.cartService.cartChanged.subscribe((res) => {
       this.isProductAddCart = res;
       this.upDateCart();
+    });
+    this.accountService.imageChanged.subscribe((res) => {
+      if (res == true) {
+        this.imgUserURL = localStorage.getItem('UserImageUrl') || '';
+      }
     });
   }
   navBar() {
@@ -209,9 +215,11 @@ export class HeaderComponent implements OnInit {
         this.userName = userInfo?.userName;
         this.advancedPermission = this.advancePermission(userInfo?.role);
         this.accountService.notifyAuthChange(true);
-        this.navBar();
         this.upDateCart();
-        this.imgUserURL = userInfo?.imgUrl;
+        this.imgUserURL = this.accountService.getUserInfo()?.imgUrl;
+        localStorage.setItem('UserImageUrl', this.imgUserURL);
+        this.navBar();
+
         this.returnUrl =
           this.route.snapshot.queryParams['returnUrl'] || this.returnUrl;
 
@@ -262,9 +270,8 @@ export class HeaderComponent implements OnInit {
   private logoutUser() {
     localStorage.removeItem(authKey.accessToken);
     localStorage.removeItem(authKey.refreshToken);
-
+    localStorage.removeItem('UserImageUrl');
     this.accountService.notifyAuthChange(false);
-
     this.router.navigate(['/']);
   }
 }

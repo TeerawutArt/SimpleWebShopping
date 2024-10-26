@@ -16,8 +16,8 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
   const location = inject(Location); // Inject Location @angular/common ดูดีๆมี 2 อัน
   return next(req).pipe(
     catchError((err: HttpErrorResponse) => {
+      console.log(err);
       let message = '';
-      console.log(router.url);
       if (err.status === 400) {
         if (router.url.startsWith('/account/register')) {
           message = getErrorMessage(err);
