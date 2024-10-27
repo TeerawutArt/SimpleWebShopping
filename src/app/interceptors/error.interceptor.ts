@@ -18,12 +18,9 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
     catchError((err: HttpErrorResponse) => {
       console.log(err);
       let message = '';
-      let currentUrl = router.routerState.snapshot.url;
-      console.log(router.url);
       if (err.status === 400) {
         if (router.url.startsWith('/account/register')) {
           message = getErrorMessage(err);
-          console.log(message);
         } else if (router.url.startsWith('/account/resetpassword')) {
           message = getErrorMessage(err);
         } else {

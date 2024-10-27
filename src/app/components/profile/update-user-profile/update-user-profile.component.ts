@@ -30,6 +30,9 @@ import {
 import { HttpErrorResponse } from '@angular/common/http';
 import { MessageService, ConfirmationService } from 'primeng/api';
 import { ProfileService } from '../../../shared/services/profile.service';
+import { AccountUpdateProfileDto } from '../../../shared/dtos/account-update-profile.dto';
+import { AccountUpdateImageDto } from '../../../shared/dtos/account-update-image.dto';
+import { AccountService } from '../../../shared/services/account.service';
 
 @Component({
   selector: 'app-update-user-profile',
@@ -61,6 +64,7 @@ export class UpdateUserProfileComponent implements OnInit {
   @ViewChild(FileUpload) fileUploadComponent!: FileUpload;
   genders = new Array();
   prefixes = new Array();
+  returnUrl = '';
   uploadImage: File | string = '';
   updateProfileForm!: FormGroup;
   isProcessing = false;
@@ -71,7 +75,8 @@ export class UpdateUserProfileComponent implements OnInit {
     private route: ActivatedRoute,
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
-    private profileService: ProfileService
+    private profileService: ProfileService,
+    private accountService: AccountService
   ) {}
   ngOnInit(): void {
     this.storeProfileInfo = window.history.state['saveProduct']; //ดึงข้อมูลจาก state(ที่ส่งมา) ใน history ของ browser (รีเฟชแล้วไม่หาย)
@@ -119,7 +124,21 @@ export class UpdateUserProfileComponent implements OnInit {
   onClearImage() {
     this.uploadImage = '';
   }
+  cancel() {
+    this.returnUrl =
+      this.route.snapshot.queryParams['returnUrl'] || this.returnUrl;
+    this.router.navigate([this.returnUrl]);
+  }
   updateProfile() {
+    const req: AccountUpdateProfileDto = {
+      // prettier-ignore
+      firstName:this.updateProfileForm.get('prefix')?.value +' '+this.updateProfileForm.get('firstName')?.value,
+      lastName: this.updateProfileForm.get('lastName')?.value,
+      birthDate: this.updateProfileForm.get('birthDate')?.value,
+      gender: this.updateProfileForm.get('gender')?.value,
+      email: this.updateProfileForm.get('email')?.value,
+      phoneNumber: String(this.updateProfileForm.get('phoneNumber')?.value),
+    };
     this.confirmationService.confirm({
       header: 'ยืนยันการทำรายการ',
       message: `ยืนยันการแก้ไขข้อมูลส่วนตัว`,
@@ -133,46 +152,33 @@ export class UpdateUserProfileComponent implements OnInit {
       accept: () => {
         this.isProcessing = true;
         this.updateProfileForm.disable();
-        this.profileService
-          .updateUserProfile(
-            {
-              // prettier-ignore
-              firstName:this.updateProfileForm.get('prefix')?.value +' '+this.updateProfileForm.get('firstName')?.value,
-              lastName: this.updateProfileForm.get('lastName')?.value,
-              birthDate: this.updateProfileForm.get('birthDate')?.value,
-              gender: this.updateProfileForm.get('gender')?.value,
-              email: this.updateProfileForm.get('email')?.value,
-              phoneNumber: String(
-                this.updateProfileForm.get('phoneNumber')?.value
-              ),
-            },
-            this.uploadImage
-          )
-          .subscribe({
-            next: (_) => {
-              this.updateProfileForm.reset();
-              this.messageService.clear();
-              this.updateProfileForm.enable();
-              this.fileUploadComponent.clear(); //ล้างไฟล์เมื่อดำเนินการแล้ว
-              this.isProcessing = false;
-              this.messageService.add({
-                summary: 'ทำรายการเสร็จสิ้น',
-                detail: `แก้ไขโปรไฟล์สำเร็จ`,
-                severity: 'success',
-                life: 1000,
-              });
-              this.router.navigate(['/account/profile']);
-            },
-            error: (err: HttpErrorResponse) => {
-              this.messageService.add({
-                summary: 'Something Error!',
-                detail: 'Please try again.',
-                severity: 'warn',
-              });
-              this.updateProfileForm.enable();
-              this.isProcessing = false;
-            },
-          });
+        this.profileService.updateUserProfile(req, this.uploadImage).subscribe({
+          next: (res: AccountUpdateImageDto) => {
+            localStorage.setItem('UserImageUrl', res.userImageURL); //เปลี่ยนurlรูปใหม่
+            this.accountService.notifyImageChange(true);
+            this.updateProfileForm.reset();
+            this.messageService.clear();
+            this.updateProfileForm.enable();
+            this.fileUploadComponent.clear(); //ล้างไฟล์เมื่อดำเนินการแล้ว
+            this.isProcessing = false;
+            this.messageService.add({
+              summary: 'ทำรายการเสร็จสิ้น',
+              detail: `แก้ไขโปรไฟล์สำเร็จ`,
+              severity: 'success',
+              life: 1000,
+            });
+            this.router.navigate(['/account/profile']);
+          },
+          error: (err: HttpErrorResponse) => {
+            this.messageService.add({
+              summary: 'Something Error!',
+              detail: 'Please try again.',
+              severity: 'warn',
+            });
+            this.updateProfileForm.enable();
+            this.isProcessing = false;
+          },
+        });
       },
       reject: () => {
         this.messageService.add({

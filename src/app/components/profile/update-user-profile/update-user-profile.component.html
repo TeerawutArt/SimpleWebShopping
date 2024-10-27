@@ -94,7 +94,7 @@
 
                     </div>
                     <div class="field col-12 text-center flex justify-content-between">
-                        <p-button label="ย้อนกลับ" severity="secondary" icon="pi pi-arrow-left" />
+                        <p-button label="ย้อนกลับ" severity="secondary" icon="pi pi-arrow-left" (onClick)="cancel()" />
                         <p-button type="submit" label="แก้ไขข้อมูล" [disabled]="updateProfileForm.invalid"
                             [loading]="isProcessing" (onClick)="updateProfile()" />
 

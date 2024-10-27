@@ -7,16 +7,19 @@ import { CouponDto } from '../dtos/coupon.dto';
 import { CouponAvailableDto } from '../dtos/coupon-available.dto';
 import { CouponCodeDTO } from '../dtos/coupon-code.dto';
 import { CouponUsedDto } from '../dtos/coupon-uesd.dto';
+import { PagingDto } from '../dtos/paging.dto';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CouponService {
   constructor(private http: HttpClient) {}
-  getCouponList(keyword: string) {
+  getCouponList(keyword: string, pageIndex: number, pagesize: number) {
     let reqUrl = environment.apiBaseUrl + '/Coupons';
     reqUrl = reqUrl + '?keyword=' + encodeURIComponent(keyword); //encode เพราะจะได้ส่งอักษรพิเศษไปได้ เช่น spacebar
-    return this.http.get<CouponDto[]>(reqUrl);
+    reqUrl = reqUrl + '&PageIndex=' + pageIndex;
+    reqUrl = reqUrl + '&PageSize=' + pagesize;
+    return this.http.get<PagingDto<CouponDto>>(reqUrl);
   }
   createCoupon(req: CouponCreateDto) {
     let reqUrl = environment.apiBaseUrl + '/Coupons';

@@ -1,4 +1,4 @@
-<div class="card m-7">
+<div class="card m-7 mb-0">
     @if (discounts.length==0) {
     <p-card class="md:fixed md:top-50 md:left-50 -translate-xy-50 w-full md:w-6 ">
         <ng-template pTemplate="header">
@@ -85,7 +85,9 @@
                 <th style="width: 4rem">
                     <p-tableHeaderCheckbox />
                 </th>
-                <th>ไอดีสินค้า</th>
+                <th>
+
+                </th>
                 <th pSortableColumn="productName">ชื่อสินค้า <p-sortIcon field="productName" /></th>
                 <th pSortableColumn="price">ราคาเต็ม <p-sortIcon field="price" /></th>
                 <th pSortableColumn="discountPrice">ราคาลดราคา <p-sortIcon field="discountPrice" /></th>
@@ -99,11 +101,15 @@
                 <td>
                     <p-tableCheckbox [value]="product" />
                 </td>
-                <td>{{ product.productId }}</td>
+                <td>
+                    <img src="{{rootImgUrl}}/{{product.productImageURL}}" alt={{product.productName}} width="50"
+                        class="shadow-4" />
+                </td>
                 <td>{{ product.productName|cutText:[50] }}</td>
                 <td>{{ product.price|currency:'฿' }}</td>
                 <td class="text-green-500">{{ product.discountPrice | currency:'฿' }}</td>
-                <td><p-button (onClick)="logInfo()" type="button" icon="pi pi-search" [outlined]="true" /></td>
+                <td><p-button (onClick)="productDetail(product.productId)" type="button" icon="pi pi-search"
+                        [outlined]="true" /></td>
                 <td><p-button icon="pi pi-stop" severity="danger" [rounded]="true" [outlined]="true"
                         (onClick)="cancelProductDiscount([product])" /></td>
 

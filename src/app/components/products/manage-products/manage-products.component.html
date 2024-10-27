@@ -1,4 +1,4 @@
-<div class="card m-7">
+<div class="card m-7 mb-0">
     <p-toast />
     <p-toolbar styleClass="mb-4 gap-2">
         <ng-template pTemplate="left">
@@ -79,7 +79,8 @@
                         class="shadow-4" />
                 </td>
                 <td style="max-width:10rem">
-                    {{ product.productName|cutText:[50] }}
+                    <a routerLink="/product/{{product.productId}}/detail">{{
+                        product.productName|cutText:[50]}}</a>
                 </td>
 
                 <td style="max-width:20rem">

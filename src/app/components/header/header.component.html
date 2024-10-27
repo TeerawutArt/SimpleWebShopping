@@ -1,9 +1,10 @@
 <header class="fixed top-0 w-full margin-btm-15">
 
-    <p-menubar [model]="productMenu">
+    <p-menubar [model]="productMenu" styleClass="bgHeaderColor">
         <ng-template pTemplate="start">
-            <a routerLink="/home" routerLinkActive="active" ariaCurrentWhenActive="page" class="mr-2"><img
-                    src="favicon.ico" height="32px" alt="profile"></a>
+            <a routerLink="/index" routerLinkActive="active" ariaCurrentWhenActive="page" class="mr-2"><img
+                    src="logoWeb.png" height="48px" alt="profile"></a>
+
         </ng-template>
 
         <ng-template pTemplate="end">
@@ -14,7 +15,7 @@
                 </a>
 
                 <span class="vertical-align-middle"><a class="text-green-600 font-bold no-underline"
-                        [href]="'/account/profile'">{{userName}}</a></span>
+                        [routerLink]="'/account/profile'">{{userName}}</a></span>
                 <a routerLink="/account/profile" routerLinkActive="active" ariaCurrentWhenActive="page">
                     <i class=" ml-2 pi pi-cog text-xl text-blue-500"></i>
                 </a>
@@ -27,8 +28,8 @@
 
             }
             @else {
-            <p-button id="loginBTN" (onClick)="showLogin()" label="Login" [link]="true" />
-            <p-button label="Register" [link]="true" routerLink="/account/register" />
+            <p-button id="loginBTN" (onClick)="showLogin()" label="เข้าระบบ" [link]="true" />
+            <p-button label="สมัครสมาชิก" [link]="true" routerLink="/account/register" />
             }
 
         </ng-template>
@@ -69,21 +70,11 @@
                     }
                 </div>
                 <div class="field col-12 mt-3 text-center">
-                    <button pButton type="submit" label="Submit" [disabled]="loginForm.invalid" [loading]="isProcessing"
-                        title="submit" class="w-full md:w-4"></button>
+                    <button pButton type="submit" label="เข้าสู่ระบบ" [disabled]="loginForm.invalid"
+                        [loading]="isProcessing" title="submit" class="w-full md:w-4"></button>
                 </div>
             </div>
         </form>
-        <ng-template pTemplate="footer">
-            <div class="grid">
-                <div class="col-6 text-left ">
-                    <span><a [href]="'/account/forgotpassword?returnUrl=' + returnUrl">Forgot
-                            password?</a></span>
-                </div>
-                <div class="col-6 text-right">
-                    <span><a [href]="'/account/register?returnUrl=' + returnUrl">New account?</a></span>
-                </div>
-            </div>
-        </ng-template>
+
     </p-dialog>
 </div>

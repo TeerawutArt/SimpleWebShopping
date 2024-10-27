@@ -22,6 +22,13 @@ export class AccountService {
   notifyAuthChange(isAuthenticated: boolean) {
     this.authChangeSub.next(isAuthenticated);
   }
+  private imageChangeSub = new Subject<boolean>();
+  imageChanged = this.imageChangeSub.asObservable();
+
+  notifyImageChange(isImageChanged: boolean) {
+    this.imageChangeSub.next(isImageChanged);
+  }
+
   //install packet auth0 for jwt
   constructor(private http: HttpClient, private jwtHelper: JwtHelperService) {}
   register(req: RegisterUserDto) {
@@ -72,6 +79,7 @@ export class AccountService {
 
     localStorage.removeItem(authKey.accessToken);
     localStorage.removeItem(authKey.refreshToken);
+    localStorage.removeItem('UserImageUrl');
 
     return false;
   }

@@ -212,7 +212,12 @@ export class UserProfileComponent implements OnInit {
   }
 
   deleteExpiryOrder(orderId: string) {
-    this.orderService.deleteOrder(orderId).subscribe(); //ไม่ต้องแจ้งอะไรทั้งนั้น ตรงเงื่อนไขส่งไปลบเลย
+    //ไม่ต้องแจ้งอะไรทั้งนั้น ตรงเงื่อนไขส่งไปลบเลย
+    this.orderService.deleteOrder(orderId).subscribe({
+      next: () => {
+        this.valueChange();
+      },
+    });
   }
   deleteSelectedOrder(orderId: string) {
     this.confirmationService.confirm({

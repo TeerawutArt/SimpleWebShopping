@@ -98,6 +98,7 @@ export class ConfirmOrderComponent implements OnInit {
         //ตรวจว่ามีการใช้คูปองในออเดอร์นี้หรือยัง
         this.getUsedCoupon();
         this.cartService.setUpdateCart(true);
+        console.log(this.order.orderProducts);
       },
       error: (err: HttpErrorResponse) => {
         console.log(err);

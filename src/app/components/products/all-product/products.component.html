@@ -1,10 +1,15 @@
-<div class="card  m-7">
+<div class="card  m-7 mb-0 ">
 
     <p-dataView #dv [value]="products" layout='grid' (onLazyLoad)="getAllProduct($event)" [paginator]="true"
         [rows]="pageSize" [totalRecords]="totalRecords" [lazy]="true" emptyMessage="ไม่มีสินค้าที่ค้นหา">
         <ng-template pTemplate="header">
-            <div class=" flex w-full  mb-3 md:justify-content-end grid  align-items-center   mt-5  ">
-                <div class="flex align-content-center">
+            <div class=" grid w-full  mb-3  align-items-center  mt-4   ">
+                <div class="col-12 md:col-4 lg:col-2">
+                    <p-dropdown [options]="categoriesItem" [(ngModel)]="selectedCategory" [checkmark]="true"
+                        [showClear]="true" (onChange)="onSelectDropdownMenu($event,dv)" optionLabel="name"
+                        placeholder="ประเภทสินค้า" styleClass="category-menu" />
+                </div>
+                <div class="col-12 md:col-8 lg:col-4 align-content-center  ">
                     <p-inputGroup>
                         <input type=" text" pInputText placeholder="คำค้นหา" [(ngModel)]="keyword"
                             (keyup)="onFilter(dv, $event)" class="w-full" />
@@ -14,23 +19,28 @@
                 </div>
                 @if (isUserAuthenticated&&hasPermission) {
 
-                <div
-                    class="flex mr-2 align-items-center  align-items-center py-2 px-2 border-round-top-2xl border-round-bottom-2xl bg-green-700 border-black-alpha-10 border-solid text-white">
-                    <div><label class="mr-2">โหมดผู้ดูแล</label></div>
-                    <div><p-inputSwitch [(ngModel)]="manageProductMode" (onChange)="valueChange(dv)"
-                            [disabled]="loading" /></div>
+                <div class="col-4  lg:col-2">
+                    <div
+                        class="flex mr-2   align-items-center py-2 px-2 border-round-top-2xl border-round-bottom-2xl bg-green-700 border-black-alpha-10 border-solid text-white">
+                        <div class="w-full"><label class="mr-2">โหมดผู้ดูแล</label></div>
+                        <div><p-inputSwitch [(ngModel)]="manageProductMode" (onChange)="valueChange(dv)"
+                                [disabled]="loading" /></div>
+                    </div>
                 </div>
-                <div
-                    class=" mr-2 flex align-items-center py-2 px-2 border-round-top-2xl border-round-bottom-2xl bg-red-600 border-black-alpha-10 border-solid text-white">
-                    <div><label class=" mr-2">ซ่อนสินค้าที่ระงับ</label></div>
-                    <div><p-inputSwitch [(ngModel)]="HideDisableProduct" (onChange)="valueChange(dv)"
-                            [disabled]="loading" />
+                <div class="col-4  lg:col-2">
+                    <div
+                        class=" mr-2 flex align-items-center py-2 px-2 border-round-top-2xl border-round-bottom-2xl bg-red-600 border-black-alpha-10 border-solid text-white">
+                        <div class="w-full"><label class=" mr-2">ซ่อนสินค้าที่ระงับ</label></div>
+                        <div><p-inputSwitch [(ngModel)]="HideDisableProduct" (onChange)="valueChange(dv)"
+                                [disabled]="loading" />
+                        </div>
                     </div>
                 </div>
 
+
                 }
 
-                <div class="ml-8">
+                <div class="col-4 lg:col-2 ">
                     <p-dataViewLayoutOptions layout='grid' />
                 </div>
             </div>
@@ -59,18 +69,25 @@
 
                             <img class="block xl:block mx-auto border-round w-full "
                                 src="{{rootImgUrl}}/{{product.productImageURL}}" alt={{product.productName}} />
-                            @if (!product.isAvailable) {
-                            <p-tag value="ระงับการขาย" severity=danger class="absolute" [style.left.px]="4"
-                                [style.top.px]="4"></p-tag>
-
+                            @if (!product.isAvailable&&product.inventoryStatus=="INSTOCK") {
+                            <p-tag value="ระงับการขาย" severity=danger [style.left.px]="4" [style.top.px]="4"
+                                class="absolute"></p-tag>
+                            }
+                            @else if (product.inventoryStatus=="INSTOCK"&& product.isDiscounted) {
+                            <p-tag value="ลดราคา" severity=success [style.left.px]="4" [style.top.px]="4"
+                                class="absolute"></p-tag>
+                            }
+                            @else if (product.inventoryStatus=="INSTOCK"&& product.discountRate>0) {
+                            <p-tag value="กำลังจะลดราคา" severity=warning [style.left.px]="4" [style.top.px]="4"
+                                class="absolute"></p-tag>
                             }
                             @else if (product.inventoryStatus=="INSTOCK") {
-                            <p-tag value="มีสินค้า" severity=success class="absolute" [style.left.px]="4"
-                                [style.top.px]="4"></p-tag>
+                            <p-tag value="มีสินค้า" severity=info [style.left.px]="4" [style.top.px]="4"
+                                class="absolute"></p-tag>
                             }
-                            @else if (product.inventoryStatus=="OUTOFSTOCK") {
-                            <p-tag value="สินค้าหมด" severity=warning class="absolute" [style.left.px]="4"
-                                [style.top.px]="4"></p-tag>
+                            @else if (product.inventoryStatus=="OUTOFSTOCK" ) {
+                            <p-tag value="สินค้าหมด" severity=warning [style.left.px]="4" [style.top.px]="4"
+                                class="absolute"></p-tag>
                             }
 
                         </div>
@@ -85,13 +102,7 @@
                                         product.productName|cutText:[30]}}</a>
                                 </div>
 
-                                <div class="surface-100 p-1" style="border-radius: 30px">
-                                    <div class="surface-0 flex align-items-center gap-2 justify-content-center py-1 px-2"
-                                        style="border-radius: 30px; box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.04), 0px 1px 2px 0px rgba(0, 0, 0, 0.06)">
-                                        <span class="text-900 font-medium text-sm">{{ product.totalScore }}</span>
-                                        <i class="pi pi-star-fill text-yellow-500"></i>
-                                    </div>
-                                </div>
+
                             </div>
                             <div class="w-full">
 
@@ -109,7 +120,7 @@
 
                             </div>
 
-                            <div class="flex flex-column md:align-items-end gap-4 ">
+                            <div class="flex flex-column md:align-items-end   ">
 
                                 @if (!product.isDiscounted) {
                                 <div class="">
@@ -118,7 +129,7 @@
                                 </div>
                                 }@else{
                                 <label class="text-green-700"> {{product.discountPrice|currency:'฿'}}</label>
-                                <br>
+
                                 <small
                                     class="line-through text-gray-400 text-lg font-bold">{{product.price|currency:'฿'}}</small>
                                 @if (product.isDiscountPercent) {
@@ -144,7 +155,7 @@
         <!-- Grid template -->
         <ng-template let-product pTemplate="grid" let-products>
             <div class="grid grid-nogutter">
-                <div class="col-12 sm:col-6 md:col-4 lg:col-3 xl:col-2 p-2 align-items-stretch flex  flex-wrap"
+                <div class="col-12 sm:col-6 md:col-6 lg:col-3  p-2 align-items-stretch flex  flex-wrap"
                     *ngFor="let product of products">
                     <div class="p-4 border-1 surface-border surface-card border-round flex flex-column ">
                         @if (isUserAuthenticated&&hasPermission&&manageProductMode) {
@@ -161,7 +172,7 @@
                         <div class="surface-50 flex justify-content-center border-round p-3">
                             <div class="relative mx-auto">
 
-                                @if (!product.isAvailable) {
+                                @if (!product.isAvailable&&product.inventoryStatus=="INSTOCK") {
                                 <p-tag value="ระงับการขาย" severity=danger></p-tag>
                                 }
                                 @else if (product.inventoryStatus=="INSTOCK"&& product.isDiscounted) {
@@ -173,15 +184,12 @@
                                 @else if (product.inventoryStatus=="INSTOCK") {
                                 <p-tag value="มีสินค้า" severity=info></p-tag>
                                 }
-                                @else if (product.inventoryStatus=="OUTOFSTOCK") {
+                                @else if (product.inventoryStatus=="OUTOFSTOCK" ) {
                                 <p-tag value="สินค้าหมด" severity=warning></p-tag>
                                 }
                                 <img class="border-round w-full " src="{{rootImgUrl}}/{{product.productImageURL}}"
                                     alt={{product.name}}
-                                    style=" min-height:150px; max-height:300px; max-width: 300px;" />
-
-
-
+                                    style=" min-height:150px; max-height:300px; max-width: 400px;" />
                             </div>
                         </div>
                         <div class="pt-4 bottom-100">
@@ -203,14 +211,7 @@
 
                                     <div class="text-lg font-medium text-900 mt-1">
                                         <a routerLink="/product/{{product.productId}}/detail">{{
-                                            product.productName|cutText:[20]}}</a>
-                                    </div>
-                                </div>
-                                <div class="surface-100 p-1" style="border-radius: 30px">
-                                    <div class="surface-0 flex align-items-center gap-2 justify-content-center py-1 px-2"
-                                        style="border-radius: 30px; box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.04), 0px 1px 2px 0px rgba(0, 0, 0, 0.06)">
-                                        <span class="text-900 font-medium text-sm">{{ product.totalScore }}</span>
-                                        <i class="pi pi-star-fill text-yellow-500"></i>
+                                            product.productName|cutText:[40]}}</a>
                                     </div>
                                 </div>
                             </div>

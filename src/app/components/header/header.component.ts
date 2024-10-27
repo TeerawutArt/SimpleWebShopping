@@ -76,6 +76,7 @@ export class HeaderComponent implements OnInit {
   }
 
   async ngOnInit() {
+    this.imgUserURL = localStorage.getItem('UserImageUrl') || ''; //อ่านจากที่เก็บไว้ใน session
     this.loginForm = new FormGroup({
       userName: new FormControl('', [Validators.required]),
       password: new FormControl('', [Validators.required]),
@@ -86,13 +87,15 @@ export class HeaderComponent implements OnInit {
       this.accountService
         .isUserAuthenticated()
         .then((v) => (this.isUserAuthenticated = v));
+      this.advancedPermission = this.advancePermission(
+        this.accountService.getUserInfo()?.role
+      );
+      this.navBar();
     }
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
-    this.advancedPermission = this.advancePermission(
-      this.accountService.getUserInfo()?.role
-    );
-    this.imgUserURL = this.accountService.getUserInfo()?.imgUrl;
-    this.navBar();
+
+    /*     this.imgUserURL = this.accountService.getUserInfo()?.imgUrl; */
+    // prettier-ignore
 
     this.userName = this.accountService.getUserInfo()?.userName;
     this.componentHelper.loginVisibleModal.subscribe((res) => {
@@ -102,10 +105,15 @@ export class HeaderComponent implements OnInit {
       this.isProductAddCart = res;
       this.upDateCart();
     });
+    this.accountService.imageChanged.subscribe((res) => {
+      if (res == true) {
+        this.imgUserURL = localStorage.getItem('UserImageUrl') || '';
+      }
+    });
   }
   navBar() {
     this.productMenu = [];
-    this.productMenu.push({ label: 'หน้าหลัก', routerLink: '/' });
+    this.productMenu.push({ label: 'หน้าหลัก', routerLink: '/index' });
     //
     if (this.isUserAuthenticated) {
       if (this.advancedPermission) {
@@ -124,7 +132,7 @@ export class HeaderComponent implements OnInit {
             },
             {
               label: 'จัดการสินค้า',
-              icon: PrimeIcons.PLUS,
+              icon: PrimeIcons.DATABASE,
               routerLink: '/product/manage',
             },
           ],
@@ -146,17 +154,7 @@ export class HeaderComponent implements OnInit {
           label: 'หมวดหมู่สินค้า',
           routerLink: 'category/list',
         });
-      } else {
-        this.productMenu.push({
-          label: 'รายการสินค้า',
-          routerLink: 'product/list',
-        });
       }
-    } else {
-      this.productMenu.push({
-        label: 'รายการสินค้า',
-        routerLink: 'product/list',
-      });
     }
   }
   showLogin() {
@@ -172,7 +170,6 @@ export class HeaderComponent implements OnInit {
   upDateCart() {
     this.cartService.GetUserCart().subscribe({
       next: (res) => {
-        console.log(res);
         if (res.length > 0) {
           this.productsInCart = res?.length;
           console.log(this.productsInCart);
@@ -220,9 +217,11 @@ export class HeaderComponent implements OnInit {
         this.userName = userInfo?.userName;
         this.advancedPermission = this.advancePermission(userInfo?.role);
         this.accountService.notifyAuthChange(true);
-        this.navBar();
         this.upDateCart();
-        this.imgUserURL = userInfo?.imgUrl;
+        this.imgUserURL = this.accountService.getUserInfo()?.imgUrl;
+        localStorage.setItem('UserImageUrl', this.imgUserURL);
+        this.navBar();
+
         this.returnUrl =
           this.route.snapshot.queryParams['returnUrl'] || this.returnUrl;
 
@@ -273,9 +272,8 @@ export class HeaderComponent implements OnInit {
   private logoutUser() {
     localStorage.removeItem(authKey.accessToken);
     localStorage.removeItem(authKey.refreshToken);
-
+    localStorage.removeItem('UserImageUrl');
     this.accountService.notifyAuthChange(false);
-
     this.router.navigate(['/']);
   }
 }

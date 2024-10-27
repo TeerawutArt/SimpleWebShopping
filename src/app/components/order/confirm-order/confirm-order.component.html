@@ -1,6 +1,6 @@
 @if (order&&!loading&&!order.isPaid) {
 
-<div class="card  lg:mt-8 lg:mr-8 lg:ml-8  grid">
+<div class="card  m-8 mb-0  grid">
     <!-- ที่อยู่ -->
     @if (allAddress.length>0) {
     <div class=" card col-12 p-1  ">
@@ -30,8 +30,8 @@
             <p-button label="แก้ไข" [text]="true" severity="warning" size="small" icon="pi pi-wrench"
                 (onClick)="updateUserAddress(selectedAddress)" />
             <span class="text-blue-500 mr-1">เปลี่ยน</span>
-            <p-splitButton text="true" [buttonDisabled]="true" [model]="addressMenu">
-                <!-- splitBTN ไม่มีตัวเลือกให้กดปุ่มแล้วโชว์ dropdown ทำไมไม่มี -->
+            <p-splitButton text="true" [buttonDisabled]="true" [model]="addressMenu" appendTo="body">
+                <!-- splitBTN ไม่มีตัวเลือกให้กดปุ่มแล้วโชว์ menu dropdown (ทำไมไม่ทำ) -->
             </p-splitButton>
         </div>
         }@else {
@@ -39,7 +39,7 @@
             <p-button label="แก้ไข" [text]="true" severity="warning" size="small" icon="pi pi-wrench"
                 (onClick)="updateUserAddress(selectedAddress)" />
             <span class="text-blue-500 mr-1">เปลี่ยน</span>
-            <p-splitButton text="true" [buttonDisabled]="true" [model]="addressMenu">
+            <p-splitButton text="true" [buttonDisabled]="true" [model]="addressMenu" appendTo="body">
                 <!-- splitBTN ไม่มีตัวเลือกให้กดปุ่มแล้วโชว์ dropdown ทำไมไม่มี -->
             </p-splitButton>
         </div>
@@ -68,7 +68,7 @@
 
 <!--  -->
 <!-- สินค้า -->
-<div class="table behind p-1  col-12 lg:col-12">
+<div class="table  p-1  col-12 lg:col-12 ">
     <p-table [value]="order.orderProducts" dataKey="productId" class="responsive-table">
         <ng-template pTemplate="header">
             <tr>
@@ -208,8 +208,13 @@
             }
 
             <div class="col-12">
+                @if (selectedAddress) {
                 <p-button label="ชำระเงิน" iconPos="right" icon="pi pi-check" severity="success" [loading]="loading"
                     styleClass="w-full" (onClick)="confirmOrder($event)" />
+                }@else {
+                <p-button label="กรุณาเลือกที่อยู่" severity="danger" disabled="true" styleClass="w-full" />
+                }
+
             </div>
         </div>
     </p-panel>
