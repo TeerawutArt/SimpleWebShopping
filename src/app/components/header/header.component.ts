@@ -87,11 +87,13 @@ export class HeaderComponent implements OnInit {
       this.accountService
         .isUserAuthenticated()
         .then((v) => (this.isUserAuthenticated = v));
+      this.advancedPermission = this.advancePermission(
+        this.accountService.getUserInfo()?.role
+      );
+      this.navBar();
     }
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
-    this.advancedPermission = this.advancePermission(
-      this.accountService.getUserInfo()?.role
-    );
+
     /*     this.imgUserURL = this.accountService.getUserInfo()?.imgUrl; */
     // prettier-ignore
 
